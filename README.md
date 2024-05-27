@@ -1,2 +1,2 @@
 # csm_al-ko
-Ыervice manager's cabinet
+Service manager's cabinet
