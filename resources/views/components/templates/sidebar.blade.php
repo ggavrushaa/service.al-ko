@@ -7,8 +7,8 @@
                 <div class="lists">
                     <div class="list-group">
                         <ul>
-                            <li class="active">
-                                <a href="./home.html" class="link">
+                            <li class="{{Route::currentRouteName() == 'app.home.index' ? 'active' : ''}}">
+                                <a href="{{route('app.home.index')}}" class="link">
                                     <span class="icon icon-search-active"></span>
                                     <span class="text">Пошук</span>
                                 </a>
@@ -18,7 +18,7 @@
                     <div class="list-group">
                         <p class="list-group__title">Журнали</p>
                         <ul>
-                            <li class="">
+                            <li class="{{Route::currentRouteName() == 'app.warranty.index' ? 'active' : ''}}">
                                 <a href="{{route('app.warranty.index')}}" class="link">
                                     <span class="icon icon-docs-in-folders"></span>
                                     <span class="text">Гарантійні заяви</span>

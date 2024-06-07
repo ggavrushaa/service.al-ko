@@ -1,238 +1,4 @@
-<!DOCTYPE html>
-<html lang="uk">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="widdiv=device-widdiv, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Журнал гарантійних заяв</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
-      rel="stylesheet">
-
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.4/dist/css/datepicker.min.css">
-<link rel="stylesheet" href="/cdn/css/swiper-bundle.min.css">
-<link rel="stylesheet" href="./css/components.css?v=002">
-</head>
-<body class="preload">
-
-
-<header data-lp>
-    <!-- show-results, показать результати пошуку -->
-    <div class="search-block show-results">
-        <div class="search-block__result">
-            <span class="icon icon-search"></span>
-            <div class="placeholder">
-                <div class="placeholder-item">
-                    00000000000000000
-                    <span class="icon-close-fill"></span>
-                </div>
-                <div class="placeholder-item">
-                    00000000000000000
-                    <span class="icon-close-fill"></span>
-                </div>
-            </div>
-            <div class="clear-all icon-close-fill"></div>
-            <div class="arrow"></div>
-        </div>
-        <form class="search-form">
-            <div class="form-group horizontal">
-                <label for="barcode">Штрихкод гарантійного талона</label>
-                <div class="input-wrapper">
-                    <input type="text" id="barcode" placeholder="Вкажіть Штрихкод">
-                    <div class="help-block">Required field</div>
-                    <button type="button" class="clear-input icon-close-fill"></button>
-                </div>
-            </div>
-            <div class="form-group horizontal _mb0">
-                <label for="number">Заводський номер гарантійного товару</label>
-                <div class="input-wrapper">
-                    <input type="text" id="number" placeholder="Вкажіть Заводський номер">
-                    <div class="help-block">Required field</div>
-                    <button type="button" class="clear-input icon-close-fill"></button>
-                </div>
-            </div>
-            <div class="btns">
-                <button class="btn-border btn-blue" type="button">Очистити</button>
-                <button class="btn-primary btn-blue" type="button">Пошук</button>
-            </div>
-        </form>
-    </div>
-    <div class="user-header">
-        <div class="user-info">
-            <img src="./img/components/user-undefined.svg" alt="">
-            <div class="user-name">Іванов Іван Іванович</div>
-            <div class="user-role">Роль</div>
-
-            <button type="button" class="icon-arrow-dropdown"></button>
-        </div>
-        <div class="user-header__dropdown">
-            <div class="user-header__dropdown-content">
-                <div class="dropdown-top">
-                    <div class="user-name">Іванов Іван Іванович</div>
-                    <div class="user-role">Роль</div>
-                </div>
-                <div class="dropdown-footer">
-                    <a href="" class="btn-primary btn-blue" type="button">Вийти</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</header>
-
-
-<aside class="sidebar">
-    <button class="btn-size-holder"></button>
-    <div class="sidebar-content custom-scrollbar">
-        <a href="/home.html" class="logo">
-            <img src="./img/components/logo.svg" alt="">
-        </a>
-        <div class="lists">
-            <div class="list-group">
-                <ul>
-                    <li class="">
-                        <a href="./home.html" class="link">
-                            <span class="icon icon-search-active"></span>
-                            <span class="text">Пошук</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            <div class="list-group">
-                <p class="list-group__title">Журнали</p>
-                <ul>
-                    <li class="active">
-                        <a href="./warranty.html" class="link">
-                            <span class="icon icon-docs-in-folders"></span>
-                            <span class="text">Гарантійні заяви</span>
-                        </a>
-                    </li>
-                    <li class="">
-                        <a href="" class="link">
-                            <span class="icon icon-docs"></span>
-                            <span class="text">Акти технічної експертизи</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            <div class="list-group">
-                <p class="list-group__title">Інше</p>
-                <ul>
-                    <li class="">
-                        <a href="" class="link">
-                            <span class="icon icon-app"></span>
-                            <span class="text">Звірка компенсацій</span>
-                        </a>
-                    </li>
-                    <li class="">
-                        <a href="" class="link">
-                            <span class="icon icon-folder"></span>
-                            <span class="text">Документація</span>
-                        </a>
-                    </li>
-                    <li class="have-sublist js-accordion ">
-                        <button type="button" class="link js-accordion-btn">
-                            <span class="icon icon-book"></span>
-                            <span class="text">Довідники</span>
-                            <span class="btn-open"></span>
-                        </button>
-                        <ul class="sublist js-accordion-content">
-                            <li class="">
-                                <a href="" class="link">Коди дефектів</a>
-                            </li>
-                            <li>
-                                <a href="" class="link">Коди симптомів</a>
-                            </li>
-                            <li>
-                                <a href="" class="link">Сервісні роботи</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div class="sidebar-footer">
-            <p>AL-KO Copyright © 2023 </p>
-        </div>
-    </div>
-    <div class="smaller-version custom-scrollbar">
-        <a href="/home.html" class="logo">
-            <img src="./img/components/logo.svg" alt="">
-        </a>
-        <div class="lists">
-            <div class="list-group">
-                <ul>
-                    <li class="">
-                        <a href="./home.html" class="link js-tooltip"
-                           data-text="Пошук"
-                           data-offset="0,16"
-                           data-placement="right"
-                        >
-                            <span class="icon icon-search-active"></span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            <div class="list-group">
-                <ul>
-                    <li class="active">
-                        <a href="./warranty.html" class="link js-tooltip"
-                           data-text="Гарантійні заяви"
-                           data-offset="0,16"
-                           data-placement="right"
-                        >
-                            <span class="icon icon-docs-in-folders"></span>
-                        </a>
-                    </li>
-                    <li class="">
-                        <a href="" class="link js-tooltip"
-                           data-text="Акти технічної експертизи"
-                           data-offset="0,16"
-                           data-placement="right"
-                        >
-                            <span class="icon icon-docs"></span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            <div class="list-group">
-                <ul>
-                    <li class="">
-                        <a href="" class="link js-tooltip"
-                           data-text="Звірка компенсацій"
-                           data-offset="0,16"
-                           data-placement="right"
-                        >
-                            <span class="icon icon-app"></span>
-                        </a>
-                    </li>
-                    <li class="active">
-                        <a href="" class="link js-tooltip"
-                           data-text="Документація"
-                           data-offset="0,16"
-                           data-placement="right"
-                           >
-                            <span class="icon icon-folder"></span>
-                        </a>
-                    </li>
-                    <li class="">
-                        <a href="" class="link js-tooltip"
-                           data-text="Довідники"
-                           data-offset="0,16"
-                           data-placement="right"
-                        >
-                            <span class="icon icon-book"></span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</aside>
-
+<x-layouts.base>
 <div class="main" id="main">
     <div class="page-warranty">
         <div class="page-name">
@@ -360,23 +126,27 @@
                     <div class="tbody">
                         @foreach ($warrantyClaims as $claim)
                         <div class="tr">
-                            <div class="td">{{$claim->number}}</div>
-                            <div class="td">{{$claim->date}}</div>
-                            <div class="td">{{$claim->product_article}}</div>
-                            <div class="td">{{$claim->product_name}}</div>
-                            <div class="td">000 000</div>
-                            <div class="td">000 000</div>
-                            <div class="td">
-                                <button type="button" class="btn-label blue">{{$claim->type_of_claim}}</button>
-                            </div>
-                            <div class="td">{{$claim->user->first_name_ru}}</div>
-                            <div class="td">Менеджер Імя Прізвище</div>
-                            <div class="td _empty"></div>
-                            <div class="td">
-                                <a href="" class="btn-action icon-user"></a>
-                                <a href="" class="btn-action icon-pdf"></a>
-                                <a href="" class="btn-action icon-message _inactive"></a>
-                            </div>
+                            <a style="text-decoration: none; color: inherit;" href="{{route('app.warranty.edit', $claim->id)}}">
+                                <div class="td">{{$claim->number}}</div>
+                            </a>
+                                <div class="td">{{$claim->date}}</div>
+                                <div class="td">{{$claim->product_article}}</div>
+                                <div class="td">{{$claim->product_name}}</div>
+                                <div class="td">000 000</div>
+                                <div class="td">000 000</div>
+                                <div class="td">
+                                    <button type="button" class="btn-label blue">{{$claim->type_of_claim}}</button>
+                                </div>
+                                <div class="td">{{$claim->user->first_name_ru}}</div>
+                                <div class="td">Менеджер Імя Прізвище</div>
+                                <div class="td _empty"></div>
+                                <div class="td">
+                                    @if(auth()->user()->role_id === 2)
+                                        <a href="" class="btn-action icon-user"></a>
+                                    @endif
+                                    <a href="" class="btn-action icon-pdf"></a>
+                                    <a href="" class="btn-action icon-message _inactive"></a>
+                                </div>
                         </div>
                         @endforeach
                     </div>
@@ -695,5 +465,5 @@
 <script src="/js/components.js?v=002"></script>
 
 <script src="/js/main.js?v=002"></script>
-</body>
-</html>
+
+</x-layouts.base>

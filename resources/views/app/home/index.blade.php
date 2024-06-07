@@ -1,72 +1,4 @@
 <x-layouts.base>
-        <header data-lp>
-            <!-- show-results, показать результати пошуку -->
-            <div class="search-block show-results">
-                <div class="search-block__result">
-                    <span class="icon icon-search"></span>
-                    <div class="placeholder">
-                        <div class="placeholder-item">
-                            00000000000000000
-                            <span class="icon-close-fill"></span>
-                        </div>
-                        <div class="placeholder-item">
-                            00000000000000000
-                            <span class="icon-close-fill"></span>
-                        </div>
-                    </div>
-                    <div class="clear-all icon-close-fill"></div>
-                    <div class="arrow"></div>
-                </div>
-                <form class="search-form" action="{{ route('app.search') }}" method="get">
-                    <div class="form-group horizontal">
-                        <label for="barcode">Штрихкод гарантійного талона</label>
-                        <div class="input-wrapper">
-                            <input type="text" id="barcode" placeholder="Вкажіть Штрихкод">
-                            <div class="help-block">Required field</div>
-                            <button type="button" class="clear-input icon-close-fill"></button>
-                        </div>
-                    </div>
-                    <div class="form-group horizontal _mb0">
-                        <label for="number">Заводський номер гарантійного товару</label>
-                        <div class="input-wrapper">
-                            <input type="text" id="number" placeholder="Вкажіть Заводський номер">
-                            <div class="help-block">Required field</div>
-                            <button type="button" class="clear-input icon-close-fill"></button>
-                        </div>
-                    </div>
-                    <div class="btns">
-                        <button class="btn-border btn-blue" type="button">Очистити</button>
-                        <button class="btn-primary btn-blue" type="button">Пошук</button>
-                    </div>
-                </form>
-            </div>
-            <div class="user-header">
-                <div class="user-info">
-                    <img src="./img/components/user-undefined.svg" alt="">
-                    <div class="user-name">{{$user->first_name_ru}}</div>
-                    <div class="user-role">{{$user->edo_role_id}}</div>
-        
-                    <button type="button" class="icon-arrow-dropdown"></button>
-                </div>
-                <div class="user-header__dropdown">
-                    <div class="user-header__dropdown-content">
-                        <div class="dropdown-top">
-                            <div class="user-name">{{$user->first_name_ru}}</div>
-                            <div class="user-role">{{$user->edo_role_id}}</div>
-                        </div>
-                        <div class="dropdown-footer">
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                @csrf
-                            </form>
-                            <a href="#" class="btn-primary btn-blue" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                Вийти
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
-        
         <div class="main" id="main">
             <div class="page-name">
                 <h1>Пошук</h1>
@@ -81,7 +13,7 @@
         
         
         <div class="modal-overlay"></div>
-        // comments
+        <!--        comments -->
         <div class="modal modal-chat js-modal js-modal-chat">
             <button type="button" class="icon-close-fill btn-close _js-btn-close-modal"></button>
             <div class="modal-content">
@@ -140,7 +72,7 @@
             </div>
         </div>
         
-        // modal switch manager
+        <!--         modal switch manager -->
         <div class="modal modal-manager js-modal js-modal-switch-manager">
             <button type="button" class="icon-close-fill btn-close _js-btn-close-modal"></button>
             <div class="modal-content ">
@@ -188,7 +120,7 @@
             </div>
         </div>
         
-        // modal switch status
+        <!--         modal switch status -->
         <div class="modal modal-alert js-modal js-modal-switch-status">
             <button type="button" class="icon-close-fill btn-close _js-btn-close-modal"></button>
             <div class="modal-content ">
@@ -203,7 +135,7 @@
             </div>
         </div>
         
-        // modal delete
+        <!--         modal delete -->
         <div class="modal modal-alert modal-alert-delete js-modal js-modal-delete">
             <button type="button" class="icon-close-fill btn-close _js-btn-close-modal"></button>
             <div class="modal-content ">
@@ -215,7 +147,7 @@
             </div>
         </div>
         
-        // import document
+        <!-- import document -->
         <div class="modal modal-document js-modal js-modal-import-document custom-scrollbar">
             <button type="button" class="icon-close-fill btn-close _js-btn-close-modal"></button>
             <div class="modal-content ">
@@ -267,7 +199,7 @@
             </div>
         </div>
         
-        // edit document
+        <!--         edit document -->
         <div class="modal modal-document js-modal js-modal-edit-document custom-scrollbar">
             <button type="button" class="icon-close-fill btn-close _js-btn-close-modal"></button>
             <div class="modal-content ">
@@ -319,7 +251,7 @@
             </div>
         </div>
         
-        // gallery
+        <!--         gallery -->
         <div class="modal modal-gallery js-modal js-modal-gallery custom-scrollbar">
             <button type="button" class="icon-close-fill btn-close _js-btn-close-modal"></button>
             <div class="modal-content ">

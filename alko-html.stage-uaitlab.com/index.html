@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Посилання</title>
+    <link rel="stylesheet" href="css/fonts.css">
+    <style>
+        body{
+            font-family: 'Open Sans', sans-serif;
+            font-size: 20px;
+            line-height: 140%;
+            background: linear-gradient(0deg, #4f546b 31%, #0a0a0d 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        .list li{
+            margin-bottom: 15px;
+            color: white;
+        }
+        .list li::marker{
+            color: white;
+        }
+        .list li a{
+            text-decoration: underline;
+            color: burlywood;
+        }
+        .sublist li{
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<ol class="list">
+    <li><a href="./login.html" target="_blank">Вхід</a></li>
+
+    <li><a href="./home.html" target="_blank">Головна</a></li>
+    <li>
+        Пошук
+        <ul class="sublist">
+            <li><a href="./search-not-found.html" target="_blank">Не знайдено</a></li>
+            <li><a href="./search-result.html" target="_blank">Результат пошуку</a></li>
+        </ul>
+    </li>
+
+    <li>
+        Гарантійні заяви
+        <ul class="sublist">
+            <li><a href="./warranty.html" target="_blank">Журнал</a></li>
+            <li><a href="./warranty-admin.html" target="_blank">Журнал Адмін</a></li>
+            <li><a href="./warranty-create.html" target="_blank">Створити заяву</a></li>
+            <li><a href="./warranty-read.html" target="_blank">Переглянути заяву (readonly)</a></li>
+            <li><a href="./warranty-ate.html" target="_blank">Акт технічної експертизи</a></li>
+        </ul>
+    </li>
+
+    <li>
+        Акти технічної експертизи
+        <ul class="sublist">
+            <li><a href="./ate.html" target="_blank">Журнал</a></li>
+            <li><a href="./ate-view-1.html" target="_blank">Перегляд (відповідальний менеджер)</a></li>
+            <li><a href="./ate-view-2.html" target="_blank">Перегляд (адмін)</a></li>
+        </ul>
+    </li>
+
+    <li>
+        Звірка компенсацій
+        <ul class="sublist">
+            <li><a href="./compensation.html" target="_blank">По документам</a></li>
+            <li><a href="./compensation-1.html" target="_blank">По сервіс-центрам</a></li>
+            <li><a href="./compensation-2.html" target="_blank">Без опису товару</a></li>
+            <li><a href="./compensation-single.html" target="_blank">Звірка компенсацій</a></li>
+        </ul>
+    </li>
+
+    <li>
+        Документація
+        <ul class="sublist">
+            <li><a href="./doc.html" target="_blank">Менеджер</a></li>
+            <li><a href="./doc-dealer.html" target="_blank">Диллер</a></li>
+        </ul>
+    </li>
+
+    <li><a href="./defect-codes.html" target="_blank">Коди дефектів</a></li>
+
+    <li><a href="./components.html" target="_blank">Компоненти (for developers)</a></li>
+</ol>
+
+</body>
+</html>

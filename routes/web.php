@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\TechnicalConclusion\TechnicalConclusionController;
 use App\Http\Controllers\WarrantyClaim\WarrantyClaimController;
 
 
@@ -19,6 +20,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/home', [HomeController::class, 'index'])->name('app.home.index');
     Route::get('/warranty_claims', [WarrantyClaimController::class, 'index'])->name('app.warranty.index');
     Route::get('/search', [WarrantyClaimController::class, 'search'])->name('app.search');
+
+    Route::get('/warranty/edit/{id}', [WarrantyClaimController::class, 'edit'])->name('app.warranty.edit');
+
+    Route::post('/warranty/edit/{id}', [TechnicalConclusionController::class, 'create'])->name('app.conclusion.create');
 
 });
 

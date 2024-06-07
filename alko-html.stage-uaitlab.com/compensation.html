@@ -5,7 +5,7 @@
     <meta name="viewport"
           content="widdiv=device-widdiv, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Головна</title>
+    <title>Журнал гарантійних заяв</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -93,7 +93,7 @@
         <div class="lists">
             <div class="list-group">
                 <ul>
-                    <li class="active">
+                    <li class="">
                         <a href="./home.html" class="link">
                             <span class="icon icon-search-active"></span>
                             <span class="text">Пошук</span>
@@ -121,7 +121,7 @@
             <div class="list-group">
                 <p class="list-group__title">Інше</p>
                 <ul>
-                    <li class="">
+                    <li class="active">
                         <a href="" class="link">
                             <span class="icon icon-app"></span>
                             <span class="text">Звірка компенсацій</span>
@@ -165,7 +165,7 @@
         <div class="lists">
             <div class="list-group">
                 <ul>
-                    <li class="active">
+                    <li class="">
                         <a href="./home.html" class="link js-tooltip"
                            data-text="Пошук"
                            data-offset="0,16"
@@ -200,7 +200,7 @@
             </div>
             <div class="list-group">
                 <ul>
-                    <li class="">
+                    <li class="active">
                         <a href="" class="link js-tooltip"
                            data-text="Звірка компенсацій"
                            data-offset="0,16"
@@ -234,59 +234,192 @@
 </aside>
 
 <div class="main" id="main">
-    <div class="page-search-result">
+    <div class="page-compensation">
         <div class="page-name">
-            <h1>Пошук</h1>
-            <p class="total-found">
-                Знайдено документів: <strong>2</strong>
-            </p>
+            <div class="row">
+                <h1>Звірка компенсацій</h1>
+                <div class="sort">
+                    <a href="" class="">По документам</a>
+                    <a href="" class="">По сервіс-центрам</a>
+                    <a href="" class="active">Без опису товару</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="filters-result">
+                    <div class="active-filters">
+                        <p class="count">
+                            Показано документів: <span>400</span>
+                        </p>
+                        <div class="filter">
+                            За період: <strong>00.00.0000 - 00.00.0000</strong>
+                            <a href="" class="icon-close-fill"></a>
+                        </div>
+                        <div class="filter">
+                            За період: <strong>00.00.0000 - 00.00.0000</strong>
+                            <a href="" class="icon-close-fill"></a>
+                        </div>
+                        <div class="filter">
+                            За період: <strong>00.00.0000 - 00.00.0000</strong>
+                            <a href="" class="icon-close-fill"></a>
+                        </div>
+                        <div class="filter">
+                            За період: <strong>00.00.0000 - 00.00.0000</strong>
+                            <a href="" class="icon-close-fill"></a>
+                        </div>
+                        <div class="filter">
+                            За період: <strong>00.00.0000 - 00.00.0000</strong>
+                            <a href="" class="icon-close-fill"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="btns">
+                <button type="button" class="btn-primary btn-blue icon-filters btn-filter _js-show-filters">Фільтри</button>
+            </div>
         </div>
+
+
+
         <div class="card-content card-table">
             <div class="table-wrapper">
-                <div class="table table-actions layout-fixed">
+                <div class="table layout-fixed table-footer layout-fixed">
                     <div class="thead">
                         <div class="tr">
-                            <div class="th">Назва товару</div>
-                            <div class="th">Покупець</div>
-                            <div class="th">Штрихкод талона</div>
-                            <div class="th">Заводський номер</div>
-                            <div class="th">Телефон</div>
-                            <div class="th">Вартість товару, грн</div>
-                            <div class="th _empty"></div>
-                            <div class="th">Дії</div>
+                            <div class="th">Сервіс-центр <a href="" class="icon-switch"></a></div>
+                            <div class="th">Запчастини, шт <a href="" class="icon-switch"></a></div>
+                            <div class="th">Вартість запчастин, грн <a href="" class="icon-switch"></a></div>
+                            <div class="th">Нормогодини <a href="" class="icon-switch"></a></div>
+                            <div class="th">Вартість нормогодин, грн <a href="" class="icon-switch"></a></div>
+                            <div class="th"><strong>Всього вартість, грн <a href="" class="icon-switch"></a></strong></div>
                         </div>
                     </div>
                     <div class="tbody">
+                        
                         <div class="tr">
                             <div class="td">
-                                Lorem ipsum dolor sit amet consectetur.
+                                Товариство з обмеженною відповідальність Якась довга довна назва назва
                             </div>
-                            <div class="td">Веретенніков Костянтин Петрович</div>
-                            <div class="td">00000000000000000</div>
-                            <div class="td">00000000000000000</div>
-                            <div class="td">+38050-123-45-67</div>
-                            <div class="td">000 000</div>
-                            <div class="td _empty"></div>
-                            <div class="td">
-                                <a href="" class="btn-action icon-info"></a>
-                            </div>
+                            <div class="td">20</div>
+                            <div class="td">0 000.00</div>
+                            <div class="td">49</div>
+                            <div class="td">0 000.00</div>
+                            <div class="td"><strong>0 000.00</strong></div>
                         </div>
+                        
                         <div class="tr">
-                            <div class="td">Lorem ipsum dolor sit amet consectetur.</div>
-                            <div class="td">Веретенніков Костянтин Петрович</div>
-                            <div class="td">00000000000000000</div>
-                            <div class="td">00000000000000000</div>
-                            <div class="td">+38050-123-45-67</div>
-                            <div class="td">000 000</div>
-                            <div class="th _empty"></div>
                             <div class="td">
-                                <a href="" class="btn-action icon-info"></a>
+                                Товариство з обмеженною відповідальність Якась довга довна назва назва
                             </div>
+                            <div class="td">20</div>
+                            <div class="td">0 000.00</div>
+                            <div class="td">49</div>
+                            <div class="td">0 000.00</div>
+                            <div class="td"><strong>0 000.00</strong></div>
+                        </div>
+                        
+                        <div class="tr">
+                            <div class="td">
+                                Товариство з обмеженною відповідальність Якась довга довна назва назва
+                            </div>
+                            <div class="td">20</div>
+                            <div class="td">0 000.00</div>
+                            <div class="td">49</div>
+                            <div class="td">0 000.00</div>
+                            <div class="td"><strong>0 000.00</strong></div>
+                        </div>
+                        
+                        <div class="tr">
+                            <div class="td">
+                                Товариство з обмеженною відповідальність Якась довга довна назва назва
+                            </div>
+                            <div class="td">20</div>
+                            <div class="td">0 000.00</div>
+                            <div class="td">49</div>
+                            <div class="td">0 000.00</div>
+                            <div class="td"><strong>0 000.00</strong></div>
+                        </div>
+                        
+                        <div class="tr">
+                            <div class="td">
+                                Товариство з обмеженною відповідальність Якась довга довна назва назва
+                            </div>
+                            <div class="td">20</div>
+                            <div class="td">0 000.00</div>
+                            <div class="td">49</div>
+                            <div class="td">0 000.00</div>
+                            <div class="td"><strong>0 000.00</strong></div>
+                        </div>
+                        
+                        <div class="tr">
+                            <div class="td">
+                                Товариство з обмеженною відповідальність Якась довга довна назва назва
+                            </div>
+                            <div class="td">20</div>
+                            <div class="td">0 000.00</div>
+                            <div class="td">49</div>
+                            <div class="td">0 000.00</div>
+                            <div class="td"><strong>0 000.00</strong></div>
+                        </div>
+                        
+                        <div class="tr">
+                            <div class="td">
+                                Товариство з обмеженною відповідальність Якась довга довна назва назва
+                            </div>
+                            <div class="td">20</div>
+                            <div class="td">0 000.00</div>
+                            <div class="td">49</div>
+                            <div class="td">0 000.00</div>
+                            <div class="td"><strong>0 000.00</strong></div>
+                        </div>
+                        
+                        <div class="tr">
+                            <div class="td">
+                                Товариство з обмеженною відповідальність Якась довга довна назва назва
+                            </div>
+                            <div class="td">20</div>
+                            <div class="td">0 000.00</div>
+                            <div class="td">49</div>
+                            <div class="td">0 000.00</div>
+                            <div class="td"><strong>0 000.00</strong></div>
+                        </div>
+                        
+                        <div class="tr">
+                            <div class="td">
+                                Товариство з обмеженною відповідальність Якась довга довна назва назва
+                            </div>
+                            <div class="td">20</div>
+                            <div class="td">0 000.00</div>
+                            <div class="td">49</div>
+                            <div class="td">0 000.00</div>
+                            <div class="td"><strong>0 000.00</strong></div>
+                        </div>
+                        
+                        <div class="tr">
+                            <div class="td">
+                                Товариство з обмеженною відповідальність Якась довга довна назва назва
+                            </div>
+                            <div class="td">20</div>
+                            <div class="td">0 000.00</div>
+                            <div class="td">49</div>
+                            <div class="td">0 000.00</div>
+                            <div class="td"><strong>0 000.00</strong></div>
+                        </div>
+                        
+                    </div>
+                    <div class="tfoot">
+                        <div class="tr">
+                            <div class="th">Разом</div>
+                            <div class="th">00 000</div>
+                            <div class="th">0 000.00</div>
+                            <div class="th">2 000</div>
+                            <div class="th">0 000.00</div>
+                            <div class="th">0 000.00</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
 </div>
 

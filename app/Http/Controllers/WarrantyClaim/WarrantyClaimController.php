@@ -22,12 +22,20 @@ class WarrantyClaimController extends Controller
             $query->where('barcode', $request->barcode);
         }
 
-        if($request->filled('number')) {
-            $query->where('factory_number', $request->barcode);
+        if($request->filled('factory_number')) {
+            $query->where('factory_number', $request->factory_number);
         }
 
         $claims = $query->with('user')->get();
 
-        return view('app.search.index', compact('claims'));
+        return view('app.search.index', compact('claims'))
+            ->with('barcode', $request->barcode)
+            ->with('factory_number', $request->factory_number);
     }        
+
+    public function edit($id)
+    {
+        $claim = WarrantyClaim::find($id);
+        return view('app.warranty.edit', compact('claim'));
+    }
 }

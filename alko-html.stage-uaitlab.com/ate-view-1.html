@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+          content="widdiv=device-widdiv, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Головна</title>
+    <title>Журнал гарантійних заяв</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -93,7 +93,7 @@
         <div class="lists">
             <div class="list-group">
                 <ul>
-                    <li class="active">
+                    <li class="">
                         <a href="./home.html" class="link">
                             <span class="icon icon-search-active"></span>
                             <span class="text">Пошук</span>
@@ -104,7 +104,7 @@
             <div class="list-group">
                 <p class="list-group__title">Журнали</p>
                 <ul>
-                    <li class="">
+                    <li class="active">
                         <a href="./warranty.html" class="link">
                             <span class="icon icon-docs-in-folders"></span>
                             <span class="text">Гарантійні заяви</span>
@@ -165,7 +165,7 @@
         <div class="lists">
             <div class="list-group">
                 <ul>
-                    <li class="active">
+                    <li class="">
                         <a href="./home.html" class="link js-tooltip"
                            data-text="Пошук"
                            data-offset="0,16"
@@ -178,7 +178,7 @@
             </div>
             <div class="list-group">
                 <ul>
-                    <li class="">
+                    <li class="active">
                         <a href="./warranty.html" class="link js-tooltip"
                            data-text="Гарантійні заяви"
                            data-offset="0,16"
@@ -209,7 +209,7 @@
                             <span class="icon icon-app"></span>
                         </a>
                     </li>
-                    <li class="">
+                    <li class="active">
                         <a href="" class="link js-tooltip"
                            data-text="Документація"
                            data-offset="0,16"
@@ -234,20 +234,147 @@
 </aside>
 
 <div class="main" id="main">
-    <div class="page-name">
-        <h1>Пошук</h1>
-    </div>
-    <div class="search-result">
-        <div class="text">
-            <p class="h1">Гарантійного талона за вказаними параметрами не знайдено.</p>
-            <p>
-                Перевірте правильність введених даних, якщо введено вірні дані, але гарантійний талон не знайдено -
-                покупцеві необхідно звернутися за місцем продажу товару
-            </p>
-            <button type="button" class="btn-primary btn-blue">Зрозуміло</button>
+    <div class="page-warranty-create">
+        <div class="page-name sticky">
+            <h1>Акт технічної експертизи</h1>
+            <div class="btns">
+                <button type="button" class="btn-link btn-green text-only">Затверджено</button>
+                <button type="button" class="btn-border btn-blue btn-only-icon _js-btn-show-modal" data-modal="chat">
+                    <span class="icon-message"></span>
+                </button>
+                <button type="button" class="btn-border btn-blue btn-only-icon">
+                    <span class="icon-pdf"></span>
+                </button>
+                <button type="button" class="btn-border btn-blue btn-only-icon">
+                    <span class="icon-message-fly"></span>
+                </button>
+            </div>
         </div>
-    </div>
 
+        <div class="card-lists">
+            <div class="card-lists">
+                <div class="card-content card-form">
+                    <p class="card-title">Загальна інформація</p>
+                    <div class="inputs-group one-row">
+                        <div class="form-group">
+                            <label for="article">Номер документу</label>
+                            <input type="text" id="article" value="0000000000" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="prod-name">Дата документу</label>
+                            <input type="text" id="prod-name" value="00.00.0000" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="factory-number">Відповідальний</label>
+                            <input type="text" id="factory-number" value="Прізвище Ім'я По батькові" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="barcode">Документ-підстава</label>
+                            <div class="input-wrapper">
+                                <input type="text" id="barcode" value="Посиланням на гарантійну заяву" readonly>
+                                <a href="" class="icon-link-external text-blue"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inputs-group one-row">
+                        <div class="form-group">
+                            <label for="field-1">ПІБ покупця</label>
+                            <input type="text" id="field-1" value="Місце продажу" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="field-2">Контактний телефон</label>
+                            <input type="text" id="field-2" value="27.05.1999" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="field-3">Артикул</label>
+                            <input type="text" id="field-3" value="00.00.0000" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="field-4">Назва виробу</label>
+                            <input type="text" id="field-4" value="0000000000" readonly>
+                        </div>
+                    </div>
+                    <div class="inputs-group one-row">
+                        <div class="form-group">
+                            <label for="place-sale">Місце продажу</label>
+                            <input type="text" id="place-sale" value="Місце продажу" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="date-sale">Дата продажу</label>
+                            <input type="text" id="date-sale" value="27.05.1999" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="date-start">Дата звернення в сервісний центр</label>
+                            <input type="text" id="date-start" value="00.00.0000" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="receipt-number">Номер квитанції сервісного центру</label>
+                            <input type="text" id="receipt-number" value="0000000000" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-lists">
+                <div class="card-lists">
+                    <div class="card-content card-form">
+                        <p class="card-title">Технічна інформація</p>
+                        <div class="inputs-group one-row">
+                            <div class="form-group">
+                                <label for="field-5">Заводський номер</label>
+                                <input type="text" id="field-5" value="0000000000" readonly>
+                            </div>
+
+                            <div class="form-group default-select">
+                                <label for="field-6">Код дефекту</label>
+                                <select name="" id="field-6" disabled>
+                                    <option value="-1">Код дефекту</option>
+                                    <option value="222" selected>Код дефекту - 1</option>
+                                    <option value="333">Код дефекту - 2</option>
+                                    <option value="444">Код дефекту - 3</option>
+                                    <option value="555">Код дефекту - 4</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group default-select">
+                                <label for="field-7">Код симптому</label>
+                                <select name="" id="field-7" disabled>
+                                    <option value="-1">Код симптому</option>
+                                    <option value="222" selected>Код симптому - 1</option>
+                                    <option value="333">Код симптому - 2</option>
+                                    <option value="444">Код симптому - 3</option>
+                                    <option value="555">Код симптому - 4</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group default-select">
+                                <label for="field-8">Тип звернення</label>
+                                <select name="" id="field-8" disabled>
+                                    <option value="-1">Тип звернення</option>
+                                    <option value="222" selected>Тип звернення - 1</option>
+                                    <option value="333">Тип звернення - 2</option>
+                                    <option value="444">Тип звернення - 3</option>
+                                    <option value="555">Тип звернення - 4</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="inputs-group one-row">
+                            <div class="form-group">
+                                <label for="field-9">Висновок</label>
+                                <textarea id="field-9" placeholder="Причина дефекту" rows="3">Lorem ipsum dolor sit amet consectetur. Mi non vitae semper euismod tellus. Pellentesqueet ornare aliquam nunc ante quam et. Placerat curabitur montes nullam hac. Quis ac nonaenean egestas velit feugiat sed. Facilisi aenean scelerisque elementum et duis commodo.Posuere elit.</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="field-10">Резолюція</label>
+                                <textarea id="field-10" placeholder="Причина дефекту" rows="3">Lorem ipsum dolor sit amet consectetur. Mi non vitae semper euismod tellus. Pellentesqueet ornare aliquam nunc ante quam et. Placerat curabitur montes nullam hac. Quis ac nonaenean egestas velit feugiat sed. Facilisi aenean scelerisque elementum et duis commodo.Posuere elit.</textarea>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
 </div>
 
 <div class="modal-overlay"></div>
