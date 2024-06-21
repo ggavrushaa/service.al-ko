@@ -39,7 +39,9 @@ class VerifyCsrfToken
      *
      * @var array<int, string>
      */
-    protected $except = [];
+    protected $except = [
+        'symptom-codes', 'defect-codes', 'product-groups', 'resolution-templates',
+    ];
 
     /**
      * The globally ignored URIs that should be excluded from CSRF verification.

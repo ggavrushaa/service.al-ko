@@ -58,6 +58,30 @@ return [
             'ignore_exceptions' => false,
         ],
 
+        'symptom_codes' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/symptom_codes.log'),
+            'level' => 'info',
+        ],
+
+        'defect_codes' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/defect_codes.log'),
+            'level' => 'info',
+        ],
+
+        'product_groups' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/product_groups.log'),
+            'level' => 'info',
+        ],
+
+        'resolution_templates' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/resolution_templates.log'),
+            'level' => 'info',
+        ],
+
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),

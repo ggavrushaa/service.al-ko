@@ -10,6 +10,10 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $this->call(WarrantyClaimSeeder::class);
+        // $this->call(WarrantyClaimSeeder::class);
+        // $this->call(ProductGroupSeeder::class);
+        // $this->call(ServiceWorksSeeder::class);
+        // $this->call(DefectCodesSeeder::class);
+        $this->call(SymptomCodesSeeder::class);
     }
 }

@@ -2,7 +2,7 @@
             <button class="btn-size-holder"></button>
             <div class="sidebar-content custom-scrollbar">
                 <a href="/home.html" class="logo">
-                    <img src="./img/components/logo.svg" alt="">
+                    <img src="{{asset('img/components/logo.svg')}}" alt="">
                 </a>
                 <div class="lists">
                     <div class="list-group">
@@ -18,14 +18,14 @@
                     <div class="list-group">
                         <p class="list-group__title">Журнали</p>
                         <ul>
-                            <li class="{{Route::currentRouteName() == 'app.warranty.index' ? 'active' : ''}}">
+                            <li class="{{Route::currentRouteName() == 'app.warranty.index' || Route::currentRouteName() == 'app.warranty.edit' ? 'active' : ''}}">
                                 <a href="{{route('app.warranty.index')}}" class="link">
                                     <span class="icon icon-docs-in-folders"></span>
                                     <span class="text">Гарантійні заяви</span>
                                 </a>
                             </li>
-                            <li class="">
-                                <a href="" class="link">
+                            <li class="{{Route::currentRouteName() == 'app.conclusion.index' || Route::currentRouteName() == 'app.conclusion.edit' ? 'active' : ''}}">
+                                <a href="{{route('app.conclusion.index')}}" class="link">
                                     <span class="icon icon-docs"></span>
                                     <span class="text">Акти технічної експертизи</span>
                                 </a>
@@ -47,6 +47,7 @@
                                     <span class="text">Документація</span>
                                 </a>
                             </li>
+                            @if(auth()->user()->role_id == 1)
                             <li class="have-sublist js-accordion ">
                                 <button type="button" class="link js-accordion-btn">
                                     <span class="icon icon-book"></span>
@@ -54,22 +55,23 @@
                                     <span class="btn-open"></span>
                                 </button>
                                 <ul class="sublist js-accordion-content">
-                                    <li class="">
-                                        <a href="" class="link">Коди дефектів</a>
+                                    <li class="{{Route::currentRouteName() == 'app.defect.index' ? 'active' : ''}}">
+                                        <a href="{{route('app.defect.index')}}" class="link">Коди дефектів</a>
                                     </li>
-                                    <li>
-                                        <a href="" class="link">Коди симптомів</a>
+                                    <li class="{{Route::currentRouteName() == 'app.symptom.index' ? 'active' : ''}}">
+                                        <a href="{{route('app.symptom.index')}}" class="link">Коди симптомів</a>
                                     </li>
-                                    <li>
-                                        <a href="" class="link">Сервісні роботи</a>
+                                    <li class="{{Route::currentRouteName() == 'app.service.index' ? 'active' : ''}}">
+                                        <a href="{{route('app.service.index')}}" class="link">Сервісні роботи</a>
                                     </li>
                                 </ul>
                             </li>
+                            @endif
                         </ul>
                     </div>
                 </div>
                 <div class="sidebar-footer">
-                    <p>AL-KO Copyright © 2023 </p>
+                    <p>AL-KO Copyright © 2024 </p>
                 </div>
             </div>
             <div class="smaller-version custom-scrollbar">
