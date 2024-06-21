@@ -126,9 +126,9 @@
                     <div class="tbody">
                         @foreach ($warrantyClaims as $claim)
                         <div class="tr">
-                            <a style="text-decoration: none; color: inherit;" href="{{route('app.warranty.edit', $claim->id)}}">
-                                <div class="td">{{$claim->number}}</div>
-                            </a>
+                                <div class="td">
+                                    <a href="{{route('app.warranty.edit', $claim->id)}}" class="table-link">{{$claim->number}}</a>
+                                </div>
                                 <div class="td">{{$claim->date}}</div>
                                 <div class="td">{{$claim->product_article}}</div>
                                 <div class="td">{{$claim->product_name}}</div>
@@ -465,5 +465,16 @@
 <script src="/js/components.js?v=002"></script>
 
 <script src="/js/main.js?v=002"></script>
+<style>
+    .table-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
 
+</style>
 </x-layouts.base>

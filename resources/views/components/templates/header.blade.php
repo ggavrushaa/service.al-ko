@@ -15,7 +15,9 @@
                     </div>
 
             </div>
-            <div class="clear-all icon-close-fill"></div>
+            @if($barcode || $factoryNumber)
+                <div class="clear-all icon-close-fill"></div>
+            @endif
             <div class="arrow"></div>
         </div>
         <form class="search-form" action="{{ route('app.search') }}" method="GET">
@@ -43,7 +45,7 @@
     </div>
     <div class="user-header">
         <div class="user-info">
-            <img src="./img/components/user-undefined.svg" alt="">
+            <img src="{{asset('img/components/user-undefined.svg')}}" alt="">
             <div class="user-name">{{$user->first_name_ru}}</div>
             <div class="user-role">{{$user->role->name}}</div>
             <button type="button" class="icon-arrow-dropdown"></button>

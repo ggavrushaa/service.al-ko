@@ -26,5 +26,10 @@ class WarrantyClaim extends Model
     {
         return $this->belongsTo(User::class, 'autor');
     }
+
+    public function spareParts()
+    {
+        return $this->hasMany(WarrantyClaimSpareParts::class, 'warranty_claim_id', 'id');
+    }
     
 }

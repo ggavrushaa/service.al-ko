@@ -10,5 +10,14 @@ class UserPartner extends Model
     use HasFactory;
 
     protected $connection = 'mysql';
-    protected $table = 'users_partners';
+    protected $table = 'user_partners';
+
+    protected $fillable = [
+        'user_id',
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }
