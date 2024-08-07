@@ -32,7 +32,7 @@ class LoginController extends Controller
         Auth::login($user, $remember);
         
         $request->session()->regenerate();
-
-        return redirect()->intended(RouteServiceProvider::HOME);
+        
+        return to_route('app.home.index');
     }
 }

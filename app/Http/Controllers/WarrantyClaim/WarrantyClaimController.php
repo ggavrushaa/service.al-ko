@@ -2,62 +2,437 @@
 
 namespace App\Http\Controllers\WarrantyClaim;
 
+use Carbon\Carbon;
+use App\Models\User;
+use App\Models\Contract;
+use App\Models\Products;
+use App\Models\UserPartner;
 use App\Models\ProductGroup;
 use App\Models\ServiceWorks;
 use Illuminate\Http\Request;
 use App\Models\WarrantyClaim;
+use App\Models\GuaranteeCoupon;
+use App\Models\UserServiceCentre;
+use App\Models\WarrantyClaimFile;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Enums\WarrantyClaimStatusEnum;
 use App\Models\WarrantyClaimSpareParts;
+use App\Models\WarrantyClaimServiceWork;
+use App\Http\Requests\WarrantyClaimRequest;
 
 class WarrantyClaimController extends Controller
 {
     public function index()
     {
-        $warrantyClaims = WarrantyClaim::with('user')->get();
-        return view('app.warranty.index', compact('warrantyClaims'));
+        $warrantyClaims = WarrantyClaim::with('user', 'manager')->paginate(10);
+        $authors = User::where('role_id', 2)->get();
+
+        return view('app.warranty.index', compact('warrantyClaims', 'authors'));
     }
 
-    public function search(Request $request)
+    public function filter(Request $request)
     {
-        $query = WarrantyClaim::query();
+        $query = WarrantyClaim::with('user', 'manager');
 
-        if($request->filled('barcode')) {
-            $query->where('barcode', $request->barcode);
+        if ($request->filled('date_start')) {
+            try {
+                $dateStart = Carbon::createFromFormat('m/d/Y', $request->date_start)->format('Y-m-d');
+                $query->whereDate('created_at', '>=', $dateStart);
+            } catch (\Exception $e) {
+                $errors[] = 'Невірний формат початкової дати';
+            }
+        }
+    
+        if ($request->filled('date_end')) {
+            try {
+                $dateEnd = Carbon::createFromFormat('m/d/Y', $request->date_end)->format('Y-m-d');
+                $query->whereDate('created_at', '<=', $dateEnd);
+            } catch (\Exception $e) {
+                $errors[] = 'Невірний формат кінцевої дати';
+            }
         }
 
-        if($request->filled('factory_number')) {
-            $query->where('factory_number', $request->factory_number);
+        if ($request->filled('article')) {
+            $query->where('product_article', 'like', '%' . $request->article . '%');
         }
 
-        $claims = $query->with('user')->get();
+        if ($request->filled('status')) {
+            $query->whereIn('status', $request->status);
+        }
 
-        return view('app.search.index', compact('claims'))
-            ->with('barcode', $request->barcode)
-            ->with('factory_number', $request->factory_number);
-    }        
+        if ($request->filled('author') && $request->author != -1) {
+            $query->whereHas('manager', function($q) use ($request) {
+                $q->where('id', $request->author);
+            });
+        }
+
+        $warrantyClaims = $query->paginate(10);
+        $authors = User::where('role_id', 2)->get();
+
+        return view('app.warranty.index', compact('warrantyClaims', 'authors'));
+    }
 
     public function edit($id)
     {
-        $claim = WarrantyClaim::with(['spareParts.product', 'user'])->find($id);
-
-        if(!$claim) {
-            return redirect()->route('app.warranty.index')->with('error', 'Warranty claim not found');
-        }
-
+        $talon = GuaranteeCoupon::findOrFail($id);
+        $product = Products::findOrFail($talon->product_id);
+        $products = Products::paginate(10);
         $groups = ProductGroup::all();
         $works = ServiceWorks::all();
-        $spareParts = $claim->spareParts; 
-        $total = $spareParts->sum('amount_with_vat');
+    
+        $currentClaim = WarrantyClaim::with('manager', 'files', 'spareParts', )->find($id);
+    
+        if (!$currentClaim) {
+            $currentClaim = WarrantyClaim::where('barcode', $talon->barcode)
+                                         ->orWhere('factory_number', $talon->factory_number)
+                                         ->first();
+        }
+    
+        if (!$currentClaim) {
+            $maxDocumentNumber = DB::connection('second_db')->table('warranty_claims')->max('number');
+            $maxDocumentNumber = $maxDocumentNumber ? intval($maxDocumentNumber) : 0;
+            $documentNumber = $maxDocumentNumber + 1;
+    
+            $currentClaim = new WarrantyClaim([
+                'barcode' => $talon->barcode,
+                'factory_number' => $talon->factory_number,
+                'client_name' => $talon->customer,
+                'product_name' => $product->name,
+                'product_article' => $product->articul,
+                'number' => $documentNumber,
+                'date' => now(),
+                'date_of_sale' => $talon->date,
+                'date_of_claim' => now(),
+                'status' => WarrantyClaimStatusEnum::new->value,
+                'client_phone' => '',
+                'sender_name' => '',
+                'sender_phone' => '',
+                'details' => '',
+                'deteails_reason' => '',
+                'product_group_id' => null,
+                'service_partner' => null,
+                'service_contract' => null,
+            ]);
+    
+            $currentClaim->save();
+        } else {
+            $documentNumber = $currentClaim->number;
+        }
+    
+        $userId = auth()->id();
+        $userServiceCentres = DB::connection('second_db')->table('users_services_centres')
+            ->where('user_id', $userId)
+            ->select('user_partner_id', 'default')
+            ->get();
 
-        return view('app.warranty.edit', compact('claim', 'groups', 'works', 'spareParts', 'total'));
+        $partnerIds = $userServiceCentres->pluck('user_partner_id');
+
+        $serviceCenters = DB::connection('mysql')->table('user_partners')
+            ->whereIn('id', $partnerIds)
+            ->select('id', 'full_name_ru')
+            ->get();
+
+        $serviceCenters = $serviceCenters->map(function ($center) use ($userServiceCentres) {
+            $center->default = $userServiceCentres->firstWhere('user_partner_id', $center->id)->default;
+            return $center;
+        });
+
+        $defaultServicePartner = $currentClaim->service_partner ? $serviceCenters->firstWhere('id', $currentClaim->service_partner) : $serviceCenters->firstWhere('default', 1);
+
+        $defaultContract = null;
+        $defaultDiscount = 0;
+    
+        if ($defaultServicePartner) {
+            $defaultContract = Contract::where('partner_id', $defaultServicePartner->id)
+                                       ->where('contract_type', 'Сервис')
+                                       ->orderBy('added_time', 'desc')
+                                       ->first();
+        }
+    
+        if ($defaultContract) {
+            $defaultDiscount = $defaultContract->discount;
+        }
+    
+        return view('app.warranty.edit', compact('talon', 'groups', 'works', 'documentNumber', 'product', 'products', 'serviceCenters', 'currentClaim', 'defaultServicePartner', 'defaultDiscount', 'defaultContract',  ));
     }
 
-    public function getParts($id)
+    public function getContractDetails(Request $request)
     {
-        $parts = WarrantyClaimSpareParts::with('product')
-                    ->where('warranty_claim_id', $id)
-                    ->get();
+        $serviceCenterId = $request->input('service_center_id');
+        $contract = Contract::where('partner_id', $serviceCenterId)
+                            ->where('contract_type', 'Сервис')
+                            ->orderBy('added_time', 'desc')
+                            ->first();
 
-        return response()->json($parts);
+        if ($contract) {
+            return response()->json([
+                'contract' => $contract->toArray(),
+                'discount' => $contract->discount,
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Contract not found',
+        ], 404);
     }
+    
+    public function save(WarrantyClaimRequest $request)
+    {
+        Log::info('Request:', $request->all());
+        $data = $request->validated();
+
+        Log::info('Validated Data:', $data);
+        
+        if ($data['product_group_id'] == -1) {
+            $data['product_group_id'] = null;
+        }
+
+        try {
+            if (isset($data['date_of_claim'])) {
+                $data['date_of_claim'] = Carbon::createFromFormat('Y-m-d', $data['date_of_claim'])->format('Y-m-d H:i:s');
+            }
+    
+            if (isset($data['date_of_sale'])) {
+                $data['date_of_sale'] = Carbon::createFromFormat('Y-m-d H:i:s', $data['date_of_sale'])->format('Y-m-d H:i:s');
+            }
+        } catch (\Exception $e) {
+            Log::error('Date Format Error:', ['error' => $e->getMessage()]);
+            return redirect()->back()->with('error', 'Неверный формат даты.');
+        }
+
+        try {
+            $warrantyClaim = WarrantyClaim::updateOrCreate(
+                ['id' => $request->id],
+                $data
+            );
+
+            if ($request->hasFile('file')) {
+                foreach ($request->file('file') as $file) {
+                    if ($file->isValid()) {
+                        $path = $file->store('warranty_claims_files');
+                        WarrantyClaimFile::create([
+                            'warranty_claim_id' => $warrantyClaim->id,
+                            'path' => $path,
+                            'filename' => $file->getClientOriginalName(),
+                            'created_at' => Carbon::now(),
+                            'updated_at' => Carbon::now(),
+                        ]);
+                    }
+                }
+            }
+
+            if (!empty($data['service_works'])) {
+                WarrantyClaimServiceWork::where('warranty_claim_id', $warrantyClaim->id)->delete();
+                foreach ($data['service_works'] as $serviceWorkId) {
+                    WarrantyClaimServiceWork::create([
+                        'warranty_claim_id' => $warrantyClaim->id,
+                        'service_work_id' => $serviceWorkId,
+                    ]);
+                }
+            }
+
+            if (!empty($data['spare_parts'])) {
+                $filteredSpareParts = array_filter($data['spare_parts'], function($part) {
+                    return !is_null($part['spare_parts']) && !is_null($part['name']) && !is_null($part['qty']) && !is_null($part['price_without_vat']) && !is_null($part['amount_vat']) && !is_null($part['amount_without_vat']) && !is_null($part['amount_with_vat']);
+                });
+    
+                WarrantyClaimSpareParts::where('warranty_claim_id', $warrantyClaim->id)->delete();
+                foreach ($filteredSpareParts as $part) {
+                    WarrantyClaimSpareParts::create([
+                        'warranty_claim_id' => $warrantyClaim->id,
+                        'spare_parts' => $part['spare_parts'],
+                        'qty' => $part['qty'],
+                        'price_without_vat' => $part['price_without_vat'],
+                        'amount_without_vat' => $part['amount_without_vat'],
+                        'amount_vat' => $part['amount_vat'],
+                        'amount_with_vat' => $part['amount_with_vat'],
+                    ]);
+                }
+            }    
+
+            return redirect()->route('app.warranty.edit', $warrantyClaim->id)->with('status', 'Збережено');
+        } catch (\Exception $e) {
+            Log::error('Save Error:', ['error' => $e->getMessage()]);
+            return redirect()->back()->with('error', 'Помилка збереження');
+        }
+    }
+    
+
+    public function delete($id)
+    {
+        $warrantyClaim = WarrantyClaim::findOrFail($id);
+        $warrantyClaim->delete();
+
+        return redirect()->route('warranty-claims.index')->with('status', 'Заявка успішно видалена');
+    }
+
+    public function getContracts($centerId)
+    {
+        $contracts = Contract::where('partner_id', $centerId)
+                             ->where('contract_type', 'Серивс')
+                             ->orderBy('added_time', 'desc')
+                             ->get();
+
+                             Log::info('Contracts found:', ['contracts' => $contracts]);
+
+        return response()->json($contracts);
+    }
+
+    public function sendToReview(Request $request, $id)
+    {
+        Log::info('Request:', $request->all());
+        $data = $request->validate([
+            'barcode' => 'required',
+            'factory_number' => 'required',
+            'client_name' => 'required',
+            'product_name' => 'required',
+            'product_article' => 'required',
+            'number' => 'required',
+            'date' => 'required|date',
+            'date_of_sale' => 'required|date',
+            'date_of_claim' => 'required|date',
+            'status' => 'required',
+            'service_partner' => 'required',
+            'service_contract' => 'nullable',
+            'client_phone' => 'required',
+            'sender_name' => 'required',
+            'sender_phone' => 'required',
+            'details' => 'nullable',
+            'details_reason' => 'required',
+            'product_group_id' => 'required',
+            'service_works' => 'nullable|array',
+            'service_works.*' => 'string',
+            'spare_parts' => 'nullable|array',
+            'spare_parts.*.spare_parts' => 'nullable|string',
+            'spare_parts.*.name' => 'nullable|string',
+            'spare_parts.*.qty' => 'nullable|integer',
+            'spare_parts.*.price_without_vat' => 'nullable|numeric',
+            'spare_parts.*.amount_vat' => 'nullable|numeric',
+            'spare_parts.*.amount_without_vat' => 'nullable|numeric',
+            'spare_parts.*.amount_with_vat' => 'nullable|numeric',
+        ]);
+
+        $data['status'] = WarrantyClaimStatusEnum::sent;
+
+        try {
+            $warrantyClaim = WarrantyClaim::find($id);
+            if (!$warrantyClaim) {
+                $data['id'] = $id;
+                $warrantyClaim = WarrantyClaim::create($data);
+            } else {
+                $warrantyClaim->update($data);
+            }
+
+            Log::info('Warranty Claim:', $warrantyClaim->toArray());
+
+            if ($request->hasFile('file')) {
+                foreach ($request->file('file') as $file) {
+                    if ($file->isValid()) {
+                        $filename = $file->getClientOriginalName();
+                        $path = $file->store('warranty_claims_files');
+
+                        WarrantyClaimFile::create([
+                            'warranty_claim_id' => $warrantyClaim->id,
+                            'path' => $path,
+                            'filename' => $filename,
+                        ]);
+                    }
+                }
+            }
+
+            if (!empty($data['service_works'])) {
+                WarrantyClaimServiceWork::where('warranty_claim_id', $warrantyClaim->id)->delete();
+                foreach ($data['service_works'] as $serviceWorkId) {
+                    WarrantyClaimServiceWork::create([
+                        'warranty_claim_id' => $warrantyClaim->id,
+                        'service_work_id' => $serviceWorkId,
+                    ]);
+                }
+    
+                Log::info('Service works saved:', $data['service_works']);
+            }
+
+       
+            if (!empty($data['spare_parts'])) {
+                $filteredSpareParts = array_filter($data['spare_parts'], function($part) {
+                    return !is_null($part['spare_parts']) && !is_null($part['name']) && !is_null($part['qty']) && !is_null($part['price_without_vat']) && !is_null($part['amount_vat']) && !is_null($part['amount_without_vat']) && !is_null($part['amount_with_vat']);
+                });
+    
+                Log::info('Filtered spare parts:', $filteredSpareParts);
+    
+                WarrantyClaimSpareParts::where('warranty_claim_id', $warrantyClaim->id)->delete();
+                foreach ($filteredSpareParts as $part) {
+                    WarrantyClaimSpareParts::create([
+                        'warranty_claim_id' => $warrantyClaim->id,
+                        'spare_parts' => $part['spare_parts'],
+                        'qty' => $part['qty'],
+                        'price_without_vat' => $part['price_without_vat'],
+                        'amount_without_vat' => $part['amount_without_vat'],
+                        'amount_vat' => $part['amount_vat'],
+                        'amount_with_vat' => $part['amount_with_vat'],
+                    ]);
+                }
+    
+                Log::info('Spare parts saved:', $filteredSpareParts);
+            }
+
+            return redirect()->route('app.warranty.edit', $warrantyClaim->id)->with('status', 'Відправлено на розгляд');
+        } catch (\Exception $e) {
+            Log::error('Save Error:', ['error' => $e->getMessage()]);
+            return redirect()->back()->with('error', 'Помилка збереження');
+        }
+    }
+
+
+    public function takeToWork($id)
+    {
+        $warrantyClaim = WarrantyClaim::findOrFail($id);
+        $warrantyClaim->status = WarrantyClaimStatusEnum::review;
+        $warrantyClaim->save();
+
+        return redirect()->back()->with('status', 'Розглядається');
+    }
+
+    public function sort(Request $request)
+    {
+        $column = $request->input('column');
+        $order = $request->input('order');
+    
+        $warrantyClaims = WarrantyClaim::with('user', 'manager', 'spareParts', 'serviceWorks')
+            ->when($column === 'amount_vat', function ($query) use ($order) {
+                $query->selectRaw('warranty_claims.*, (
+                    SELECT SUM(amount_vat) FROM warranty_claim_spareparts 
+                    WHERE warranty_claim_spareparts.warranty_claim_id = warranty_claims.id
+                ) as total_amount_vat')
+                ->orderBy('total_amount_vat', $order);
+            })
+            ->when($column !== 'amount_vat', function ($query) use ($column, $order) {
+                $query->orderBy($column, $order);
+            })
+            ->get();
+
+        Log::info('Sorted data:', ['data' => $warrantyClaims]); 
+    
+        return response()->json($warrantyClaims);
+    }
+    
+
+    public function updateManager($claimId, Request $request)
+    {
+        $managerId = $request->input('manager_id');
+        $claim = WarrantyClaim::find($claimId);
+
+        if ($claim) {
+            $claim->manager_id = $managerId;
+            $claim->save();
+
+            return response()->json(['success' => true, 'message' => 'Менеджера успішно змінено']);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Заява не знайдена'], 404);
+    }
+
+
 }

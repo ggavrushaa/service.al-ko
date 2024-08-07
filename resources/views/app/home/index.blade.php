@@ -11,7 +11,6 @@
         
         </div>
         
-        
         <div class="modal-overlay"></div>
         <!--        comments -->
         <div class="modal modal-chat js-modal js-modal-chat">

@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Parts;
 
+use App\Models\Contract;
 use App\Models\Products;
 use Illuminate\Http\Request;
 use App\Models\WarrantyClaim;
@@ -15,7 +16,10 @@ class PartsController extends Controller
         $perPage = 10;
 
         $parts = Products::where('articul', 'LIKE', "%{$articul}%")
-                        ->with('productPrices')
+                        ->where('in_actual_price_sp', 1) 
+                        ->with(['productPrices' => function ($query) {
+                            $query->where('price_type_id', 127);
+                        }])
                         ->paginate($perPage, ['*'], 'page', $page);
 
         return response()->json($parts);
@@ -68,4 +72,5 @@ class PartsController extends Controller
             return response()->json(['success' => false, 'error' => 'Error deleting spare part'], 500);
         }
     }
+
 }

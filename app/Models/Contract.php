@@ -11,4 +11,9 @@ class Contract extends Model
 
     protected $table = 'contracts';
     protected $connection = 'mysql';
+
+    public function userPartner()
+    {
+        return $this->belongsTo(UserPartner::class, 'partner_id');
+    }
 }

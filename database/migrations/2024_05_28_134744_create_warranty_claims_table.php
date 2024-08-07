@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::connection('second_db')->create('warranty_claims', function (Blueprint $table) {
             $table->id()->from(1001);
-            $table->string('code_1C')->unique();
+            $table->string('code_1C')->unique()->nullable();
             $table->string('number')->unique();
 
             $table->string('product_article');
@@ -27,7 +27,7 @@ return new class extends Migration
 
             $table->integer('service_partner');
             $table->integer('service_contract');
-            $table->integer('point_of_sale');
+            $table->integer('point_of_sale')->nullable();
             $table->integer('autor');
 
             $table->dateTime('date');
@@ -35,7 +35,7 @@ return new class extends Migration
             $table->dateTime('date_of_claim')->comment('Дата звернення в СЦ');
 
             $table->text('details');
-            $table->string('type_of_claim');
+            $table->string('type_of_claim')->default('Гарантійний ремонт');
             $table->boolean('is_deleted');
 
             $table->timestamps();

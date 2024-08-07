@@ -40,8 +40,14 @@ return [
             'driver' => 'local',
             'root' => storage_path('app/public'),
             'url' => env('APP_URL').'/storage',
+        'visibility' => 'public',
+        ],
+
+        'warranty_claims_files' => [
+            'driver' => 'local',
+            'root' => storage_path('app/warranty_claims_files'),
+            'url' => env('APP_URL').'/storage/warranty_claims_files',
             'visibility' => 'public',
-            'throw' => false,
         ],
 
         's3' => [

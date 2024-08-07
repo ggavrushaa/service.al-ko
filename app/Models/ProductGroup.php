@@ -19,6 +19,6 @@ class ProductGroup extends Model
 
     public function works()
     {
-        return $this->hasMany(ServiceWorks::class, 'product_group_id');
+        return $this->hasMany(ServiceWorks::class, 'product_group_id', 'code_1C');
     }
 }

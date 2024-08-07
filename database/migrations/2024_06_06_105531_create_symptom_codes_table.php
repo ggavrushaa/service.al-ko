@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('symptom_codes', function (Blueprint $table) {
             $table->id();
-            $table->string('code_1C');
+            $table->string('code_1C', 40);
             $table->string('name', 200);
             $table->bigInteger('parent_id')->nullable();
             $table->tinyInteger('is_folder')->default(0);

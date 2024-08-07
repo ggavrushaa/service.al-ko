@@ -1,5 +1,7 @@
 <?php
 
+use Barryvdh\DomPDF\Facade;
+
 return [
 
     /*
@@ -37,7 +39,7 @@ return [
     | stack traces will be shown on every error that occurs within your
     | application. If disabled, a simple generic error page is shown.
     |
-    */
+*/
 
     'debug' => (bool) env('APP_DEBUG', false),
 
@@ -65,7 +67,7 @@ return [
     |
     */
 
-    'timezone' => env('APP_TIMEZONE', 'UTC'),
+    'timezone' => 'Europe/Kiev',
 
     /*
     |--------------------------------------------------------------------------

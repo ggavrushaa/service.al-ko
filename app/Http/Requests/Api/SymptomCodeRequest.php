@@ -16,9 +16,9 @@ class SymptomCodeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            '*.code_1C' => 'required|string|max:32',
+            '*.code_1C' => 'required|string|max:40',
             '*.name' => 'required|string|max:200',
-            '*.parent_id' => 'nullable|integer',
+            '*.parent_id' => 'nullable',
             '*.is_folder' => 'required|boolean',
             '*.is_deleted' => 'required|boolean',
             '*.created' => 'nullable|date',

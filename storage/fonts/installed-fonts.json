@@ -1,0 +1,8 @@
+{
+    "dejavu sans": {
+        "bold": "\/Users\/mac\/Herd\/csm_al-ko\/vendor\/dompdf\/dompdf\/lib\/fonts\/DejaVuSans-Bold",
+        "bold_italic": "\/Users\/mac\/Herd\/csm_al-ko\/vendor\/dompdf\/dompdf\/lib\/fonts\/DejaVuSans-BoldOblique",
+        "italic": "\/Users\/mac\/Herd\/csm_al-ko\/vendor\/dompdf\/dompdf\/lib\/fonts\/DejaVuSans-Oblique",
+        "normal": "dejavu_sans_normal_ea8cb3c303db82286b8b9d6c7ed29987"
+    }
+}

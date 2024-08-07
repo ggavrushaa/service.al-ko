@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\TechnicalConclusion\TechnicalConclusion;
 
 class DefectCodes extends Model
 {
@@ -21,5 +22,10 @@ class DefectCodes extends Model
         'created',
         'edited',
     ];
+
+    public function technicalConclusions()
+{
+    return $this->hasMany(TechnicalConclusion::class, 'defect_code');
+}
 
 }

@@ -1,7 +1,7 @@
   <aside class="sidebar">
             <button class="btn-size-holder"></button>
             <div class="sidebar-content custom-scrollbar">
-                <a href="/home.html" class="logo">
+                <a href="{{route('app.home.index')}}" class="logo">
                     <img src="{{asset('img/components/logo.svg')}}" alt="">
                 </a>
                 <div class="lists">
@@ -35,19 +35,18 @@
                     <div class="list-group">
                         <p class="list-group__title">Інше</p>
                         <ul>
-                            <li class="">
-                                <a href="" class="link">
-                                    <span class="icon icon-app"></span>
+                            <li class="{{Route::currentRouteName() == 'documentations.fees' || Route::currentRouteName() == 'documentations.fees' ? 'active' : ''}}">
+                                <a href="{{route('documentations.fees')}}" class="link">
+                                    <span class="icon icon-docs"></span>
                                     <span class="text">Звірка компенсацій</span>
                                 </a>
                             </li>
-                            <li class="">
-                                <a href="" class="link">
-                                    <span class="icon icon-folder"></span>
+                            <li class="{{Route::currentRouteName() == 'documentations.index' || Route::currentRouteName() == 'documentations.index' ? 'active' : ''}}">
+                                <a href="{{route('documentations.index')}}" class="link">
+                                    <span class="icon icon-docs"></span>
                                     <span class="text">Документація</span>
                                 </a>
                             </li>
-                            @if(auth()->user()->role_id == 1)
                             <li class="have-sublist js-accordion ">
                                 <button type="button" class="link js-accordion-btn">
                                     <span class="icon icon-book"></span>
@@ -64,9 +63,13 @@
                                     <li class="{{Route::currentRouteName() == 'app.service.index' ? 'active' : ''}}">
                                         <a href="{{route('app.service.index')}}" class="link">Сервісні роботи</a>
                                     </li>
+                                    @if(auth()->check() && auth()->user()->role_id !== 1)
+                                        <li class="{{Route::currentRouteName() == 'users.index' ? 'active' : ''}}">
+                                            <a href="{{route('users.index')}}" class="link">Користувачі</a>
+                                        </li>
+                                    @endif
                                 </ul>
                             </li>
-                            @endif
                         </ul>
                     </div>
                 </div>

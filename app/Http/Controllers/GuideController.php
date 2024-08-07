@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\DefectCodes;
+use App\Models\ProductGroup;
 use App\Models\ServiceWorks;
 use App\Models\SymptomCodes;
 use Illuminate\Http\Request;
@@ -27,9 +28,20 @@ class GuideController extends Controller
         return view('guide.service', compact('works'));
     }
 
-    public function getServiceWorks($group_id)
+  
+    public function getServiceWorksByGroupId($groupId)
     {
-        $works = ServiceWorks::where('product_group_id', $group_id)->get();
-        return response()->json($works);
+        // Найти группу продуктов по ID
+        $productGroup = ProductGroup::find($groupId);
+
+        // Если группа продуктов не найдена, вернуть пустой ответ
+        if (!$productGroup) {
+            return response()->json([], 404);
+        }
+
+        // Использовать code_1C для поиска сервисных работ
+        $serviceWorks = ServiceWorks::where('product_group_id', $productGroup->code_1C)->get();
+
+        return response()->json($serviceWorks);
     }
 }

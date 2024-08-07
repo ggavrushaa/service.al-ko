@@ -26,7 +26,7 @@
                             <div class="tr">
                                 <div class="td">{{$work->code_1C}}</div>
                                 <div class="td">{{$work->name}}</div>
-                                <div class="td">{{$work->group->name}}</div>
+                                <div class="td">{{$work->group->name ?? 'Не вказано'}}</div>
                                 <div class="td">{{$work->duration_decimal}}</div>
                                 <div class="td">{{$work->duration_minutes}}</div>
                                 <div class="td">{{$work->created_at}}</div>

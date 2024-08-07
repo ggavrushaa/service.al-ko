@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Contract;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class UserPartner extends Model
 {
@@ -16,8 +17,15 @@ class UserPartner extends Model
         'user_id',
     ];
 
-    public function user()
+    public function users()
+{
+    return $this->belongsToMany(User::class, 'users_services_centres', 'user_partner_id', 'user_id')
+        ->withPivot('default')
+        ->withTimestamps();
+}
+
+    public function contracts()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->hasMany(Contract::class, 'partner_id');
     }
 }

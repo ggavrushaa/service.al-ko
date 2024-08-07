@@ -17,14 +17,22 @@ class WarrantyClaimSpareParts extends Model
         'line_number',
         'spare_parts',
         'qty',
-        'price_without_vat',
-        'amount_without_vat',
-        'amount_vat',
-        'amount_with_vat',
+        'price', 
+        'discount',
+        'sum',
+    ];
+
+    protected $hidden = [
+        'created_at', 'updated_at', 'pivot', 'warranty_claim_id', 'id', 'sum',
     ];
 
     public function product()
     {
         return $this->belongsTo(Products::class, 'spare_parts', 'articul', 'mysql');
+    }
+
+    public function warrantyClaim()
+    {
+        return $this->belongsTo(WarrantyClaim::class, 'warranty_claim_id');
     }
 }

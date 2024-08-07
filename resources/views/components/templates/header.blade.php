@@ -4,14 +4,12 @@
             <span class="icon icon-search"></span>
             <div class="placeholder">
           
-                    <div class="placeholder-item">
-                        {{ $barcode }}
-                        @if($barcode) <span class="icon-close-fill"></span> @endif
+                    <div class="placeholder-item" id="barcode-placeholder">
+                        {{ $barcode ?? '000000000' }}<span class="icon-close-fill"></span>
                     </div>
                
-                    <div class="placeholder-item">
-                        {{ $factoryNumber }}
-                        @if($factoryNumber) <span class="icon-close-fill"></span> @endif
+                    <div class="placeholder-item" id="factoryNumber-placeholder">
+                        {{ $barcode ?? '000000000' }}<span class="icon-close-fill"></span>
                     </div>
 
             </div>
@@ -46,15 +44,22 @@
     <div class="user-header">
         <div class="user-info">
             <img src="{{asset('img/components/user-undefined.svg')}}" alt="">
-            <div class="user-name">{{$user->first_name_ru}}</div>
-            <div class="user-role">{{$user->role->name}}</div>
+            @if($user)
+                <div class="user-name">{{$user->first_name_ru}}</div>
+                <div class="user-role">{{$user->role->name ?? 'Дилер'}}</div>
+            @else
+                <div class="user-name">Неавторизован</div>
+                <div class="user-role">Гость</div>
+            @endif
             <button type="button" class="icon-arrow-dropdown"></button>
         </div>
         <div class="user-header__dropdown">
             <div class="user-header__dropdown-content">
                 <div class="dropdown-top">
+                @if($user)
                     <div class="user-name">{{$user->first_name_ru}}</div>
-                    <div class="user-role">{{$user->role->name}}</div>
+                    <div class="user-role">{{$user->role->name ?? 'Дилер'}}</div>
+                @endif
                 </div>
                 <div class="dropdown-footer">
                     <form action="{{ route('logout') }}" method="POST" id='logout-form'>

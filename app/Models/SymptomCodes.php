@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\TechnicalConclusion\TechnicalConclusion;
 
 class SymptomCodes extends Model
 {
@@ -26,4 +27,8 @@ class SymptomCodes extends Model
 
     public $timestamps = false;
 
+    public function technicalConclusions()
+{
+    return $this->hasMany(TechnicalConclusion::class, 'symptom_code');
+}
 }

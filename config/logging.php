@@ -76,6 +76,24 @@ return [
             'level' => 'info',
         ],
 
+        'service_works' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/service_works.log'),
+            'level' => 'info',
+        ],
+
+        'warranty_claims' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/warranty_claims.log'),
+            'level' => 'info',
+        ],
+
+        'technical_conclusions' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/technical_conclusions.log'),
+            'level' => 'info',
+        ],
+
         'resolution_templates' => [
             'driver' => 'single',
             'path' => storage_path('logs/resolution_templates.log'),

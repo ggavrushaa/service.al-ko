@@ -12,7 +12,7 @@ return new class extends Migration
 
             $table->id()->from(1001);
 
-            $table->string('code_1C', 32)->unique();
+            $table->string('code_1C', 40)->unique();
             $table->string('name', 200);
 
             $table->bigInteger('parent_id');
@@ -20,7 +20,7 @@ return new class extends Migration
             $table->tinyInteger('is_deleted');
 
             $table->timestamps();
-            $table->text('description');
+            $table->text('description')->nullable();
             
         });
     }

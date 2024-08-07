@@ -1,13 +1,20 @@
 <x-layouts.base>
     
-    @if($claims->count() > 0)
+    @if($talons->count() > 0)
+    @if($talons->count() == 1)
+        @php
+            $talon = $talons->first();
+            header("Location: " . route('app.warranty.edit', ['id' => $talon->id]));
+            exit();
+        @endphp
+    @endif
 
 <div class="main" id="main">
     <div class="page-search-result">
         <div class="page-name">
             <h1>Пошук</h1>
             <p class="total-found">
-                Знайдено документів: <strong>2</strong>
+                Знайдено документів: <strong>{{ $talons->count() }}</strong>
             </p>
         </div>
 
@@ -27,13 +34,18 @@
                 </tr>
             </thead>
             <tbody class="tbody">
-                @foreach ($claims as $claim)
+                @foreach ($talons as $talon)
                 <tr class="tr">
-                    <td class="td">{{ $claim->code_1C }}</td>
-                    <td class="td">{{ $claim->number }}</td>
-                    <td class="td">{{ $claim->barcode }}</td>
-                    <td class="td">{{ $claim->factory_number }}</td>
-                    <td class="td">{{ $claim->user->first_name_ru }}</td>
+                    <td class="td">{{ empty($talon->product->name) ? 'Не вказано' : $talon->product->name }}</td>
+                    <td class="td">{{ empty($talon->customer) ? 'Не вказано' : $talon->customer }}</td>
+                    <td class="td">{{ empty($talon->barcode) ? 'Не вказано' : $talon->barcode }}</td>
+                    <td class="td">{{ empty($talon->factory_number) ? 'Не вказано' : $talon->factory_number }}</td>
+                    <td class="td">{{ empty($talon->phone) ? 'Не вказано' : $talon->phone }}</td>
+                    <td class="td">{{ empty($talon->product->productPrices->recommended_price) ? 'Не вказано' : $talon->product->productPrices->recommended_price }}</td>
+                    <td class="td _empty"></td>
+                    <td class="td" style="">
+                        <a href="{{ route('app.warranty.edit', ['id' => $talon->id]) }}" class="btn-action icon-info"></a>
+                    </td>
                 </tr>
                 @endforeach
             </tbody>

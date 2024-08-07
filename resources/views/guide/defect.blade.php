@@ -13,10 +13,8 @@
                     <div class="thead">
                         <div class="tr">
                             <div class="th">Код <a href="" class="icon-switch"></a></div>
-                            <div class="th">Код 1С <a href="" class="icon-switch"></a></div>
                             <div class="th">Назва <a href="" class="icon-switch"></a></div>
                             <div class="th">Власник <a href="" class="icon-switch"></a></div>
-                            <div class="th">Є папкою <a href="" class="icon-switch"></a></div>
                             <div class="th">Мітка на видалення <a href="" class="icon-switch"></a></div>
                             <div class="th">Відмітка створення <a href="" class="icon-switch"></a></div>
                             <div class="th">Відмітка модифікації <a href="" class="icon-switch"></a></div>
@@ -26,10 +24,8 @@
                         @foreach ($codes as $code)
                             <div class="tr">
                                 <div class="td">{{$code->id}}</div>
-                                <div class="td">{{$code->code_1C}}</div>
                                 <div class="td">{{$code->name}}</div>
                                 <div class="td">{{$code->parent_id}}</div>
-                                <div class="td">{{$code->is_folder ? 'Так' : 'Ні'}}</div>
                                 <div class="td">{{$code->is_deleted ? 'Так' : 'Ні'}}</div>
                                 <div class="td">{{$code->created_at}}</div>
                                 <div class="td">{{$code->updated_at}}</div>

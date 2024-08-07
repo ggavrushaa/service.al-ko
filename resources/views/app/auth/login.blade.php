@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
     <html lang="uk">
     <head>
         <meta charset="UTF-8">
@@ -14,7 +14,7 @@
     
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.4/dist/css/datepicker.min.css">
-    <link rel="stylesheet" href="/cdn/css/swiper-bundle.min.css">
+    <link rel="stylesheet" href="https://cdn/css/swiper-bundle.min.css">
     <link rel="stylesheet" href="./css/components.css?v=002">
     </head>
     <body class="login-page">
@@ -25,7 +25,7 @@
             @csrf
             <p class="form-title">Авторизація</p>
             
-            <div class="form-group required" data-valid="mask">
+            <div class="form-group required" data-valid="mask, empty">
                 <label for="email">Електронна пошта</label>
                 <input class="_js-mask-email" type="text" id="email" name="email" placeholder="Пошта">
                 <div class="help-block" data-empty="Обов`язкове поле"></div>

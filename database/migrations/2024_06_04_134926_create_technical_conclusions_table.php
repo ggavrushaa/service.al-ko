@@ -37,14 +37,17 @@ return new class extends Migration
 
             $table->string('resolution', 500);
             $table->integer('autor');
-
+            
             $table->dateTime('date');
             $table->timestamps();
-
+            
             $table->foreign('service_partner')->references('id')->on('alko_db.user_partners')->onDelete('cascade')->name('fk_service_partner_tc');
             $table->foreign('service_contract')->references('id')->on('alko_db.contracts')->onDelete('cascade')->name('fk_service_contract_tc');
             $table->foreign('point_of_sale')->references('id')->on('alko_db.user_partners')->onDelete('cascade')->name('fk_point_of_sale_tc');
             $table->foreign('autor')->references('id')->on('alko_db.users')->onDelete('cascade')->name('fk_autor_tc');
+
+            $table->string('conclusion', 500);
+            $table->string('appeal_type');
         });
     }
     public function down(): void

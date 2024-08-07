@@ -43,8 +43,6 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected static $alwaysLoadCachedRoutesUsing;
 
-    public const HOME = '/';
-
     /**
      * Register any application services.
      *
@@ -68,11 +66,8 @@ class RouteServiceProvider extends ServiceProvider
         });
     }
 
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
+    public const HOME = '/';
+    
     public function boot()
     {
         //

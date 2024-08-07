@@ -13,7 +13,7 @@ class ProductGroupRequest extends FormRequest
     public function rules(): array
     {
         return [
-            '*.code_1C' => 'required|string|max:32',
+            '*.code_1C' => 'required|string|max:40',
             '*.name' => 'required|string|max:200',
         ];
     }

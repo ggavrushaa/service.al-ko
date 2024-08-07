@@ -40,7 +40,7 @@ class VerifyCsrfToken
      * @var array<int, string>
      */
     protected $except = [
-        'symptom-codes', 'defect-codes', 'product-groups', 'resolution-templates',
+        'symptom-codes', 'defect-codes', 'product-groups', 'resolution-templates', 'warranty-claims', 'technical-conclusions', 'service-works',
     ];
 
     /**

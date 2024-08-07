@@ -2,8 +2,11 @@
 
 namespace App\Models\TechnicalConclusion;
 
-use App\Enums\TechnicalConclusionStatusEnum;
 use App\Models\User;
+use App\Models\DefectCodes;
+use App\Enums\ClaimTypeEnum;
+use App\Models\SymptomCodes;
+use App\Models\WarrantyClaim;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -15,28 +18,29 @@ class TechnicalConclusion extends Model
     protected $table = 'technical_conclusions';
 
     protected $fillable = [ 
-    'code_1C', 'number',
-    'client_name', 'client_phone', 
-    'product_name', 'product_article', 'product_group_id','factory_number', 'barcode',
-    'service_partner', 'service_contract', 'point_of_sale', 'autor', 
-    'parent_doc', 'defect_code', 'symptom_code', 'resolution', 
-    'date', 'date_of_sale', 'date_of_claim',
-    'details', 'type_of_claim', 'file_paths',
-    'sender_name', 'sender_phone', 'receipt_number', 'deteails_reason',
-    'comment', 'comment_part', 'comment_service', 'status',
+        'warranty_claim_id', 'date',
+        'defect_code', 'symptom_code', 'resolution',  
+        'appeal_type', 'conclusion', 'code_1C',
     ];
 
     protected $casts = [
-        'status' => TechnicalConclusionStatusEnum::class,
+        'appeal_type' => ClaimTypeEnum::class,
     ];
 
-    public function files()
+    public function warrantyClaim()
     {
-        return $this->hasMany(TechnicalConclusionFile::class, 'technical_conclusion_id', 'id');
+        return $this->belongsTo(WarrantyClaim::class, 'warranty_claim_id');
     }
 
-    public function user()
+
+    public function defectCode()
     {
-        return $this->belongsTo(User::class, 'autor');
+        return $this->belongsTo(DefectCodes::class, 'defect_code');
     }
+
+    public function symptomCode()
+    {
+        return $this->belongsTo(SymptomCodes::class, 'symptom_code');
+    }
+
 }
