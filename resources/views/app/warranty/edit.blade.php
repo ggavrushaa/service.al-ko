@@ -7,8 +7,8 @@
                 <h1>Гарантійна заява</h1>
                 <div class="btns">
                     @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::new)
-                        <button type="submit" class="btn-primary btn-blue" form="send-to-save">Зберегти</button>
-                        <button type="submit" class="btn-primary btn-blue" form="send-to-review-form">Відправити</button>
+                        <button type="submit" class="btn-primary btn-blue js-btn-required-switcher" form="send-to-save" data-required-switcher="add">Зберегти</button>
+                        <button type="submit" class="btn-primary btn-blue js-btn-required-switcher" form="send-to-save" data-required-switcher="remove">Відправити</button>
                     @elseif ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::sent && auth()->user()->role_id === 2 OR auth()->user()->role_id === 3)
                         <button type="submit" class="btn-primary btn-blue" form="take-to-work-form">Взяти в роботу</button>
                     @elseif ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review && auth()->user()->role_id === 2)
@@ -28,7 +28,7 @@
 
 
         <div class="modal-overlay"></div>
-    
+
         <!--         modal switch manager -->
         <div class="modal modal-manager js-modal js-modal-switch-manager">
             <button type="button" class="icon-close-fill btn-close _js-btn-close-modal" id="modal-close"></button>
@@ -85,16 +85,17 @@
                                 <label for="autor-name">Відповідальний</label>
                                 <input type="text" id="autor-name" value="{{ $currentClaim->manager->first_name_ru ?? 'Не вказано' }}" readonly>
                             </div>
-                            <div class="form-group long-width">
+                            <div class="form-group default-select show-placeholder long-width required" data-required data-valid="vanilla-select">
                                 <label for="service-center">Сервісний центр</label>
-                                <select name="service_partner" id="service-center" required @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) disabled @endif>
-                                    <option value="">Виберіть сервісний центр</option>
+                                <select name="service_partner" id="service-center" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) disabled @endif>
+                                    <option value="-1">Виберіть сервісний центр</option>
                                     @foreach($serviceCenters as $center)
                                     <option value="{{ $center->id }}" {{ old('service_partner', $currentClaim['service_partner'] ?? $currentClaim->service_partner) == $center->id ? 'selected' : '' }}>
                                         {{ $center->full_name_ru }}
                                     </option>
                                 @endforeach
                                 </select>
+                                <div class="help-block" data-empty="Required field"></div>
                             </div>
                             <div class="form-group small-width">
                                 <label for="service-contract">Договір сервісу</label>
@@ -123,14 +124,14 @@
                         <div class="card-content card-form">
                             <p class="card-title">Дані того Хто звернувся</p>
                             <button type="button" class="btn-link btn-copy btn-blue" onclick="copyToClipboard()" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) disabled @endif> Копіювати данні покупця</button>
-      
+
                             <div class="inputs-group one-row">
-                                <div class="form-group required" data-valid="empty">
+                                <div class="form-group required" data-required data-valid="empty">
                                     <label for="sender-name">ПІБ</label>
                                     <input type="text" name="sender_name" id="sender-name"  placeholder="Прізвище Ім'я По батькові" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) readonly @endif>
                                     <div class="help-block" data-empty="Required field"></div>
                                 </div>
-                                <div class="form-group required" data-valid="empty">
+                                <div class="form-group required" data-required data-valid="empty">
                                     <label for="sender-phone">Контактний телефон</label>
                                     <input type="text" name="sender_phone" id="sender-phone" value="{{ old('sender_phone', $currentClaim->sender_phone ?? $product->phone ?? '') }}" placeholder="+380501234567" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) readonly @endif>
                                     <div class="help-block" data-empty="Required field"></div>
@@ -167,7 +168,7 @@
                                 <label for="date-sale">Дата продажу</label>
                                 <input type="text" name="date_of_sale" id="date-sale" value="{{$currentClaim->date}}" readonly>
                             </div>
-                            <div class="form-group required" data-valid="empty">
+                            <div class="form-group required" data-required data-valid="empty">
                                 <label for="date-start">Дата звернення в сервісний центр</label>
                                 <div class="input-wrapper">
                                     <input type="text" name="date_of_claim" id="date-start" value="{{now()->format('d.m.Y')}}" class="_js-datepicker" @if($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) disabled @endif>
@@ -184,12 +185,12 @@
                     <div class="card-content card-form">
                         <p class="card-title">Опис дефекту</p>
                         <div class="inputs-group one-row">
-                            <div class="form-group required" data-valid="empty">
+                            <div class="form-group required" data-required data-valid="empty">
                                 <label for="desc">Точний опис дефекту</label>
                                 <textarea name="details" id="desc" placeholder="Точний опис дефекту" rows="3" @if($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) readonly @endif>{{ old('details', $currentClaim->details ?? '') }}</textarea>
                                 <div class="help-block" data-empty="Обов'язкове поле"></div>
                             </div>
-                            <div class="form-group required" data-valid="empty">
+                            <div class="form-group required" data-required data-valid="empty">
                                 <label for="reason">Причина дефекту</label>
                                 <textarea name="deteails_reason" id="reason" placeholder="Причина дефекту" rows="3" @if($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) readonly @endif>{{ old('deteails_reason', $currentClaim->deteails_reason ?? '') }}</textarea>
                                 <div class="help-block" data-empty="Обов'язкове поле"></div>
@@ -203,7 +204,7 @@
                                 <label for="comment_photo">Коментар</label>
                                 <textarea name="comment" id="comment" placeholder="Коментар до заяви" rows="3" @if($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) readonly @endif>{{ old('comment', $currentClaim->comment ?? '') }}</textarea>
                             </div>
-                            <div class="form-group file required" data-valid="file">
+                            <div class="form-group file" data-valid="file">
                                 <input type="file" name="file[]" id="file" multiple @if($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) disabled @endif>
                                 <label for="file">
                                     <span class="icon-upload"></span>
@@ -227,8 +228,8 @@
                     <div class="card-content card-form service-work">
                         <div class="card-title__wrapper">
                             <p class="card-title">Сервісні роботи</p>
-                            
-                            <div class="form-group default-select">
+
+                            <div class="form-group default-select" >
                                 <select name="product_group" id="product-group">
                                     <option value="-1">Виберіть групу товару</option>
                                     @foreach($groups as $group)
@@ -237,7 +238,7 @@
                                 </select>
                             </div>
                         </div>
-                        
+
                         <div class="display-grid">
                             <div class="inputs-group one-column">
                                 <div class="table-parts">
@@ -255,7 +256,7 @@
                                             <div class="cell">Вартість, грн</div>
                                         </div>
                                     </div>
-                    
+
                                     <div class="table-body" id="service-works-container">
                                         <!-- Service works will be loaded here -->
                                     </div>
@@ -268,7 +269,7 @@
                                         </div>
                                     </div>
                                 </div>
-                    
+
                                 <div class="display-grid col-2">
                                     <div class="form-group">
                                         <label for="comment-2">Опис додаткових робіт</label>
@@ -278,7 +279,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="card-content card-form used-parts">
                         <div class="card-title__wrapper">
                             <p class="card-title">Використані запчастини</p>
@@ -287,7 +288,7 @@
                                 <input type="text" id="search-articul" placeholder="XXXXXX-XXX">
                             </div>
                         </div>
-                    
+
                         <div class="card-group">
                             <div class="table-parts">
                                 <div class="table-header">
@@ -325,7 +326,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="table-parts only-footer">
                                 <div class="table-footer">
                                     <div class="row">
@@ -339,7 +340,7 @@
                                 </div>
                             </div>
                         </div>
-                    
+
                         <div class="card-group">
                             <p class="sub-title">Для пошуку потрібних запчастин  перейдіть за посиланням</p>
                             <div class="display-grid col-2 gap-8">
@@ -365,7 +366,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                 </div>
             </form>
 
@@ -404,7 +405,7 @@
                         });
                     });
                 </script>
-        
+
             </form>
 
             <form action="{{ route('warranty-claims.take-to-work', $currentClaim->id) }}" id="take-to-work-form" method="GET" style="display: none;">
@@ -570,7 +571,7 @@ flex-direction: column;
 
 </style>
 
-    
+
 <!-- Відображення менеджерів в модалці -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -612,7 +613,7 @@ flex-direction: column;
 
     searchInput.addEventListener('input', function () {
         const query = this.value.toLowerCase();
-        const filteredManagers = managersList.filter(manager => 
+        const filteredManagers = managersList.filter(manager =>
             manager.first_name_ru.toLowerCase().includes(query)
         );
         displayManagers(filteredManagers);
@@ -631,8 +632,8 @@ flex-direction: column;
             fadeOut(modal, () => {
                 modal.classList.remove('open');
             });
-            modalOverlay.classList.add('hide'); 
-            modalOverlay.classList.remove('show'); 
+            modalOverlay.classList.add('hide');
+            modalOverlay.classList.remove('show');
         }
     });
 
@@ -672,7 +673,7 @@ flex-direction: column;
     });
 
     function displayManagers(managers) {
-        modalBody.innerHTML = ''; 
+        modalBody.innerHTML = '';
         managers.forEach(manager => {
             const managerRow = `
                 <div class="form-group radio">
@@ -780,9 +781,9 @@ flex-direction: column;
             const serviceWorksContainer = document.getElementById('service-works-container');
             const totalDurationElement = document.getElementById('total-duration');
             const currentClaimServiceWorks = @json($currentClaim ? $currentClaim->serviceWorks->pluck('id')->toArray() : []);
-    
+
             let savedCheckboxStates = {};
-    
+
             function saveCheckboxStates(groupId) {
                 const checkboxes = serviceWorksContainer.querySelectorAll('input[type="checkbox"]');
                 if (!savedCheckboxStates[groupId]) {
@@ -793,7 +794,7 @@ flex-direction: column;
                 });
                 console.log(`Saved states for group ${groupId}:`, savedCheckboxStates[groupId]);
             }
-    
+
             function restoreCheckboxStates(groupId) {
                 const checkboxes = serviceWorksContainer.querySelectorAll('input[type="checkbox"]');
                 if (savedCheckboxStates[groupId]) {
@@ -805,7 +806,7 @@ flex-direction: column;
                 }
                 console.log(`Restored states for group ${groupId}:`, savedCheckboxStates[groupId]);
             }
-        
+
             function loadServiceWorks(groupId) {
                 saveCheckboxStates(productGroupSelect.value);
                 fetch(`/service/${groupId}`)
@@ -813,18 +814,18 @@ flex-direction: column;
                     .then(data => {
                         serviceWorksContainer.innerHTML = ''; // Очистка контейнера перед новым отображением
                         let totalDuration = 0;
-        
+
                         data.forEach(work => {
                             const isChecked = currentClaimServiceWorks.includes(work.id) || (savedCheckboxStates[groupId] && savedCheckboxStates[groupId][work.id]);
                             const duration = work.duration_decimal;
-        
+
                             if (isChecked) {
                                 totalDuration += parseFloat(duration);
                             }
-        
+
                             const row = document.createElement('div');
                             row.classList.add('row');
-        
+
                             row.innerHTML = `
                                 <div class="cell">
                                     <div class="form-group checkbox">
@@ -853,7 +854,7 @@ flex-direction: column;
                                     </div>
                                 </div>
                             `;
-        
+
                             row.querySelector('input[type="checkbox"]').addEventListener('change', function() {
                                 const durationElement = this.closest('.row').querySelector('.form-group input[type="text"]:last-child');
                                 const durationValue = parseFloat(durationElement.value);
@@ -864,21 +865,21 @@ flex-direction: column;
                                 }
                                 totalDurationElement.textContent = totalDuration.toFixed(2);
                             });
-        
+
                             serviceWorksContainer.appendChild(row);
                         });
-                        
+
                         totalDurationElement.textContent = totalDuration.toFixed(2);
                         restoreCheckboxStates(groupId);
                     })
                     .catch(error => console.error('Error fetching service works:', error));
             }
-        
+
             // Load service works on page load if product group is selected
             if (productGroupSelect.value !== '-1') {
                 loadServiceWorks(productGroupSelect.value);
             }
-        
+
             // Update service works when product group changes
             productGroupSelect.addEventListener('change', function() {
                 const groupId = this.value;
@@ -890,8 +891,8 @@ flex-direction: column;
                 }
             });
         });
-    </script>    
-    
+    </script>
+
 
 <!-- Копіювання данних ПІБ та телефон -->
 <script>
@@ -930,7 +931,7 @@ document.addEventListener('DOMContentLoaded', function() {
             fetch(`/parts/${articul}`)
                 .then(response => response.json())
                 .then(data => {
-                    partsContainer.innerHTML = ''; 
+                    partsContainer.innerHTML = '';
                     if (data.data.length > 0) {
                         data.data.forEach((part, index) => {
                             if (part.product_prices && part.product_prices.recommended_price) {
@@ -1101,7 +1102,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const option = document.createElement('option');
                 option.value = data.contract.id;
                 option.textContent = `${data.contract.number}`;
-                serviceContractSelect.innerHTML = ''; 
+                serviceContractSelect.innerHTML = '';
                 serviceContractSelect.appendChild(option);
                 serviceContractSelect.value = data.contract.id;
 
@@ -1135,11 +1136,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const dateInputs = document.querySelectorAll('._js-datepicker');
     dateInputs.forEach((input, index) => {
         const containerId = input.getAttribute('data-container-id') || `datepicker-container-${index}`;
-        
+
         const currentDate = new Date();
         const formattedDate = currentDate.toISOString().split('T')[0];
         input.value = formattedDate;
-        
+
         new Datepicker(input, {
             format: 'yyyy-mm-dd',
             autohide: true,
@@ -1158,18 +1159,18 @@ document.addEventListener('DOMContentLoaded', function() {
        const totalSumElement = document.getElementById('total-sum');
        const addedPartsHiddenContainer = document.getElementById('added-parts-hidden');
        const discount = {{ $defaultDiscount ?? 0 }};
-   
+
        let totalSum = 0;
        let addedParts = [];
-   
+
        searchInput.addEventListener('input', function () {
            const articul = this.value.trim();
-   
+
            if (articul.length >= 3) {
                fetch(`/parts/${articul}`)
                    .then(response => response.json())
                    .then(data => {
-                       partsContainer.innerHTML = ''; 
+                       partsContainer.innerHTML = '';
                        if (data.data.length > 0) {
                            data.data.forEach((part, index) => {
                                if (part.product_prices && part.product_prices.recommended_price) {
@@ -1177,7 +1178,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                    const priceWithDiscountAndVat = (recommendedPrice * (1 - discount / 100)).toFixed(2);
                                    const amountWithoutVat = (recommendedPrice).toFixed(2);
                                    const amountWithVat = (recommendedPrice * 1.2).toFixed(2); // assuming VAT is 20%
-   
+
                                    const newRow = `
                                        <div class="row" data-articul="${part.articul}">
                                            <div class="cell">
@@ -1220,24 +1221,24 @@ document.addEventListener('DOMContentLoaded', function() {
                                            </div>
                                        </div>
                                    `;
-   
+
                                    partsContainer.insertAdjacentHTML('beforeend', newRow);
-   
+
                                    const currentRow = partsContainer.lastElementChild;
                                    currentRow.querySelector('.part-quantity').addEventListener('input', function () {
                                        const quantity = parseInt(this.value) || 0;
                                        const total = (priceWithDiscountAndVat * quantity).toFixed(2);
                                        currentRow.querySelector('.part-total').value = total;
                                    });
-   
+
                                    currentRow.querySelector('.add-part-btn').addEventListener('click', function () {
                                        const articul = currentRow.querySelector('input[name*="[spare_parts]"]').value;
-   
+
                                        if (addedParts.some(part => part.articul === articul)) {
                                            alert('Запчастина вже добавлена');
                                            return;
                                        }
-   
+
                                        const name = currentRow.querySelector('input[name*="[name]"]').value;
                                        const price = parseFloat(currentRow.querySelector('input[name*="[price_without_vat]"]').value);
                                        const amountWithoutVat = parseFloat(currentRow.querySelector('input[name*="[amount_without_vat]"]').value);
@@ -1245,9 +1246,9 @@ document.addEventListener('DOMContentLoaded', function() {
                                        const quantity = parseInt(currentRow.querySelector('.part-quantity').value);
                                        const total = parseFloat(currentRow.querySelector('.part-total').value);
                                        const checked = currentRow.querySelector(`#parts-${part.id}`).checked;
-   
+
                                        addedParts.push({ articul, name, price, amountWithoutVat, amountWithVat, quantity, total });
-   
+
                                        const addedRow = `
                                            <div class="row" data-articul="${articul}">
                                                <div class="cell">
@@ -1290,11 +1291,11 @@ document.addEventListener('DOMContentLoaded', function() {
                                                </div>
                                            </div>
                                        `;
-   
+
                                        addedPartsContainer.insertAdjacentHTML('beforeend', addedRow);
                                        totalSum += total;
                                        totalSumElement.textContent = totalSum.toFixed(2);
-   
+
                                        const removeButton = addedPartsContainer.querySelector('.row:last-child .remove-part-btn');
                                        removeButton.addEventListener('click', function () {
                                            const row = this.closest('.row');
@@ -1305,7 +1306,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                            addedParts = addedParts.filter(part => part.articul !== articul);
                                            row.remove();
                                        });
-   
+
                                        // Добавление скрытых полей
                                        const hiddenFields = `
                                            <input type="hidden" name="spare_parts[${addedParts.length - 1}][spare_parts]" value="${articul}">
@@ -1317,7 +1318,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                            <input type="hidden" name="spare_parts[${addedParts.length - 1}][amount_vat]" value="${total.toFixed(2)}">
                                        `;
                                        addedPartsHiddenContainer.insertAdjacentHTML('beforeend', hiddenFields);
-   
+
                                        // Отладочные выводы
                                        console.log('Added part:', {
                                            articul,
