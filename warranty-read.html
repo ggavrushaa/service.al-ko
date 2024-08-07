@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="widdiv=device-widdiv, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Журнал гарантійних заяв</title>
+
+    @@include('_style.html')
+</head>
+<body class="preload">
+
+
+@@include('_header.html')
+
+@@include('_sidebar.html', {
+"page": "warranty"
+})
+
+<div class="main" id="main">
+    <div class="page-warranty-create">
+        <div class="page-name sticky">
+            <h1>Гарантійна заява</h1>
+            <div class="btns">
+                <button type="button" class="btn-link btn-blue text-only">Розглядається</button>
+                <button type="button" class="btn-border btn-blue btn-only-icon _js-btn-show-modal" data-modal="chat">
+                    <span class="icon-message"></span>
+                </button>
+                <button type="button" class="btn-border btn-red _js-btn-show-modal" data-modal="switch-manager">Змінити менеджера</button>
+            </div>
+        </div>
+
+        <div class="card-lists">
+            <div class="card-content card-form">
+                <p class="card-title">Загальна інформація</p>
+                <div class="inputs-group one-row">
+                    <div class="form-group">
+                        <label for="number-doc">Номер документу</label>
+                        <input type="text" id="number-doc" value="0000000000" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="date-doc">Дата документу</label>
+                        <input type="text" id="date-doc" value="27.05.1999" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="author">Відповідальний</label>
+                        <input type="text" id="author" value="Прізвище Ім'я По батькові" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="display-grid col-2 gap-8">
+                <div class="card-content card-form">
+                    <p class="card-title">Дані покупця</p>
+                    <div class="inputs-group one-row">
+                        <div class="form-group">
+                            <label for="buyer-name">ПІБ покупця</label>
+                            <input type="text" id="buyer-name" value="Прізвище Ім'я По батькові" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="buyer-phone">Контактний телефон</label>
+                            <input type="text" id="buyer-phone" value="+380501234567" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-content card-form">
+                    <p class="card-title">Дані того Хто звернувся</p>
+
+                    <div class="inputs-group one-row">
+                        <div class="form-group">
+                            <label for="sender-name">ПІБ</label>
+                            <input type="text" id="sender-name" value="Прізвище Ім'я По батькові" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="sender-phone">Контактний телефон</label>
+                            <input type="text" id="sender-phone" value="+380501234567" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-content card-form">
+                <p class="card-title">Дані про товар</p>
+                <div class="inputs-group one-row">
+                    <div class="form-group">
+                        <label for="article">Артикул</label>
+                        <input type="text" id="article" value="Артикул" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="prod-name">Назва виробу</label>
+                        <input type="text" id="prod-name" value="Назва виробу" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="factory-number">Заводський номер</label>
+                        <input type="text" id="factory-number" value="0000000000" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="barcode">Штрихкод гарантійного талону</label>
+                        <input type="text" id="barcode" value="0000000000" readonly>
+                    </div>
+                </div>
+                <div class="inputs-group one-row">
+                    <div class="form-group">
+                        <label for="place-sale">Місце продажу</label>
+                        <input type="text" id="place-sale" value="Місце продажу" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="date-sale">Дата продажу</label>
+                        <input type="text" id="date-sale" value="27.05.1999" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="date-start">Дата звернення в сервісний центр</label>
+                        <input type="text" id="date-start" value="00.00.0000" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="receipt-number">Номер квитанції сервісного центру</label>
+                        <input type="text" id="receipt-number" value="0000000000" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="card-content card-form">
+                <p class="card-title">Опис дефекту</p>
+                <div class="inputs-group one-row">
+                    <div class="form-group">
+                        <label for="desc">Точний опис дефекту</label>
+                        <textarea id="desc" placeholder="Точний опис дефекту" rows="3" readonly></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="reason">Причина дефекту</label>
+                        <textarea id="reason" placeholder="Причина дефекту" rows="3" readonly></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="card-content card-form">
+                <p class="card-title">Підтверджуючі фото та інше</p>
+                <div class="inputs-group one-row">
+                    <div class="form-group">
+                        <label for="comment">Коментар</label>
+                        <textarea id="comment" placeholder="Коментар до заяви" rows="3"></textarea>
+                    </div>
+                    <div class="form-group"></div>
+                </div>
+                <div class="inputs-group one-row">
+                    <div class="image-preview">
+                        <div class="img">
+                            <img src="./img/delete/img.png" alt="">
+                            <button type="button" class="icon-trash js-remove-image" data-actiob="/testaction/12/"></button>
+                        </div>
+                        <div class="img">
+                            <img src="./img/delete/img.png" alt="">
+                            <button type="button" class="icon-trash js-remove-image" data-actiob="/testaction/13/"></button>
+                        </div>
+                        <div class="img">
+                            <img src="./img/delete/img.png" alt="">
+                            <button type="button" class="icon-trash js-remove-image" data-actiob="/testaction/14/"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-content card-form service-work">
+                <div class="card-title__wrapper">
+                    <p class="card-title">Сервісні роботи</p>
+                    
+                    <div class="form-group default-select">
+                        <select name="" id="" disabled>
+                            <option value="-1">Якась група товару</option>
+                            <option value="1">Група товару - 1</option>
+                            <option value="2">Група товару - 2</option>
+                            <option value="3">Група товару - 3</option>
+                            <option value="4">Група товару - 4</option>
+                            <option value="5">Група товару - 5</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="display-grid">
+
+
+                    <div class="inputs-group one-column">
+                        <div class="table-parts">
+                            <div class="table-header">
+                                <div class="row">
+                                    <div class="cell">
+                                        <div class="form-group checkbox">
+                                            <input type="checkbox" id="parts-nn" disabled>
+                                            <label for="parts-nn"></label>
+                                        </div>
+                                    </div>
+                                    <div class="cell">Назва робіт</div>
+                                    <div class="cell">Ціна, грн</div>
+                                    <div class="cell">Нормогодин</div>
+                                    <div class="cell">Вартість, грн</div>
+                                </div>
+                            </div>
+    
+                            <div class="table-body">
+                                <div class="row">
+                                    <div class="cell">
+                                        <div class="form-group checkbox">
+                                            <input type="checkbox" id="parts-55105" checked disabled>
+                                            <label for="parts-55105"></label>
+                                        </div>
+                                    </div>
+                                    <div class="cell">
+                                        <div class="form-group">
+                                            <input type="text" value="Можливий сервіс, характерних обраній групі товару" readonly="">
+                                        </div>
+                                    </div>
+                                    <div class="cell">
+                                        <div class="form-group">
+                                            <input type="text" value="100 000. 00" readonly="">
+                                        </div>
+                                    </div>
+                                    <div class="cell">
+                                        <div class="form-group">
+                                            <input type="text" value="2" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="cell">
+                                        <div class="form-group">
+                                            <input type="text" value="200 000.00" readonly="">
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                <div class="row">
+                                    <div class="cell">
+                                        <div class="form-group checkbox">
+                                            <input type="checkbox" id="parts-55106" checked disabled>
+                                            <label for="parts-55106"></label>
+                                        </div>
+                                    </div>
+                                    <div class="cell">
+                                        <div class="form-group">
+                                            <input type="text" value="Можливий сервіс, характерних обраній групі товару" readonly="">
+                                        </div>
+                                    </div>
+                                    <div class="cell">
+                                        <div class="form-group">
+                                            <input type="text" value="100 000. 00" readonly="">
+                                        </div>
+                                    </div>
+                                    <div class="cell">
+                                        <div class="form-group">
+                                            <input type="text" value="2" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="cell">
+                                        <div class="form-group">
+                                            <input type="text" value="200 000.00" readonly="">
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                <div class="row">
+                                    <div class="cell">
+                                        <div class="form-group checkbox">
+                                            <input type="checkbox" id="parts-55107" checked disabled>
+                                            <label for="parts-55107"></label>
+                                        </div>
+                                    </div>
+                                    <div class="cell">
+                                        <div class="form-group">
+                                            <input type="text" value="Можливий сервіс, характерних обраній групі товару" readonly="">
+                                        </div>
+                                    </div>
+                                    <div class="cell">
+                                        <div class="form-group">
+                                            <input type="text" value="100 000. 00" readonly="">
+                                        </div>
+                                    </div>
+                                    <div class="cell">
+                                        <div class="form-group">
+                                            <input type="text" value="2" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="cell">
+                                        <div class="form-group">
+                                            <input type="text" value="200 000.00" readonly="">
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            <div class="table-footer">
+                                <div class="row">
+                                    <div class="cell">Загальна вартість робіт</div>
+                                    <div class="cell"></div>
+                                    <div class="cell"></div>
+                                    <div class="cell"></div>
+                                    <div class="cell">80 000</div>
+                                </div>
+                            </div>
+    
+                        </div>
+    
+    
+    
+                        <div class="display-grid col-2">
+                            <div class="form-group">
+                                <label for="comment-2">Опис додаткових робіт</label>
+                                <textarea name="comment_service" id="comment-2" placeholder="Якщо виконувалися додаткові роботи, які не відображені в списку до вибору, опишіть їх в цьому полі" rows="3"></textarea>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    
+                </div>
+            </div>
+            <div class="card-content card-form used-parts">
+                <div class="card-title__wrapper">
+                    <p class="card-title">Використані запчастини</p>
+                    <div class="form-group have-icon">
+                        <span class="icon icon-search-active"></span>
+                        <input type="text" placeholder="XXXXXX-XXX">
+                    </div>
+                </div>
+                
+
+                <div class="card-group">
+                    <div class="table-parts without-actions">
+                        <div class="table-header">
+                            <div class="row">
+                                <div class="cell">Артикул</div>
+                                <div class="cell">Назва</div>
+                                <div class="cell">Ціна</div>
+                                <div class="cell">Кількість</div>
+                                <div class="cell">Всього, грн</div>
+                                <div class="cell">Замовити</div>
+                            </div>
+                        </div>
+
+                        <div class="table-body">
+                            <div class="row title-only">
+                                <p>Результати пошуку</p>
+                            </div>
+                            <div class="row">
+                                <div class="cell">
+                                    <div class="form-group">
+                                        <input type="text" value="000000-000" readonly>
+                                    </div>
+                                </div>
+                                <div class="cell">
+                                    <div class="form-group">
+                                        <input type="text" value="Назва - посилання на запчастину" readonly>
+                                    </div>
+                                </div>
+                                <div class="cell">
+                                    <div class="form-group">
+                                        <input type="text" value="10 0000" readonly>
+                                    </div>
+                                </div>
+                                <div class="cell">
+                                    <div class="form-group">
+                                        <input type="text" value="2" readonly>
+                                    </div>
+                                </div>
+                                <div class="cell">
+                                    <div class="form-group">
+                                        <input type="text" value="20 000" readonly>
+                                    </div>
+                                </div>
+                                <div class="cell">
+                                    <div class="form-group checkbox">
+                                        <input type="checkbox" id="parts-1" checked disabled>
+                                        <label for="parts-1"></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="cell">
+                                    <div class="form-group">
+                                        <input type="text" value="000000-000" readonly>
+                                    </div>
+                                </div>
+                                <div class="cell">
+                                    <div class="form-group">
+                                        <input type="text" value="Назва - посилання на запчастину" readonly>
+                                    </div>
+                                </div>
+                                <div class="cell">
+                                    <div class="form-group">
+                                        <input type="text" value="10 0000" readonly>
+                                    </div>
+                                </div>
+                                <div class="cell">
+                                    <div class="form-group">
+                                        <input type="text" value="2" readonly>
+                                    </div>
+                                </div>
+                                <div class="cell">
+                                    <div class="form-group">
+                                        <input type="text" value="20 000" readonly>
+                                    </div>
+                                </div>
+                                <div class="cell">
+                                    <div class="form-group checkbox">
+                                        <input type="checkbox" id="parts-1" checked disabled>
+                                        <label for="parts-1"></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row title-only">
+                                <p>Додані запчастини</p>
+                            </div>
+                            <div class="row">
+                                <div class="cell">
+                                    <div class="form-group">
+                                        <input type="text" value="000000-000" readonly>
+                                    </div>
+                                </div>
+                                <div class="cell">
+                                    <div class="form-group">
+                                        <input type="text" value="Назва - посилання на запчастину" readonly>
+                                    </div>
+                                </div>
+                                <div class="cell">
+                                    <div class="form-group">
+                                        <input type="text" value="10 0000" readonly>
+                                    </div>
+                                </div>
+                                <div class="cell">
+                                    <div class="form-group">
+                                        <input type="text" value="2" readonly>
+                                    </div>
+                                </div>
+                                <div class="cell">
+                                    <div class="form-group">
+                                        <input type="text" value="20 000" readonly>
+                                    </div>
+                                </div>
+                                <div class="cell">
+                                    <div class="form-group checkbox">
+                                        <input type="checkbox" id="parts-1" checked disabled>
+                                        <label for="parts-1"></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="cell">
+                                    <div class="form-group">
+                                        <input type="text" value="000000-000" readonly>
+                                    </div>
+                                </div>
+                                <div class="cell">
+                                    <div class="form-group">
+                                        <input type="text" value="Назва - посилання на запчастину" readonly>
+                                    </div>
+                                </div>
+                                <div class="cell">
+                                    <div class="form-group">
+                                        <input type="text" value="10 0000" readonly>
+                                    </div>
+                                </div>
+                                <div class="cell">
+                                    <div class="form-group">
+                                        <input type="text" value="2" readonly>
+                                    </div>
+                                </div>
+                                <div class="cell">
+                                    <div class="form-group">
+                                        <input type="text" value="20 000" readonly>
+                                    </div>
+                                </div>
+                                <div class="cell">
+                                    <div class="form-group checkbox">
+                                        <input type="checkbox" id="parts-1" checked disabled>
+                                        <label for="parts-1"></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-footer">
+                            <div class="row">
+                                <div class="cell">Підсумок</div>
+                                <div class="cell"></div>
+                                <div class="cell"></div>
+                                <div class="cell"></div>
+                                <div class="cell">80 000</div>
+                                <div class="cell"></div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="table-parts without-actions only-footer">
+                        <div class="table-footer">
+                            <div class="row">
+                                <div class="cell">Загальна вартість по документу</div>
+                                <div class="cell"></div>
+                                <div class="cell"></div>
+                                <div class="cell"></div>
+                                <div class="cell">80 000</div>
+                                <div class="cell"></div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+                <div class="card-group">
+                    <p class="sub-title">Для пошуку потрібних запчастин  перейдіть за посиланням</p>
+                    <div class="display-grid col-2 gap-8">
+                        <div class="card-content card-text">
+                            <h2 class="text-underline text-blue">AL-KO</h2>
+
+                            <p>Після відкриття, у лівому верхньому куті виберіть директорію: <span class="text-red fw-600">ERSATZTEILSUCHE.</span>
+                            </p>
+                            <p>
+                                Після переходу на іншу сторінку, в правому кутку в порожнє поле внесіть артикульний номер
+                                виробу, що Вас цікавить (артикульний номер виробу можна подивитися в прайс-листі або на
+                                заводській наклейці).
+                            </p>
+                            <p>
+                                Щоб дізнатися ціну на деталь, відкрийте каталог зап.частин (додаток №3 до договору з
+                                сервісного
+                                обслуговування). Комбінація Ctrl - F відкриває пошукове вікно, куди вноситься артикул
+                                зап.частини.
+                            </p>
+                            <p>
+                                За необхідності можна зберігати і друкувати деталі з інтернет бази. Для цього необхідно
+                                зліва
+                                внизу натиснути кнопку <span class="text-red fw-600">Drucken</span>, після чого вибрати
+                                потрібну вам сторінку.
+                            </p>
+                        </div>
+                        <div class="card-content card-text">
+                            <h2 class="text-underline text-blue">B&S</h2>
+
+                            <p>
+                                Дотримуючись наведених інструкцій, знайдіть необхідну деталь для вашого продукту Briggs &
+                                Stratton
+                            </p>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-group _mb0">
+                    <div class="display-grid col-2 gap-8">
+                        <div class="form-group _mb0">
+                            <label for="comment-3">Коментар</label>
+                            <textarea id="comment-3" placeholder="Не знайшли потрібні запчастини? Опишіть вашу проблему" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@@include('_footer.html')
+
+@@include('_script.html')
+</body>
+</html>

@@ -418,7 +418,7 @@ function validate(form_group) {
         case 'empty':
           {
             form_group.querySelector('input, textarea').addEventListener('blur', function () {
-              if (form_group.classList.contains('required')) {
+              if (form_group.classList.contains('required') || form_group.classList.contains('required-merged')) {
                 if (i === 0) {
                   error_count = +!validateField(form_group, valid_type);
                 } else {
@@ -432,8 +432,9 @@ function validate(form_group) {
           }
         case 'mask':
           {
+            // console.log(form_group);
             form_group.querySelector('input').addEventListener('blur', function () {
-              if (form_group.classList.contains('required')) {
+              if (form_group.classList.contains('required') || form_group.classList.contains('required-merged')) {
                 if (i === 0) {
                   error_count = +!validateField(form_group, valid_type);
                 } else {
@@ -486,6 +487,19 @@ function validate(form_group) {
             });
             break;
           }
+        case 'number':
+          {
+            form_group.querySelector('input, textarea').addEventListener('blur', function () {
+              if (i === 0) {
+                error_count = +!validateField(form_group, valid_type);
+              } else {
+                if (error_count === 0) {
+                  error_count = +!validateField(form_group, valid_type);
+                }
+              }
+            });
+            break;
+          }
       }
     };
     for (var i = 0; i < valid_type_arr.length; i++) {
@@ -494,47 +508,57 @@ function validate(form_group) {
   }
 }
 function validateField(form_group, valid_type) {
+  // console.log(form_group);
   var maxlength;
   if (valid_type.indexOf('maxlength') !== -1) {
     maxlength = valid_type.split('-')[1];
     valid_type = 'maxlength';
   }
+  var isMergedFields = form_group.closest('._js-validate-merged-field');
+  var helpBock = form_group.querySelector('.help-block');
+  if (isMergedFields) {
+    helpBock = form_group.closest('._js-validate-merged-field').querySelector('.help-block-merged');
+  }
+  var result;
   switch (valid_type) {
     case 'empty':
       {
         var input = form_group.querySelector('input, textarea');
         if (input.value.trim() === "") {
           form_group.classList.add('has-error');
-          form_group.querySelector('.help-block').innerHTML = form_group.querySelector('.help-block').dataset.empty;
-          return false;
+          helpBock.innerHTML = helpBock.dataset.empty;
+          result = false;
         } else {
           form_group.classList.remove('has-error');
+          result = true;
         }
-        return true;
+        break;
       }
     case 'mask':
       {
         var _input = form_group.querySelector('input');
         if (_input.inputmask.isComplete()) {
           form_group.classList.remove('has-error');
+          result = true;
         } else {
           form_group.classList.add('has-error');
-          form_group.querySelector('.help-block').innerHTML = form_group.querySelector('.help-block').dataset.empty;
-          return false;
+          helpBock.innerHTML = helpBock.dataset.empty;
+          result = false;
         }
-        return true;
+        break;
       }
     case 'checkbox':
       {
         var _input2 = form_group.querySelector('input');
         if (_input2.checked) {
           form_group.classList.remove('has-error');
+          result = true;
         } else {
           form_group.classList.add('has-error');
-          form_group.querySelector('.help-block').innerHTML = form_group.querySelector('.help-block').dataset.empty;
-          return false;
+          helpBock.innerHTML = helpBock.dataset.empty;
+          result = false;
         }
-        return true;
+        break;
       }
     case 'select':
       {
@@ -547,23 +571,25 @@ function validateField(form_group, valid_type) {
         }
         if (val === '') {
           form_group.classList.add('has-error');
-          return false;
+          result = false;
         } else {
           form_group.classList.remove('has-error');
+          result = true;
         }
-        return true;
+        break;
       }
     case 'maxlength':
       {
         var _input3 = form_group.querySelector('input, textarea');
         if (_input3.value.length > maxlength) {
           form_group.classList.add('has-error');
-          form_group.querySelector('.help-block').innerHTML = form_group.querySelector('.help-block').dataset.maxlength;
-          return false;
+          helpBock.innerHTML = helpBock.dataset.maxlength;
+          result = true;
         } else {
           form_group.classList.remove('has-error');
+          result = false;
         }
-        return true;
+        break;
       }
     case 'cyrillic':
       {
@@ -572,14 +598,33 @@ function validateField(form_group, valid_type) {
         var regex = /^([а-яіїє' -]+)?$/gi;
         if (!regex.test(_input4.value)) {
           form_group.classList.add('has-error');
-          form_group.querySelector('.help-block').innerHTML = form_group.querySelector('.help-block').dataset.cyrillic;
-          return false;
+          helpBock.innerHTML = helpBock.dataset.cyrillic;
+          result = false;
         } else {
           form_group.classList.remove('has-error');
+          result = true;
         }
-        return true;
+        break;
+      }
+    case 'number':
+      {
+        var _input5 = form_group.querySelector('input, textarea');
+        // let regex = /^[а-яіїє' -]+$/gi;
+        var _regex = /^\d+$/;
+        if (!_regex.test(_input5.value)) {
+          form_group.classList.add('has-error');
+          helpBock.innerHTML = helpBock.dataset.number;
+          result = false;
+        } else {
+          form_group.classList.remove('has-error');
+          result = true;
+        }
+        break;
       }
   }
+
+  // console.log(result);
+  return result;
 }
 function validateForm(form) {
   var required_fields = form.querySelectorAll('.required');
@@ -594,7 +639,6 @@ function validateForm(form) {
         valid_type = 'maxlength';
       }
       if (i === 0) {
-        // error_valid_count = ;
         if (!validateField(form_group, valid_type_arr[i])) {
           error_valid_count = 1;
           errors += 1;
@@ -613,12 +657,9 @@ function validateForm(form) {
           }
         }
       }
-
-      // if (!validateField(form_group, valid_type_arr[i])) {
-      //     errors += 1;
-      // }
     }
   });
+  console.log(errors_fields);
   if (errors === 0) {
     return true;
   } else {

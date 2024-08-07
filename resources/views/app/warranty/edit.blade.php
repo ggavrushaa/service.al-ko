@@ -7,10 +7,10 @@
                 <h1>Гарантійна заява</h1>
                 <div class="btns">
                     @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::new)
-                        <button type="button" class="btn-primary btn-blue" onclick="document.getElementById('send-to-save').submit()">Зберегти</button>
-                        <button type="button" class="btn-primary btn-blue" onclick="document.getElementById('send-to-review-form').submit()">Відправити</button>
+                        <button type="submit" class="btn-primary btn-blue" form="send-to-save">Зберегти</button>
+                        <button type="submit" class="btn-primary btn-blue" form="send-to-review-form">Відправити</button>
                     @elseif ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::sent && auth()->user()->role_id === 2 OR auth()->user()->role_id === 3)
-                        <button type="button" class="btn-primary btn-blue" onclick="document.getElementById('take-to-work-form').submit()">Взяти в роботу</button>
+                        <button type="submit" class="btn-primary btn-blue" form="take-to-work-form">Взяти в роботу</button>
                     @elseif ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review && auth()->user()->role_id === 2)
                         <a href="{{ route('technical-conclusions.create', $currentClaim->id) }}" class="btn-primary btn-blue">Створити Акт</a>
                     @endif
@@ -64,7 +64,7 @@
                 $technicalConcluison = session('conclusion');
             @endphp
 
-            <form action="{{ route('warranty-claims.save') }}" id="send-to-save" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('warranty-claims.save') }}" id="send-to-save" method="POST" enctype="multipart/form-data" class="js-form-validation">
                 @csrf
 
                 <div class="card-lists">
@@ -127,7 +127,7 @@
                             <div class="inputs-group one-row">
                                 <div class="form-group required" data-valid="empty">
                                     <label for="sender-name">ПІБ</label>
-                                    <input type="text" name="sender_name" id="sender-name" value="{{ old('sender_name', $currentClaim->sender_name ?? '') }}" placeholder="Прізвище Ім'я По батькові" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) readonly @endif>
+                                    <input type="text" name="sender_name" id="sender-name"  placeholder="Прізвище Ім'я По батькові" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) readonly @endif>
                                     <div class="help-block" data-empty="Required field"></div>
                                 </div>
                                 <div class="form-group required" data-valid="empty">
@@ -170,7 +170,7 @@
                             <div class="form-group required" data-valid="empty">
                                 <label for="date-start">Дата звернення в сервісний центр</label>
                                 <div class="input-wrapper">
-                                    <input type="text" name="date_of_claim" id="date-start" value="{{ $currentClaim->date_of_claim ?? now()->format('Y-m-d') }}" class="_js-datepicker" @if($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) disabled @endif>
+                                    <input type="text" name="date_of_claim" id="date-start" value="{{now()->format('d.m.Y')}}" class="_js-datepicker" @if($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) disabled @endif>
                                     <span class="icon-calendar"></span>
                                 </div>
                                 <div class="help-block" data-empty=""></div>
@@ -224,44 +224,72 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card-content card-form">
-                        <p class="card-title">Сервісні роботи</p>
-                        <div class="display-grid col-2 gap-20">
-                            <div class="inputs-group one-column">
-                                <div class="form-group default-select">
-                                    <label for="product-group">Група товару</label>
-                                    <select name="product_group_id" id="product-group">
-                                        <option value="-1">Оберіть групу товару</option>
-                                        @foreach($groups as $group)
-                                            <option value="{{ $group->id }}" {{ old('product_group_id', $currentClaim->product_group_id ?? '') == $group->id ? 'selected' : '' }}>
-                                                {{ $group->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="comment-2">Опис додаткових робіт</label>
-                                    <textarea name="comment_service" id="comment-2" placeholder="Якщо виконувалися додаткові роботи, які не відображені в списку до вибору, опишіть їх в цьому полі" rows="3">{{ old('comment_service', $currentClaim->comment_service ?? '') }}</textarea>
-                                </div>
-                            </div>
-                            <div class="inputs-group">
-                                <div class="fake-label"></div>
-                                <div class="form-group" id="service-works-container">
-                                    @foreach($works as $work)
-                                        <div class="form-group checkbox">
-                                            <input type="checkbox" id="service-{{ $work->id }}" name="service_works[]" value="{{ $work->id }}"
-                                            {{ is_array(old('service_works', $currentClaim ? $currentClaim->serviceWorks->pluck('id')->toArray() : [])) && in_array($work->id, old('service_works', $currentClaim ? $currentClaim->serviceWorks->pluck('id')->toArray() : [])) ? 'checked' : '' }}>
-                                            <label for="service-{{ $work->id }}">{{ $work->name }}</label>
-                                        </div>
+                    <div class="card-content card-form service-work">
+                        <div class="card-title__wrapper">
+                            <p class="card-title">Сервісні роботи</p>
+                            
+                            <div class="form-group default-select">
+                                <select name="product_group" id="product-group">
+                                    <option value="-1">Виберіть групу товару</option>
+                                    @foreach($groups as $group)
+                                        <option value="{{ $group->id }}">{{ $group->name }}</option>
                                     @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="display-grid">
+                            <div class="inputs-group one-column">
+                                <div class="table-parts">
+                                    <div class="table-header">
+                                        <div class="row">
+                                            <div class="cell">
+                                                <div class="form-group checkbox">
+                                                    <input type="checkbox" id="parts-nn" >
+                                                    <label for="parts-nn"></label>
+                                                </div>
+                                            </div>
+                                            <div class="cell">Назва робіт</div>
+                                            <div class="cell">Ціна, грн</div>
+                                            <div class="cell">Нормогодин</div>
+                                            <div class="cell">Вартість, грн</div>
+                                        </div>
+                                    </div>
+                    
+                                    <div class="table-body" id="service-works-container">
+                                        <!-- Service works will be loaded here -->
+                                    </div>
+                                    <div class="table-footer">
+                                        <div class="row">
+                                            <div class="cell">Загальна вартість робіт</div>
+                                            <div class="cell"></div>
+                                            <div class="cell"></div>
+                                            <div class="cell" id="total-duration">0</div>
+                                        </div>
+                                    </div>
+                                </div>
+                    
+                                <div class="display-grid col-2">
+                                    <div class="form-group">
+                                        <label for="comment-2">Опис додаткових робіт</label>
+                                        <textarea name="comment_service" id="comment-2" placeholder="Якщо виконувалися додаткові роботи, які не відображені в списку до вибору, опишіть їх в цьому полі" rows="3"></textarea>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="card-content card-form">
-                        <p class="card-title">Використані запчастини</p>
+                    
+                    <div class="card-content card-form used-parts">
+                        <div class="card-title__wrapper">
+                            <p class="card-title">Використані запчастини</p>
+                            <div class="form-group have-icon">
+                                <span class="icon icon-search-active"></span>
+                                <input type="text" id="search-articul" placeholder="XXXXXX-XXX">
+                            </div>
+                        </div>
+                    
                         <div class="card-group">
-                            <div class="table-parts without-action">
+                            <div class="table-parts">
                                 <div class="table-header">
                                     <div class="row">
                                         <div class="cell">Артикул</div>
@@ -273,94 +301,16 @@
                                         <div class="cell">Дія</div>
                                     </div>
                                 </div>
-                                <div class="table-body">
-                                    <div class="row add-new">
-                                        <div class="cell">
-                                            <div class="form-group have-icon">
-                                                <span class="icon icon-search-active"></span>
-                                                <input type="text" name="spare_parts_temp[0][spare_parts]" id="search-articul" placeholder="XXXXXX-XXX">
-                                                <div id="search-results" class="search-results"></div>
-                                            </div>
+                                <div class="table-body" id="parts-container">
+                                    <!-- Запчастини для пошуку -->
+                                </div>
+                                <div class="table-parts">
+                                    <div class="table-body">
+                                        <div class="row title-only">
+                                            <p>Додані запчастини</p>
                                         </div>
-                                        <div class="cell">
-                                            <div class="form-group">
-                                                <input type="text" name="spare_parts_temp[0][name]" id="part-name" placeholder="Назва" readonly>
-                                            </div>
-                                            <input type="hidden" name="spare_parts_temp[0][amount_without_vat]" id="amount_without_vat" value="0">
-                                        </div>
-                                        <div class="cell">
-                                            <div class="form-group">
-                                                <input type="text" name="spare_parts_temp[0][price_without_vat]" id="part-price" placeholder="Ціна" readonly>
-                                            </div>
-                                        </div>
-                                        <div class="cell">
-                                            <div class="form-group _bg-white">
-                                                <input type="number" id="part-quantity" name="spare_parts_temp[0][qty]" placeholder="Кількість" min="1" value="1">
-                                            </div>
-                                        </div>
-                                        <div class="cell">
-                                            <div class="form-group">
-                                                <input type="text" name="spare_parts_temp[0][amount_vat]" id="part-total" placeholder="Всього, грн" readonly>
-                                            </div>
-                                        </div>
-                                        <div class="cell">
-                                            <div class="form-group checkbox">
-                                                <input type="checkbox" id="order-part">
-                                                <label for="order-part"></label>
-                                            </div>
-                                        </div>
-                                        <div class="cell">
-                                            <button type="button" class="btn-primary btn-blue btn-action" id="add-part-btn">
-                                                <span class="icon-plus"></span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div id="parts-container"></div>
-                                    <div class="card-group">
-                                        <p class="card-title sub-title">Додано:</p>
-                                        <div id="added-parts-container" class="table-parts without-action">
-                                            @foreach($currentClaim->spareParts as $part)
-                                                <div class="row" data-articul="{{ $part->spare_parts }}">
-                                                    <div class="cell">
-                                                        <div class="form-group _bg-white">
-                                                            <input type="text" name="spare_parts[{{ $loop->index }}][spare_parts]" value="{{ $part->spare_parts }}" readonly>
-                                                        </div>
-                                                    </div>
-                                                    <div class="cell">
-                                                        <div class="form-group">
-                                                            <input type="text" name="spare_parts[{{ $loop->index }}][name]" value="{{ $part->product->name }}" readonly>
-                                                        </div>
-                                                        <input type="hidden" name="spare_parts[{{ $loop->index }}][amount_without_vat]" value="{{ $part->amount_without_vat }}">
-                                                        <input type="hidden" name="spare_parts[{{ $loop->index }}][amount_with_vat]" value="{{ $part->amount_with_vat }}">
-                                                    </div>
-                                                    <div class="cell">
-                                                        <div class="form-group">
-                                                            <input type="text" name="spare_parts[{{ $loop->index }}][price_without_vat]" value="{{ $part->price_without_vat }}" readonly>
-                                                        </div>
-                                                    </div>
-                                                    <div class="cell">
-                                                        <div class="form-group _bg-white">
-                                                            <input type="text" name="spare_parts[{{ $loop->index }}][qty]" value="{{ $part->qty }}" readonly>
-                                                        </div>
-                                                    </div>
-                                                    <div class="cell">
-                                                        <div class="form-group">
-                                                            <input type="text" name="spare_parts[{{ $loop->index }}][amount_vat]" value="{{ $part->amount_vat }}" readonly>
-                                                        </div>
-                                                    </div>
-                                                    <div class="cell">
-                                                        <div class="form-group checkbox">
-                                                            <input type="checkbox" id="parts-{{ $part->id }}" {{ $part->checked ? 'checked' : '' }} disabled>
-                                                            <label for="parts-{{ $part->id }}"></label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="cell">
-                                                        <button type="button" class="btn-border btn-red btn-action remove-part-btn" data-part-id="{{ $part->id }}">
-                                                            <span class="icon-minus"></span>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            @endforeach
+                                        <div id="added-parts-container">
+                                            <!-- Додані запчастини -->
                                         </div>
                                     </div>
                                 </div>
@@ -370,47 +320,57 @@
                                         <div class="cell"></div>
                                         <div class="cell"></div>
                                         <div class="cell"></div>
-                                        <div class="cell" id="total-sum">{{ $currentClaim->spareParts->sum('amount_vat') }}</div>
+                                        <div class="cell" id="total-sum">0</div>
+                                        <div class="cell"></div>
                                     </div>
                                 </div>
                             </div>
-                        </div>                    
-
+                            
+                            <div class="table-parts only-footer">
+                                <div class="table-footer">
+                                    <div class="row">
+                                        <div class="cell">Загальна вартість по документу</div>
+                                        <div class="cell"></div>
+                                        <div class="cell"></div>
+                                        <div class="cell"></div>
+                                        <div class="cell" id="total-sum-final">0</div>
+                                        <div class="cell"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    
                         <div class="card-group">
-                            <p class="sub-title">Для пошуку потрібних запчастин перейдіть за посиланням</p>
+                            <p class="sub-title">Для пошуку потрібних запчастин  перейдіть за посиланням</p>
                             <div class="display-grid col-2 gap-8">
                                 <div class="card-content card-text">
-                                    <h2 class="text-underline text-blue">
-                                        <a target="_blank"  class="ts-link" href="https://parts.al-ko.com/shop/parts/index.php?tc_sid=2&tc_cid=1&tc_lid=1
-                                        ">AL-KO</a></h2>
+                                    <h2 class="text-underline text-blue">AL-KO</h2>
                                     <p>Після відкриття, у лівому верхньому куті виберіть директорію: <span class="text-red fw-600">ERSATZTEILSUCHE.</span></p>
                                     <p>Після переходу на іншу сторінку, в правому кутку в порожнє поле внесіть артикульний номер виробу, що Вас цікавить (артикульний номер виробу можна подивитися в прайс-листі або на заводській наклейці).</p>
                                     <p>Щоб дізнатися ціну на деталь, відкрийте каталог зап.частин (додаток №3 до договору з сервісного обслуговування). Комбінація Ctrl - F відкриває пошукове вікно, куди вноситься артикул зап.частини.</p>
                                     <p>За необхідності можна зберігати і друкувати деталі з інтернет бази. Для цього необхідно зліва внизу натиснути кнопку <span class="text-red fw-600">Drucken</span>, після чого вибрати потрібну вам сторінку.</p>
                                 </div>
                                 <div class="card-content card-text">
-                                    <h2 class="text-underline text-blue"><a target="_blank" class="ts-link" href="http://www.briggsandstratton.com
-                                        ">
-                                        B&S</a></h2>
+                                    <h2 class="text-underline text-blue">B&S</h2>
                                     <p>Дотримуючись наведених інструкцій, знайдіть необхідну деталь для вашого продукту Briggs & Stratton</p>
                                 </div>
                             </div>
                         </div>
-
                         <div class="card-group _mb0">
                             <div class="display-grid col-2 gap-8">
                                 <div class="form-group _mb0">
                                     <label for="comment-3">Коментар</label>
-                                    <textarea name="comment_part" id="comment-3" placeholder="Не знайшли потрібні запчастини? Опишіть вашу проблему" rows="3" @if($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) readonly @endif>{{ old('comment_part', $currentClaim->comment_part ?? '') }}</textarea>
+                                    <textarea id="comment-3" placeholder="Не знайшли потрібні запчастини? Опишіть вашу проблему" rows="3"></textarea>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    
                 </div>
             </form>
 
             @if ($currentClaim && $currentClaim->id)
-            <form action="{{ route('warranty-claims.send-to-review', $currentClaim->id) }}" id="send-to-review-form" method="POST" style="display: none;">
+            <form action="{{ route('warranty-claims.send-to-review', $currentClaim->id) }}" id="send-to-review-form" method="POST" style="display: none;" class="js-form-validation">
                 @csrf
                 <input type="hidden" name="barcode" value="{{ $currentClaim->barcode }}">
                 <input type="hidden" name="factory_number" value="{{ $currentClaim->factory_number }}">
@@ -815,60 +775,123 @@ flex-direction: column;
 
     <!-- Код для генерації сервісних робот для певної групи товарів -->
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-    const productGroupSelect = document.getElementById('product-group');
-    const serviceWorksContainer = document.getElementById('service-works-container');
-    const currentClaimServiceWorks = @json($currentClaim ? $currentClaim->serviceWorks->pluck('id')->toArray() : []);
-
-    function loadServiceWorks(groupId) {
-        fetch(`/service/${groupId}`)
-            .then(response => response.json())
-            .then(data => {
-                serviceWorksContainer.innerHTML = ''; // Очистка контейнера перед новым отображением
-
-                data.forEach(work => {
-                    const isChecked = currentClaimServiceWorks.includes(work.id);
-
-                    const checkbox = document.createElement('input');
-                    checkbox.type = 'checkbox';
-                    checkbox.id = `service-${work.id}`;
-                    checkbox.name = 'service_works[]';
-                    checkbox.value = work.id;
-                    checkbox.checked = isChecked;
-
-                    const label = document.createElement('label');
-                    label.htmlFor = `service-${work.id}`;
-                    label.textContent = work.name;
-
-                    const div = document.createElement('div');
-                    div.classList.add('form-group', 'checkbox');
-                    div.appendChild(checkbox);
-                    div.appendChild(label);
-
-                    serviceWorksContainer.appendChild(div);
+        document.addEventListener('DOMContentLoaded', function() {
+            const productGroupSelect = document.getElementById('product-group');
+            const serviceWorksContainer = document.getElementById('service-works-container');
+            const totalDurationElement = document.getElementById('total-duration');
+            const currentClaimServiceWorks = @json($currentClaim ? $currentClaim->serviceWorks->pluck('id')->toArray() : []);
+    
+            let savedCheckboxStates = {};
+    
+            function saveCheckboxStates(groupId) {
+                const checkboxes = serviceWorksContainer.querySelectorAll('input[type="checkbox"]');
+                if (!savedCheckboxStates[groupId]) {
+                    savedCheckboxStates[groupId] = {};
+                }
+                checkboxes.forEach(checkbox => {
+                    savedCheckboxStates[groupId][checkbox.value] = checkbox.checked;
                 });
-            })
-            .catch(error => console.error('Error fetching service works:', error));
-    }
-
-    // Load service works on page load if product group is selected
-    if (productGroupSelect.value !== '-1') {
-        loadServiceWorks(productGroupSelect.value);
-    }
-
-    // Update service works when product group changes
-    productGroupSelect.addEventListener('change', function() {
-        const groupId = this.value;
-        if (groupId !== '-1') {
-            loadServiceWorks(groupId);
-        } else {
-            serviceWorksContainer.innerHTML = '';
-        }
-    });
-});
-
-</script>
-
+                console.log(`Saved states for group ${groupId}:`, savedCheckboxStates[groupId]);
+            }
+    
+            function restoreCheckboxStates(groupId) {
+                const checkboxes = serviceWorksContainer.querySelectorAll('input[type="checkbox"]');
+                if (savedCheckboxStates[groupId]) {
+                    checkboxes.forEach(checkbox => {
+                        if (savedCheckboxStates[groupId][checkbox.value] !== undefined) {
+                            checkbox.checked = savedCheckboxStates[groupId][checkbox.value];
+                        }
+                    });
+                }
+                console.log(`Restored states for group ${groupId}:`, savedCheckboxStates[groupId]);
+            }
+        
+            function loadServiceWorks(groupId) {
+                saveCheckboxStates(productGroupSelect.value);
+                fetch(`/service/${groupId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        serviceWorksContainer.innerHTML = ''; // Очистка контейнера перед новым отображением
+                        let totalDuration = 0;
+        
+                        data.forEach(work => {
+                            const isChecked = currentClaimServiceWorks.includes(work.id) || (savedCheckboxStates[groupId] && savedCheckboxStates[groupId][work.id]);
+                            const duration = work.duration_decimal;
+        
+                            if (isChecked) {
+                                totalDuration += parseFloat(duration);
+                            }
+        
+                            const row = document.createElement('div');
+                            row.classList.add('row');
+        
+                            row.innerHTML = `
+                                <div class="cell">
+                                    <div class="form-group checkbox">
+                                        <input type="checkbox" id="service-${work.id}" name="service_works[]" value="${work.id}" ${isChecked ? 'checked' : ''}>
+                                        <label for="service-${work.id}"></label>
+                                    </div>
+                                </div>
+                                <div class="cell">
+                                    <div class="form-group">
+                                        <input type="text" value="${work.name}" readonly="">
+                                    </div>
+                                </div>
+                                <div class="cell">
+                                    <div class="form-group">
+                                        <input type="text" value="100 000. 00" readonly="">
+                                    </div>
+                                </div>
+                                <div class="cell">
+                                    <div class="form-group">
+                                        <input type="text" value="${duration}" readonly="">
+                                    </div>
+                                </div>
+                                <div class="cell">
+                                    <div class="form-group">
+                                        <input type="text" value="100 000. 00" readonly="">
+                                    </div>
+                                </div>
+                            `;
+        
+                            row.querySelector('input[type="checkbox"]').addEventListener('change', function() {
+                                const durationElement = this.closest('.row').querySelector('.form-group input[type="text"]:last-child');
+                                const durationValue = parseFloat(durationElement.value);
+                                if (this.checked) {
+                                    totalDuration += durationValue;
+                                } else {
+                                    totalDuration -= durationValue;
+                                }
+                                totalDurationElement.textContent = totalDuration.toFixed(2);
+                            });
+        
+                            serviceWorksContainer.appendChild(row);
+                        });
+                        
+                        totalDurationElement.textContent = totalDuration.toFixed(2);
+                        restoreCheckboxStates(groupId);
+                    })
+                    .catch(error => console.error('Error fetching service works:', error));
+            }
+        
+            // Load service works on page load if product group is selected
+            if (productGroupSelect.value !== '-1') {
+                loadServiceWorks(productGroupSelect.value);
+            }
+        
+            // Update service works when product group changes
+            productGroupSelect.addEventListener('change', function() {
+                const groupId = this.value;
+                if (groupId !== '-1') {
+                    loadServiceWorks(groupId);
+                } else {
+                    serviceWorksContainer.innerHTML = '';
+                    totalDurationElement.textContent = '0.00';
+                }
+            });
+        });
+    </script>    
+    
 
 <!-- Копіювання данних ПІБ та телефон -->
 <script>
@@ -887,10 +910,10 @@ flex-direction: column;
 }
 </script>
 
-    <!-- Код для пошуку і збереження запчастини для сейв форми -->
+<!-- Код для пошуку і збереження запчастини для сейв форми -->
 
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('search-articul');
     const partsContainer = document.getElementById('parts-container');
     const addedPartsContainer = document.getElementById('added-parts-container');
@@ -900,7 +923,7 @@ flex-direction: column;
     let totalSum = 0;
     let addedParts = [];
 
-    searchInput.addEventListener('input', function () {
+    searchInput.addEventListener('input', function() {
         const articul = this.value.trim();
 
         if (articul.length >= 3) {
@@ -913,8 +936,6 @@ flex-direction: column;
                             if (part.product_prices && part.product_prices.recommended_price) {
                                 const recommendedPrice = parseFloat(part.product_prices.recommended_price);
                                 const priceWithDiscountAndVat = (recommendedPrice * (1 - discount / 100)).toFixed(2);
-                                const amountWithoutVat = (recommendedPrice).toFixed(2);
-                                const amountWithVat = (recommendedPrice * 1.2).toFixed(2); // assuming VAT is 20%
 
                                 const newRow = `
                                     <div class="row" data-articul="${part.articul}">
@@ -927,12 +948,10 @@ flex-direction: column;
                                             <div class="form-group">
                                                 <input type="text" name="spare_parts_temp[${index}][name]" value="${part.name}" readonly>
                                             </div>
-                                            <input type="hidden" name="spare_parts_temp[${index}][amount_without_vat]" value="${amountWithoutVat}">
-                                            <input type="hidden" name="spare_parts_temp[${index}][amount_with_vat]" value="${amountWithVat}">
                                         </div>
                                         <div class="cell">
                                             <div class="form-group">
-                                                <input type="text" name="spare_parts_temp[${index}][price_without_vat]" value="${priceWithDiscountAndVat}" readonly>
+                                                <input type="text" name="spare_parts_temp[${index}][price]" value="${priceWithDiscountAndVat}" readonly>
                                             </div>
                                         </div>
                                         <div class="cell">
@@ -942,7 +961,7 @@ flex-direction: column;
                                         </div>
                                         <div class="cell">
                                             <div class="form-group">
-                                                <input type="text" name="spare_parts_temp[${index}][amount_vat]" value="${priceWithDiscountAndVat}" readonly class="part-total">
+                                                <input type="text" name="spare_parts_temp[${index}][sum]" value="${priceWithDiscountAndVat}" readonly class="part-total">
                                             </div>
                                         </div>
                                         <div class="cell">
@@ -962,13 +981,13 @@ flex-direction: column;
                                 partsContainer.insertAdjacentHTML('beforeend', newRow);
 
                                 const currentRow = partsContainer.lastElementChild;
-                                currentRow.querySelector('.part-quantity').addEventListener('input', function () {
+                                currentRow.querySelector('.part-quantity').addEventListener('input', function() {
                                     const quantity = parseInt(this.value) || 0;
                                     const total = (priceWithDiscountAndVat * quantity).toFixed(2);
                                     currentRow.querySelector('.part-total').value = total;
                                 });
 
-                                currentRow.querySelector('.add-part-btn').addEventListener('click', function () {
+                                currentRow.querySelector('.add-part-btn').addEventListener('click', function() {
                                     const articul = currentRow.querySelector('input[name*="[spare_parts]"]').value;
 
                                     if (addedParts.some(part => part.articul === articul)) {
@@ -977,14 +996,12 @@ flex-direction: column;
                                     }
 
                                     const name = currentRow.querySelector('input[name*="[name]"]').value;
-                                    const price = parseFloat(currentRow.querySelector('input[name*="[price_without_vat]"]').value);
-                                    const amountWithoutVat = parseFloat(currentRow.querySelector('input[name*="[amount_without_vat]"]').value);
-                                    const amountWithVat = parseFloat(currentRow.querySelector('input[name*="[amount_with_vat]"]').value);
+                                    const price = parseFloat(currentRow.querySelector('input[name*="[price]"]').value);
                                     const quantity = parseInt(currentRow.querySelector('.part-quantity').value);
                                     const total = parseFloat(currentRow.querySelector('.part-total').value);
                                     const checked = currentRow.querySelector(`#parts-${part.id}`).checked;
 
-                                    addedParts.push({ articul, name, price, amountWithoutVat, amountWithVat, quantity, total });
+                                    addedParts.push({ articul, name, price, quantity, total });
 
                                     const addedRow = `
                                         <div class="row" data-articul="${articul}">
@@ -997,12 +1014,10 @@ flex-direction: column;
                                                 <div class="form-group">
                                                     <input type="text" name="spare_parts[${addedParts.length - 1}][name]" value="${name}" readonly>
                                                 </div>
-                                                <input type="hidden" name="spare_parts[${addedParts.length - 1}][amount_without_vat]" value="${amountWithoutVat.toFixed(2)}">
-                                                <input type="hidden" name="spare_parts[${addedParts.length - 1}][amount_with_vat]" value="${amountWithVat.toFixed(2)}">
                                             </div>
                                             <div class="cell">
                                                 <div class="form-group">
-                                                    <input type="text" name="spare_parts[${addedParts.length - 1}][price_without_vat]" value="${price.toFixed(2)}" readonly>
+                                                    <input type="text" name="spare_parts[${addedParts.length - 1}][price]" value="${price.toFixed(2)}" readonly>
                                                 </div>
                                             </div>
                                             <div class="cell">
@@ -1012,7 +1027,7 @@ flex-direction: column;
                                             </div>
                                             <div class="cell">
                                                 <div class="form-group">
-                                                    <input type="text" name="spare_parts[${addedParts.length - 1}][amount_vat]" value="${total.toFixed(2)}" readonly>
+                                                    <input type="text" name="spare_parts[${addedParts.length - 1}][sum]" value="${total.toFixed(2)}" readonly>
                                                 </div>
                                             </div>
                                             <div class="cell">
@@ -1034,7 +1049,7 @@ flex-direction: column;
                                     totalSumElement.textContent = totalSum.toFixed(2);
 
                                     const removeButton = addedPartsContainer.querySelector('.row:last-child .remove-part-btn');
-                                    removeButton.addEventListener('click', function () {
+                                    removeButton.addEventListener('click', function() {
                                         const row = this.closest('.row');
                                         const rowTotal = parseFloat(row.querySelectorAll('input[type="text"]')[4].value);
                                         totalSum -= rowTotal;

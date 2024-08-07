@@ -31,15 +31,12 @@ class GuideController extends Controller
   
     public function getServiceWorksByGroupId($groupId)
     {
-        // Найти группу продуктов по ID
         $productGroup = ProductGroup::find($groupId);
 
-        // Если группа продуктов не найдена, вернуть пустой ответ
         if (!$productGroup) {
             return response()->json([], 404);
         }
 
-        // Использовать code_1C для поиска сервисных работ
         $serviceWorks = ServiceWorks::where('product_group_id', $productGroup->code_1C)->get();
 
         return response()->json($serviceWorks);
