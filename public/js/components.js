@@ -430,6 +430,22 @@ function validate(form_group) {
             });
             break;
           }
+        case 'vanilla-select':
+          {
+            form_group.querySelector('select').addEventListener('change', function () {
+              console.log(1488);
+              if (form_group.classList.contains('required') || form_group.classList.contains('required-merged')) {
+                if (i === 0) {
+                  error_count = +!validateField(form_group, valid_type);
+                } else {
+                  if (error_count === 0) {
+                    error_count = +!validateField(form_group, valid_type);
+                  }
+                }
+              }
+            });
+            break;
+          }
         case 'mask':
           {
             // console.log(form_group);
@@ -523,7 +539,7 @@ function validateField(form_group, valid_type) {
   switch (valid_type) {
     case 'empty':
       {
-        var input = form_group.querySelector('input, textarea');
+        var input = form_group.querySelector('input, textarea, select');
         if (input.value.trim() === "") {
           form_group.classList.add('has-error');
           helpBock.innerHTML = helpBock.dataset.empty;
@@ -571,6 +587,19 @@ function validateField(form_group, valid_type) {
         }
         if (val === '') {
           form_group.classList.add('has-error');
+          result = false;
+        } else {
+          form_group.classList.remove('has-error');
+          result = true;
+        }
+        break;
+      }
+    case 'vanilla-select':
+      {
+        var select = form_group.querySelector('select');
+        if (select.value.trim() === '-1') {
+          form_group.classList.add('has-error');
+          helpBock.innerHTML = helpBock.dataset.empty;
           result = false;
         } else {
           form_group.classList.remove('has-error');
@@ -659,7 +688,6 @@ function validateForm(form) {
       }
     }
   });
-  console.log(errors_fields);
   if (errors === 0) {
     return true;
   } else {

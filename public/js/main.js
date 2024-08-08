@@ -289,7 +289,6 @@ if (document.querySelector('.custom-scrollbar')) {
 }
 window.addEventListener('scroll', datepickerPositionInScroll);
 function datepickerPositionInScroll() {
-  console.log('ddd');
   if (datepickerInputs.length > 0) {
     datepickerInputs.forEach(function (input) {
       var container = document.querySelector("#".concat(input.dataset.containerId));
@@ -320,11 +319,34 @@ if (document.querySelector('.swiper-gallery')) {
 var formsValidation = document.querySelectorAll('.js-form-validation');
 if (formsValidation.length > 0) {
   formsValidation.forEach(function (form) {
-    console.log(form);
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       if (validateForm(form)) {
         form.submit();
+      }
+    });
+  });
+}
+
+// Btn required switcher
+var btnRequiredSwitcher = document.querySelectorAll('.js-btn-required-switcher');
+if (btnRequiredSwitcher.length > 0) {
+  btnRequiredSwitcher.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      if (btn.dataset.requiredSwitcher && btn.dataset.requiredSwitcher !== "") {
+        var form = btn.closest('form'),
+          action;
+        if (btn.getAttribute('form')) {
+          form = document.getElementById(btn.getAttribute('form'));
+        }
+        if (btn.dataset.requiredSwitcher === 'add') {
+          action = 'add';
+        } else if (btn.dataset.requiredSwitcher === 'remove') {
+          action = 'remove';
+        }
+        if (form && action) {
+          toggleRequired(form, action);
+        }
       }
     });
   });
