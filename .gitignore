@@ -1,3 +1,5 @@
 /_docker/
 /docker-compose.yml
 /tmp/
+.env
+**/.DS_Store

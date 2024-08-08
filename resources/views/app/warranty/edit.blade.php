@@ -28,7 +28,7 @@
 
 
         <div class="modal-overlay"></div>
-    
+
         <!--         modal switch manager -->
         <div class="modal modal-manager js-modal js-modal-switch-manager">
             <button type="button" class="icon-close-fill btn-close _js-btn-close-modal" id="modal-close"></button>
@@ -123,7 +123,7 @@
                         <div class="card-content card-form">
                             <p class="card-title">Дані того Хто звернувся</p>
                             <button type="button" class="btn-link btn-copy btn-blue" onclick="copyToClipboard()" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) disabled @endif> Копіювати данні покупця</button>
-      
+
                             <div class="inputs-group one-row">
                                 <div class="form-group required" data-valid="empty">
                                     <label for="sender-name">ПІБ</label>
@@ -227,7 +227,7 @@
                     <div class="card-content card-form service-work">
                         <div class="card-title__wrapper">
                             <p class="card-title">Сервісні роботи</p>
-                            
+
                             <div class="form-group default-select">
                                 <select name="product_group" id="product-group">
                                     <option value="-1">Виберіть групу товару</option>
@@ -237,7 +237,7 @@
                                 </select>
                             </div>
                         </div>
-                        
+
                         <div class="display-grid">
                             <div class="inputs-group one-column">
                                 <div class="table-parts">
@@ -297,7 +297,7 @@
                                         </div>
                                     </div>
                                 </div>
-                    
+
                                 <div class="display-grid col-2">
                                     <div class="form-group">
                                         <label for="comment_service">Опис додаткових робіт</label>
@@ -307,7 +307,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="card-content card-form used-parts">
                         <div class="card-title__wrapper">
                             <p class="card-title">Використані запчастини</p>
@@ -316,7 +316,7 @@
                                 <input type="text" id="search-articul" placeholder="XXXXXX-XXX">
                             </div>
                         </div>
-                    
+
                         <div class="card-group">
                             <div class="table-parts">
                                 <div class="table-header">
@@ -325,7 +325,7 @@
                                         <div class="cell">Назва</div>
                                         <div class="cell">Ціна</div>
                                         <div class="cell">Кількість</div>
-                                        {{-- <div class="cell">Знижка, %</div> --}}
+                                        <div class="cell">Знижка, %</div>
                                         <div class="cell">Всього зі знижкою, грн</div>
                                         <div class="cell">Замовити</div>
                                         <div class="cell">Дія</div>
@@ -364,6 +364,11 @@
                                                     </div>
                                                     <div class="cell">
                                                         <div class="form-group">
+                                                            <input type="text" name="discount" value="20" readonly>
+                                                        </div>
+                                                    </div>
+                                                    <div class="cell">
+                                                        <div class="form-group">
                                                             <input type="text" name="spare_parts[{{ $index }}][sum]" value="{{ $part->sum }}" readonly>
                                                         </div>
                                                     </div>
@@ -389,16 +394,18 @@
                                         <div class="cell"></div>
                                         <div class="cell"></div>
                                         <div class="cell"></div>
+                                        <div class="cell"></div>
                                         <div class="cell" id="total-parts-sum">0</div>
                                         <div class="cell"></div>
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="table-parts only-footer">
                                 <div class="table-footer">
                                     <div class="row">
                                         <div class="cell">Загальна вартість по документу</div>
+                                        <div class="cell"></div>
                                         <div class="cell"></div>
                                         <div class="cell"></div>
                                         <div class="cell"></div>
@@ -408,7 +415,7 @@
                                 </div>
                             </div>
                         </div>
-                    
+
                         <div class="card-group">
                             <p class="sub-title">Для пошуку потрібних запчастин  перейдіть за посиланням</p>
                             <div class="display-grid col-2 gap-8">
@@ -434,7 +441,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                 </div>
             </form>
 
@@ -464,7 +471,7 @@
                  <input type="hidden" name="service_works" id="service-works-hidden">
 
                 <div id="added-parts-hidden"></div>
-        
+
             </form>
 
             <form action="{{ route('warranty-claims.take-to-work', $currentClaim->id) }}" id="take-to-work-form" method="GET" style="display: none;">
@@ -639,7 +646,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const addedPartsContainer = document.getElementById('added-parts-container');
     const totalPartsSumElement = document.getElementById('total-parts-sum');
     const discount = {{ $defaultDiscount ?? 0 }};
-    
+
     let addedParts = [];
 
     // Функция для пересчета общей суммы запчастей
@@ -654,21 +661,21 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         totalPartsSumElement.textContent = totalSum.toFixed(2);
     }
-    
+
     searchInput.addEventListener('input', function() {
         const articul = this.value.trim();
-    
+
         if (articul.length >= 3) {
             fetch(`/parts/${articul}`)
                 .then(response => response.json())
                 .then(data => {
-                    partsContainer.innerHTML = ''; 
+                    partsContainer.innerHTML = '';
                     if (data.data.length > 0) {
                         data.data.forEach((part, index) => {
                             if (part.product_prices && part.product_prices.recommended_price) {
                                 const recommendedPrice = parseFloat(part.product_prices.recommended_price);
                                 const priceWithDiscountAndVat = (recommendedPrice * (1 - discount / 100)).toFixed(2);
-    
+
                                 const newRow = `
                                     <div class="row" data-articul="${part.articul}">
                                         <div class="cell">
@@ -691,7 +698,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                                 <input type="number" name="spare_parts_temp[${index}][qty]" value="1" class="part-quantity">
                                             </div>
                                         </div>
-    
+
                                         <div class="cell">
                                             <div class="form-group">
                                                 <input type="text" name="spare_parts_temp[${index}][sum]" value="${priceWithDiscountAndVat}" readonly class="part-total">
@@ -710,32 +717,32 @@ document.addEventListener('DOMContentLoaded', function() {
                                         </div>
                                     </div>
                                 `;
-    
+
                                 partsContainer.insertAdjacentHTML('beforeend', newRow);
-    
+
                                 const currentRow = partsContainer.lastElementChild;
                                 currentRow.querySelector('.part-quantity').addEventListener('input', function() {
                                     const quantity = parseInt(this.value) || 0;
                                     const total = (priceWithDiscountAndVat * quantity).toFixed(2);
                                     currentRow.querySelector('.part-total').value = total;
                                 });
-    
+
                                 currentRow.querySelector('.add-part-btn').addEventListener('click', function() {
                                     const articul = currentRow.querySelector('input[name*="[spare_parts]"]').value;
-    
+
                                     if (addedParts.some(part => part.articul === articul)) {
                                         alert('Запчастина вже добавлена');
                                         return;
                                     }
-    
+
                                     const name = currentRow.querySelector('input[name*="[name]"]').value;
                                     const price = parseFloat(currentRow.querySelector('input[name*="[price]"]').value);
                                     const quantity = parseInt(currentRow.querySelector('.part-quantity').value);
                                     const total = parseFloat(currentRow.querySelector('.part-total').value);
                                     const checked = currentRow.querySelector(`#parts-${part.id}`).checked;
-    
+
                                     addedParts.push({ articul, name, price, quantity, total });
-    
+
                                     const addedRow = `
                                         <div class="row" data-articul="${articul}">
                                             <div class="cell">
@@ -776,10 +783,10 @@ document.addEventListener('DOMContentLoaded', function() {
                                             </div>
                                         </div>
                                     `;
-    
+
                                     addedPartsContainer.insertAdjacentHTML('beforeend', addedRow);
                                     calculateTotalPartsSum();
-    
+
                                     const removeButton = addedPartsContainer.querySelector('.row:last-child .remove-part-btn');
                                     removeButton.addEventListener('click', function() {
                                         const row = this.closest('.row');
@@ -885,7 +892,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-    
+
 <!-- Відображення менеджерів в модалці -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -927,7 +934,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     searchInput.addEventListener('input', function () {
         const query = this.value.toLowerCase();
-        const filteredManagers = managersList.filter(manager => 
+        const filteredManagers = managersList.filter(manager =>
             manager.first_name_ru.toLowerCase().includes(query)
         );
         displayManagers(filteredManagers);
@@ -946,8 +953,8 @@ document.addEventListener('DOMContentLoaded', function() {
             fadeOut(modal, () => {
                 modal.classList.remove('open');
             });
-            modalOverlay.classList.add('hide'); 
-            modalOverlay.classList.remove('show'); 
+            modalOverlay.classList.add('hide');
+            modalOverlay.classList.remove('show');
         }
     });
 
@@ -987,7 +994,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function displayManagers(managers) {
-        modalBody.innerHTML = ''; 
+        modalBody.innerHTML = '';
         managers.forEach(manager => {
             const managerRow = `
                 <div class="form-group radio">
@@ -1097,7 +1104,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const totalSumElement = document.getElementById('total-sum');
     const currentClaimServiceWorks = @json($currentClaim ? $currentClaim->serviceWorks->pluck('id')->toArray() : []);
     const contractPrice = {{ $defaultContract ? $defaultContract->service_works_price : 0 }};
-    
+
     let savedCheckboxStates = {};
     let totalSum = 0;
 
@@ -1141,7 +1148,7 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch(`/service/${groupId}`)
             .then(response => response.json())
             .then(data => {
-                serviceWorksContainer.innerHTML = ''; 
+                serviceWorksContainer.innerHTML = '';
                 let totalDuration = 0;
 
                 data.forEach(work => {
@@ -1232,8 +1239,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-</script>    
-    
+</script>
+
 
 <!-- Копіювання данних ПІБ та телефон -->
 <script>
@@ -1280,7 +1287,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const option = document.createElement('option');
                 option.value = data.contract.id;
                 option.textContent = `${data.contract.number}`;
-                serviceContractSelect.innerHTML = ''; 
+                serviceContractSelect.innerHTML = '';
                 serviceContractSelect.appendChild(option);
                 serviceContractSelect.value = data.contract.id;
 
@@ -1314,11 +1321,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const dateInputs = document.querySelectorAll('._js-datepicker');
     dateInputs.forEach((input, index) => {
         const containerId = input.getAttribute('data-container-id') || `datepicker-container-${index}`;
-        
+
         const currentDate = new Date();
         const formattedDate = currentDate.toISOString().split('T')[0];
         input.value = formattedDate;
-        
+
         new Datepicker(input, {
             format: 'yyyy-mm-dd',
             autohide: true,
