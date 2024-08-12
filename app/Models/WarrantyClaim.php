@@ -21,7 +21,7 @@ class WarrantyClaim extends Model
         'product_name', 'product_article','factory_number', 'barcode',
         'service_partner', 'service_contract', 'point_of_sale', 'autor',
         'date', 'date_of_sale', 'date_of_claim', 'type_of_claim',
-        'is_deleted', 'created_at', 'updated_at',
+        'is_deleted',
         'product_group_id', 'file_paths', 
         'comment', 'comment_service', 'comment_part', 
         'sender_name', 'sender_phone', 'receipt_number', 
@@ -65,6 +65,11 @@ class WarrantyClaim extends Model
     public function serviceWorks()
     {
         return $this->belongsToMany(ServiceWorks::class, 'warranty_claim_service_works', 'warranty_claim_id', 'service_work_id');
+    }
+
+    public function serviceWorksAPI()
+    {
+        return $this->hasMany(WarrantyClaimServiceWork::class, 'warranty_claim_id');
     }
 
     public function statusColor()

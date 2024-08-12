@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Api;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class WarrantyClaimRequest extends FormRequest
 {
@@ -14,6 +16,7 @@ class WarrantyClaimRequest extends FormRequest
     public function rules(): array
     {
         return [
+            // '*.id' => 'nullable|integer',
             '*.code_1C' => 'required|string|max:255',
             '*.number' => 'nullable|integer',
             '*.product_name' => 'nullable|string|max:255',
@@ -22,7 +25,7 @@ class WarrantyClaimRequest extends FormRequest
             '*.barcode' => 'nullable|string|max:255',
             '*.service_partner' => 'nullable|integer',
             '*.service_contract' => 'nullable|integer',
-            '*.point_of_sale' => 'nullable|integer',
+            '*.point_of_sale' => 'nullable|string',
             '*.autor' => 'nullable|integer',
             '*.date' => 'nullable|date',
             '*.date_of_sale' => 'nullable|date',
@@ -58,5 +61,19 @@ class WarrantyClaimRequest extends FormRequest
             '*.service_works.*.discount' => 'nullable|numeric',
             '*.service_works.*.sum' => 'nullable|numeric',
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(
+            response()->json([
+                'status' => 'validation_error',
+                'errors' => $validator->errors(),
+            ], 422)
+            ->withHeaders([
+                'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
+                'Pragma' => 'no-cache',
+            ])
+        );
     }
 }

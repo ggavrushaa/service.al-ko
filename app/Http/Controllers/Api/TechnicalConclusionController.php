@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
+use Carbon\Carbon;
+use App\Models\DefectCodes;
+use App\Models\SymptomCodes;
 use Illuminate\Http\Request;
+use App\Models\WarrantyClaim;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\TechnicalConclusionRequest;
@@ -27,14 +31,14 @@ class TechnicalConclusionController extends Controller
             return [
                 'id' => $conclusion->id,
                 'code_1C' => $conclusion->code_1C,
-                'warranty_claim_code_1C' => optional($conclusion->warrantyClaim)->code_1C,
-                'defect_code_1C' => optional($conclusion->defectCode)->code_1C,
-                'symptom_code_1C' => optional($conclusion->symptomCode)->code_1C,
+                'warranty_claim_code_id' => optional($conclusion->warrantyClaim)->code_1C,
+                'defect_code' => optional($conclusion->defectCode)->code_1C,
+                'symptom_code' => optional($conclusion->symptomCode)->code_1C,
                 'conclusion' => $conclusion->conclusion,
                 'resolution' => $conclusion->resolution,
                 'date' => $conclusion->date,
-                'created_at' => $conclusion->created_at,
-                'updated_at' => $conclusion->updated_at,
+                'created_at' => Carbon::parse($conclusion->created_at)->format('Y-m-d H:i:s'),
+                'updated_at' => Carbon::parse($conclusion->updated_at)->format('Y-m-d H:i:s'),
             ];
         });
     
@@ -52,36 +56,65 @@ class TechnicalConclusionController extends Controller
         $technicalConclusions = $request->all();
         $createdCount = 0;
         $updatedCount = 0;
-        $results = [];
-    
+        $errors = [];
+
         foreach ($technicalConclusions as $data) {
-            $technicalConclusion = TechnicalConclusion::updateOrCreate(
-                ['code_1C' => $data['code_1C']],
-                $data
-            );
+            try {
+                // Ищем ID по коду 1С в таблице warranty_claims
+                $warrantyClaim = WarrantyClaim::where('code_1C', $data['warranty_claim_id'])->first();
+                if (!$warrantyClaim) {
+                    throw new \Exception("Warranty claim with code_1C {$data['warranty_claim_code_id']} not found");
+                }
+
+                // Ищем ID по коду 1С в таблице defect_codes
+                $defectCode = DefectCodes::where('code_1C', $data['defect_code'])->first();
+                if (!$defectCode) {
+                    throw new \Exception("Defect code with code_1C {$data['defect_code']} not found");
+                }
+
+                // Ищем ID по коду 1С в таблице symptom_codes
+                $symptomCode = SymptomCodes::where('code_1C', $data['symptom_code'])->first();
+                if (!$symptomCode) {
+                    throw new \Exception("Symptom code with code_1C {$data['symptom_code']} not found");
+                }
+
+                $technicalConclusion = TechnicalConclusion::updateOrCreate(
+                    ['code_1C' => $data['code_1C']],
+                    [
+                        'warranty_claim_id' => $warrantyClaim->id,
+                        'defect_code' => $defectCode->id,
+                        'symptom_code' => $symptomCode->id,
+                        'conclusion' => $data['conclusion'],
+                        'resolution' => $data['resolution'],
+                        'date' => $data['date'],
+                        'appeal_type' => $data['appeal_type'],
+                        'number_1c' => $data['number_1c'],
+                    ]
+                );
+
+                if ($technicalConclusion->wasRecentlyCreated) {
+                    $createdCount++;
+                    $action = 'Создано';
+                } else {
+                    $updatedCount++;
+                    $action = 'Оновлено';
+                }
     
-            if ($technicalConclusion->wasRecentlyCreated) {
-                $createdCount++;
-                $action = 'Создано';
-            } else {
-                $updatedCount++;
-                $action = 'Оновлено';
+                Log::channel('technical_conclusions')->info("$action техническое заключение", ['id' => $technicalConclusion->id]);
+    
+            } catch (\Exception $e) {
+                $errors[] = [
+                    'error' => $e->getMessage(),
+                    'data' => $data,
+                ];
             }
-    
-            $results[] = [
-                'message' => $action,
-                'record_id' => $technicalConclusion->id,
-                'data' => $technicalConclusion,
-            ];
-    
-            Log::channel('technical_conclusions')->info("$action техническое заключение", ['id' => $technicalConclusion->id]);
         }
     
         return response()->json([
             'created_count' => $createdCount,
             'updated_count' => $updatedCount,
-            'results' => $results,
-        ], 200);
+            'errors' => $errors,
+        ], empty($errors) ? 200 : 400);
     }
 
 }

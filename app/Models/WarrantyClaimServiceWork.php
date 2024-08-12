@@ -25,4 +25,9 @@ class WarrantyClaimServiceWork extends Model
         'discount',
         'line_number',
     ];
+
+    public function serviceWork()
+    {
+        return $this->belongsTo(ServiceWorks::class, 'service_work_id');
+    }
 }

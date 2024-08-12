@@ -15,6 +15,7 @@ use App\Events\WarrantyClaimApproved;
 use App\Enums\WarrantyClaimStatusEnum;
 use App\Models\TechnicalConclusion\TechnicalConclusion;
 use App\Http\Requests\Conclusion\StoreTechnicalConclusionRequest;
+use Illuminate\Support\Facades\Log;
 
 class TechnicalConclusionController extends Controller
 {
@@ -129,6 +130,34 @@ class TechnicalConclusionController extends Controller
 
         return redirect()->back()->with('status', 'Акт технічної експертизи оновлено та затверджено');
     }
+
+    public function save(Request $request, $id)
+    {
+        Log::info('Technical Conclusion request:', $request->all());
+        $validatedData = $request->validate([
+            'conclusion' => 'nullable|string',
+            'resolution' => 'nullable|string',
+            'defect_code' => 'nullable|integer',
+            'symptom_code' => 'nullable|integer',
+            'appeal_type' => 'nullable|string',
+        ]);
+
+        $technicalConclusion = TechnicalConclusion::where('warranty_claim_id', $id)->first();
+
+        if ($technicalConclusion) {
+            $technicalConclusion->update($validatedData);
+        } else {
+            $technicalConclusion = new TechnicalConclusion($validatedData);
+            $technicalConclusion->warranty_claim_id = $id;
+            $technicalConclusion->date = date('Y-m-d');
+            $technicalConclusion->code_1C = null;
+            $technicalConclusion->save();
+        }
+        Log::info('Technical Conclusion saved:', $validatedData);
+
+        return redirect()->back()->with('status', 'Акт технічної експертизи збережено');
+    }
+
     
 }
     

@@ -270,7 +270,7 @@ if (datepickerInputs.length > 0) {
     new Datepicker(input, {
       container: '#datepicker-container-' + index,
       autohide: true,
-      format: 'dd.mm.yyyy'
+      format: 'yyyy-mm-dd'
     });
     input.addEventListener('input', function () {
       input.value = '';
