@@ -34,6 +34,7 @@ Route::group(['middleware' => ['auth',]], function () {
     Route::get('/warranty_claims', [WarrantyClaimController::class, 'index'])->name('app.warranty.index');
     Route::get('/search', [GuaranteeCouponController::class, 'index'])->name('app.search');
 
+    Route::get('/warranty/create/{barcode?}/{factory_number?}', [WarrantyClaimController::class, 'create'])->name('app.warranty.create');
     Route::get('/warranty/edit/{id}', [WarrantyClaimController::class, 'edit'])->name('app.warranty.edit');
 
     Route::post('/conclusion', [TechnicalConclusionController::class, 'store'])->name('app.conclusion.store');
@@ -67,6 +68,9 @@ Route::group(['middleware' => ['auth',]], function () {
 
     // Пошук запчастин
     Route::get('/parts/{articul}/{page?}', [PartsController::class, 'search'])->name('parts.search');
+
+    // Збереження акту
+    Route::post('/technical-conclusions/{id}/save', [TechnicalConclusionController::class, 'save'])->name('technical-conclusions.save');
 
     // Підбір контракту по сервісному центру
     Route::post('/get-contract-details', [WarrantyClaimController::class, 'getContractDetails']);

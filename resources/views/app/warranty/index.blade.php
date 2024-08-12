@@ -30,6 +30,7 @@
                         </div>
                     </div>
                     <div class="tbody">
+                        {{-- {{dd($warrantyClaims)}} --}}
                         @foreach ($warrantyClaims as $claim)
                              <div class="tr" data-url="{{ route('app.warranty.edit', $claim->id) }}" onclick="window.location.href=this.dataset.url">
                                 <div class="td">
@@ -38,8 +39,8 @@
                                 <div class="td">{{$claim->date}}</div>
                                 <div class="td">{{$claim->product_article}}</div>
                                 <div class="td">{{$claim->product_name}}</div>
-                                <div class="td">{{ $claim->spareParts->sum('amount_vat') ?? 'Не вказано' }}</div>
-                                <div class="td">{{rand(1000, 5000)}}</div>
+                                <div class="td">{{ $claim->spareParts->sum('sum') ?? 'Не вказано' }}</div>
+                                <div class="td">{{ $claim->serviceWorksAPI->sum('sum') ?? 'Не вказано' }}</div>
                                 <div class="td">
                                     <button type="button" class="btn-label blue">
                                         {{ $claim->status }}
@@ -210,461 +211,98 @@
 
 </style>
 
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    // Handle row click for edit navigation
-    document.querySelectorAll('.tbody').forEach(tbody => {
-        tbody.addEventListener('click', function(event) {
-            const target = event.target.closest('.tr');
-            if (target && !event.target.closest('a') && !event.target.closest('button')) {
-                window.location.href = target.dataset.url;
-            }
-        });
-    });
-
-    // Handle sorting
-    document.querySelectorAll('.icon-switch').forEach(el => {
-        el.addEventListener('click', function (event) {
-            event.preventDefault();
-            const column = event.target.getAttribute('data-column');
-            const order = event.target.getAttribute('data-order');
-            const newOrder = order === 'asc' ? 'desc' : 'asc';
-            const authUserRole = {{ auth()->user()->role_id }};
-
-            fetch(`/warranty-claims/sort?column=${column}&order=${newOrder}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok ' + response.statusText);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Sorted data:', data);
-                    if (data.length === 0) {
-                        console.error('No data returned');
-                    } else {
-                        const tbody = document.querySelector('.tbody');
-                        tbody.innerHTML = '';
-
-                        data.forEach(claim => {
-                            const totalVat = claim.spare_parts.reduce((sum, part) => sum + parseFloat(part.amount_vat), 0);
-                            console.log('Total VAT:', totalVat);
-                            
-                            const tr = document.createElement('div');
-                            tr.classList.add('tr');
-                            tr.dataset.url = `/warranty/edit/${claim.id}`;
-                            tr.innerHTML = `
-                                <div class="td"><a href="/warranty/edit/${claim.id}" class="table-link">${claim.number}</a></div>
-                                <div class="td">${claim.date}</div>
-                                <div class="td">${claim.product_article}</div>
-                                <div class="td">${claim.product_name}</div>
-                                <div class="td">${totalVat.toFixed(2)}</div>
-                                <div class="td">${claim.works_cost || 'Не вказано'}</div>
-                                <div class="td"><button type="button" class="btn-label blue">${claim.status}</button></div>
-                                <div class="td">${claim.user ? claim.user.first_name_ru : 'Не вказано'}</div>
-                                <div class="td">${claim.manager ? claim.manager.first_name_ru : 'Не вказано'}</div>
-                                <div class="td _empty"></div>
-                                <div class="td">
-                                    ${authUserRole === 2 ? '<a href="#" class="btn-action icon-user _js-btn-show-modal" data-claim-id="' + claim.id + '" data-modal="switch-manager"></a>' : ''}
-                                    <a href="#" class="btn-action icon-message _js-btn-show-modal" data-claim-id="${claim.id}" data-modal="chat"></a>
-                                </div>
-                            `;
-                            tbody.appendChild(tr);
-                        });
-
-                        // Reinitialize event listeners for new elements
-                        initModalHandlers();
-
-                        // Update the data-order attribute for all switches to 'asc'
-                        document.querySelectorAll('.icon-switch').forEach(el => {
-                            el.setAttribute('data-order', 'asc');
-                        });
-                        // Set the new order for the clicked switch
-                        event.target.setAttribute('data-order', newOrder);
-                    }
-                })
-                .catch(error => console.error('Error fetching sorted data:', error));
-        });
-    });
-
-    // Initialize modal handling for manager reassignment and chat
-    function initModalHandlers() {
-        let currentClaimId = null;
-        let managersList = [];
-        const modalOverlay = document.querySelector('.modal-overlay');
-        const modal = document.querySelector('.js-modal-switch-manager');
-        const modalBody = modal ? modal.querySelector('.manager-body') : null;
-        const searchInput = modal ? modal.querySelector('input[name="manager-search"]') : null;
-        const reassignButton = modal ? modal.querySelector('.change-manager-btn') : null;
-
-        document.addEventListener('click', function(event) {
-            if (event.target.matches('.btn-action.icon-user._js-btn-show-modal')) {
-                event.preventDefault();
-                currentClaimId = event.target.getAttribute('data-claim-id');
-                openModal('switch-manager');
-
-                // Fetch and display manager list
-                fetch('/managers')
-                    .then(response => response.json())
-                    .then(data => {
-                        managersList = data; // Store the managers list
-                        displayManagers(managersList);
-                        fadeIn(modal);
-                        fadeIn(modalOverlay);
-                    })
-                    .catch(error => console.error('Error fetching managers:', error));
-            }
-
-            if (event.target.matches('.btn-action.icon-message._js-btn-show-modal')) {
-                event.preventDefault();
-                currentClaimId = event.target.getAttribute('data-claim-id');
-                openModal('chat');
-            }
-        });
-
-        function openModal(modalType) {
-            const modal = document.querySelector(`.js-modal-${modalType}`);
-            if (modal) {
-                fadeIn(modal);
-                fadeIn(modalOverlay);
-            }
-        }
-
-        function fadeIn(element) {
-            element.style.display = 'block';
-            element.style.opacity = 0;
-            let last = +new Date();
-            const tick = function () {
-                element.style.opacity = +element.style.opacity + (new Date() - last) / 400;
-                last = +new Date();
-                if (+element.style.opacity < 1) {
-                    (window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16);
-                }
-            };
-            tick();
-        }
-
-        modalOverlay.addEventListener('click', function () {
-            const modals = document.querySelectorAll('.js-modal');
-            modals.forEach(modal => fadeOut(modal));
-            fadeOut(modalOverlay);
-        });
-
-        function fadeOut(element) {
-            element.style.opacity = 1;
-            let last = +new Date();
-            const tick = function () {
-                element.style.opacity = +element.style.opacity - (new Date() - last) / 400;
-                last = +new Date();
-                if (+element.style.opacity > 0) {
-                    (window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16);
-                } else {
-                    element.style.display = 'none';
-                }
-            };
-            tick();
-        }
-
-        // Display the list of managers
-        function displayManagers(managers) {
-            modalBody.innerHTML = '';
-            managers.forEach(manager => {
-                const managerRow = `
-                    <div class="form-group radio">
-                        <input type="radio" id="manager-${manager.id}" name="manager" value="${manager.id}">
-                        <label for="manager-${manager.id}">${manager.first_name_ru}</label>
-                    </div>
-                `;
-                modalBody.insertAdjacentHTML('beforeend', managerRow);
-            });
-        }
-
-        if (searchInput) {
-            searchInput.addEventListener('input', function () {
-                const query = this.value.toLowerCase();
-                const filteredManagers = managersList.filter(manager => 
-                    manager.first_name_ru.toLowerCase().includes(query)
-                );
-                displayManagers(filteredManagers);
-            });
-        }
-
-        reassignButton.addEventListener('click', function () {
-            const selectedRadio = modalBody.querySelector('input[type="radio"][name="manager"]:checked');
-            if (!selectedRadio) {
-                alert('Виберіть менеджера');
-                return;
-            }
-            const selectedManagerId = selectedRadio.value;
-            console.log('Selected Manager ID:', selectedManagerId);
-
-            fetch(`/warranty-claims/${currentClaimId}/update-manager`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({ manager_id: selectedManagerId })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const managerName = selectedRadio.nextElementSibling.textContent;
-                    const tr = document.querySelector(`.tr[data-claim-id="${currentClaimId}"]`);
-                    if (tr) {
-                        const managerCell = tr.querySelector('.td:nth-child(9)');
-                        if (managerCell) {
-                            managerCell.textContent = managerName;
-                        }
-                    }
-                    fadeOut(modal, function () {
-                        modal.classList.remove('open');
-                    });
-                    fadeOut(modalOverlay);
-                    alert(data.message);
-                    location.reload();
-                } else {
-                    alert(data.message);
-                }
-            })
-            .catch(error => console.error('Error updating manager:', error));
-        });
-    }
-
-    initModalHandlers();
-});
-</script>
-
 
 <!-- Сортування -->
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    // Handle row click for edit navigation
-    document.querySelectorAll('.tbody').forEach(tbody => {
-        tbody.addEventListener('click', function(event) {
-            const target = event.target.closest('.tr');
-            if (target && !event.target.closest('a') && !event.target.closest('button')) {
-                window.location.href = target.dataset.url;
-            }
-        });
-    });
+    const authUserRole = {{ auth()->user()->role_id }}; // Определение переменной authUserRole
+    let isSorting = false; // Флаг для предотвращения повторных запросов
 
-    // Handle sorting
-    document.querySelectorAll('.icon-switch').forEach(el => {
-        el.addEventListener('click', function (event) {
-            event.preventDefault();
-            const column = event.target.getAttribute('data-column');
-            const order = event.target.getAttribute('data-order');
-            const newOrder = order === 'asc' ? 'desc' : 'asc';
-            const authUserRole = {{ auth()->user()->role_id }};
-
-            fetch(`/warranty-claims/sort?column=${column}&order=${newOrder}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok ' + response.statusText);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Sorted data:', data);
-                    if (data.length === 0) {
-                        console.error('No data returned');
-                    } else {
-                        const tbody = document.querySelector('.tbody');
-                        tbody.innerHTML = '';
-
-                        data.forEach(claim => {
-                            const totalVat = claim.spare_parts.reduce((sum, part) => sum + parseFloat(part.amount_vat), 0);
-                            console.log('Total VAT:', totalVat);
-                            
-                            const tr = document.createElement('div');
-                            tr.classList.add('tr');
-                            tr.dataset.claimId = claim.id; // Ensure claim ID is properly set
-                            tr.dataset.url = `/warranty/edit/${claim.id}`;
-                            tr.innerHTML = `
-                                <div class="td"><a href="/warranty/edit/${claim.id}" class="table-link">${claim.number}</a></div>
-                                <div class="td">${claim.date}</div>
-                                <div class="td">${claim.product_article}</div>
-                                <div class="td">${claim.product_name}</div>
-                                <div class="td">${totalVat.toFixed(2)}</div>
-                                <div class="td">${claim.works_cost || 'Не вказано'}</div>
-                                <div class="td"><button type="button" class="btn-label blue">${claim.status}</button></div>
-                                <div class="td">${claim.user ? claim.user.first_name_ru : 'Не вказано'}</div>
-                                <div class="td">${claim.manager ? claim.manager.first_name_ru : 'Не вказано'}</div>
-                                <div class="td _empty"></div>
-                                <div class="td">
-                                    ${authUserRole === 2 ? '<a href="#" class="btn-action icon-user _js-btn-show-modal" data-claim-id="' + claim.id + '" data-modal="switch-manager"></a>' : ''}
-                                    <a href="#" class="btn-action icon-message _js-btn-show-modal" data-claim-id="${claim.id}" data-modal="chat"></a>
-                                </div>
-                            `;
-                            tbody.appendChild(tr);
-                        });
-
-                        // Reinitialize event listeners for new elements
-                        initModalHandlers();
-
-                        // Update the data-order attribute for all switches to 'asc'
-                        document.querySelectorAll('.icon-switch').forEach(el => {
-                            el.setAttribute('data-order', 'asc');
-                        });
-                        // Set the new order for the clicked switch
-                        event.target.setAttribute('data-order', newOrder);
-                    }
-                })
-                .catch(error => console.error('Error fetching sorted data:', error));
-        });
-    });
-
-    // Initialize modal handling for manager reassignment and chat
-    function initModalHandlers() {
-        let currentClaimId = null;
-        let managersList = [];
-        const modalOverlay = document.querySelector('.modal-overlay');
-        const modal = document.querySelector('.js-modal-switch-manager');
-        const modalBody = modal ? modal.querySelector('.manager-body') : null;
-        const searchInput = modal ? modal.querySelector('input[name="manager-search"]') : null;
-        const reassignButton = modal ? modal.querySelector('.change-manager-btn') : null;
-
-        document.addEventListener('click', function(event) {
-            if (event.target.matches('.btn-action.icon-user._js-btn-show-modal')) {
-                event.preventDefault();
-                currentClaimId = event.target.getAttribute('data-claim-id');
-                openModal('switch-manager');
-
-                // Fetch and display manager list
-                fetch('/managers')
-                    .then(response => response.json())
-                    .then(data => {
-                        managersList = data; // Store the managers list
-                        displayManagers(managersList);
-                        fadeIn(modal);
-                        fadeIn(modalOverlay);
-                    })
-                    .catch(error => console.error('Error fetching managers:', error));
-            }
-
-            if (event.target.matches('.btn-action.icon-message._js-btn-show-modal')) {
-                event.preventDefault();
-                currentClaimId = event.target.getAttribute('data-claim-id');
-                openModal('chat');
-            }
-        });
-
-        function openModal(modalType) {
-            const modal = document.querySelector(`.js-modal-${modalType}`);
-            if (modal) {
-                fadeIn(modal);
-                fadeIn(modalOverlay);
-            }
-        }
-
-        function fadeIn(element) {
-            element.style.display = 'block';
-            element.style.opacity = 0;
-            let last = +new Date();
-            const tick = function () {
-                element.style.opacity = +element.style.opacity + (new Date() - last) / 400;
-                last = +new Date();
-                if (+element.style.opacity < 1) {
-                    (window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16);
+    function initTableEvents() {
+        document.querySelectorAll('.tbody').forEach(tbody => {
+            tbody.addEventListener('click', function(event) {
+                const target = event.target.closest('.tr');
+                if (target && !event.target.closest('a') && !event.target.closest('button')) {
+                    window.location.href = target.dataset.url;
                 }
-            };
-            tick();
-        }
-
-        modalOverlay.addEventListener('click', function () {
-            const modals = document.querySelectorAll('.js-modal');
-            modals.forEach(modal => fadeOut(modal));
-            fadeOut(modalOverlay);
-        });
-
-        function fadeOut(element) {
-            element.style.opacity = 1;
-            let last = +new Date();
-            const tick = function () {
-                element.style.opacity = +element.style.opacity - (new Date() - last) / 400;
-                last = +new Date();
-                if (+element.style.opacity > 0) {
-                    (window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16);
-                } else {
-                    element.style.display = 'none';
-                }
-            };
-            tick();
-        }
-
-        // Display the list of managers
-        function displayManagers(managers) {
-            modalBody.innerHTML = '';
-            managers.forEach(manager => {
-                const managerRow = `
-                    <div class="form-group radio">
-                        <input type="radio" id="manager-${manager.id}" name="manager" value="${manager.id}">
-                        <label for="manager-${manager.id}">${manager.first_name_ru}</label>
-                    </div>
-                `;
-                modalBody.insertAdjacentHTML('beforeend', managerRow);
             });
-        }
+        });
 
-        if (searchInput) {
-            searchInput.addEventListener('input', function () {
-                const query = this.value.toLowerCase();
-                const filteredManagers = managersList.filter(manager => 
-                    manager.first_name_ru.toLowerCase().includes(query)
-                );
-                displayManagers(filteredManagers);
-            });
-        }
-
-        reassignButton.addEventListener('click', function () {
-            const selectedRadio = modalBody.querySelector('input[type="radio"][name="manager"]:checked');
-            if (!selectedRadio) {
-                alert('Виберіть менеджера');
-                return;
-            }
-            const selectedManagerId = selectedRadio.value;
-            console.log('Selected Manager ID:', selectedManagerId);
-
-            fetch(`/warranty-claims/${currentClaimId}/update-manager`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({ manager_id: selectedManagerId })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const managerName = selectedRadio.nextElementSibling.textContent;
-                    const tr = document.querySelector(`.tr[data-claim-id="${currentClaimId}"]`);
-                    if (tr) {
-                        const managerCell = tr.querySelector('.td:nth-child(9)');
-                        if (managerCell) {
-                            managerCell.textContent = managerName;
-                        }
-                    }
-                    fadeOut(modal, function () {
-                        modal.classList.remove('open');
-                    });
-                    fadeOut(modalOverlay);
-                    alert(data.message);
-                    location.reload();
-                } else {
-                    alert(data.message);
-                }
-            })
-            .catch(error => console.error('Error updating manager:', error));
+        document.querySelectorAll('.icon-switch').forEach(el => {
+            // Удаляем существующие обработчики событий, если они есть
+            el.removeEventListener('click', handleSortClick);
+            el.addEventListener('click', handleSortClick);
         });
     }
 
-    initModalHandlers();
+    function handleSortClick(event) {
+        event.preventDefault();
+        if (isSorting) return; // Предотвращаем множественные запросы
+        isSorting = true; // Устанавливаем флаг, чтобы предотвратить повторный вызов до завершения текущего
+
+        const column = event.target.getAttribute('data-column');
+        const order = event.target.getAttribute('data-order');
+        const newOrder = order === 'asc' ? 'desc' : 'asc';
+
+        fetch(`/warranty-claims/sort?column=${column}&order=${newOrder}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log('Sorted data:', data); // Отладка данных
+                if (data && data.data && data.data.length > 0) {
+                    updateTableRows(data.data, newOrder, column, authUserRole); // Передаем authUserRole
+                } else {
+                    console.error('No valid data returned:', data);
+                }
+                isSorting = false; // Сбрасываем флаг после завершения
+            })
+            .catch(error => {
+                console.error('Error fetching sorted data:', error);
+                isSorting = false; // Сбрасываем флаг при ошибке
+            });
+    }
+
+    function updateTableRows(data, newOrder, column, authUserRole) {
+        const tbody = document.querySelector('.tbody');
+        tbody.innerHTML = '';
+
+        data.forEach(claim => {
+            const totalVat = claim.spare_parts.reduce((sum, part) => sum + parseFloat(part.amount_vat), 0);
+            
+            const tr = document.createElement('div');
+            tr.classList.add('tr');
+            tr.dataset.url = `/warranty/edit/${claim.id}`;
+            tr.innerHTML = `
+                <div class="td"><a href="/warranty/edit/${claim.id}" class="table-link">${claim.number}</a></div>
+                <div class="td">${claim.date}</div>
+                <div class="td">${claim.product_article}</div>
+                <div class="td">${claim.product_name}</div>
+                <div class="td">${totalVat.toFixed(2)}</div>
+                <div class="td">${claim.works_cost || 'Не вказано'}</div>
+                <div class="td"><button type="button" class="btn-label blue">${claim.status}</button></div>
+                <div class="td">${claim.user ? claim.user.first_name_ru : 'Не вказано'}</div>
+                <div class="td">${claim.manager ? claim.manager.first_name_ru : 'Не вказано'}</div>
+                <div class="td _empty"></div>
+                <div class="td">
+                    ${authUserRole === 2 ? '<a href="#" class="btn-action icon-user _js-btn-show-modal" data-claim-id="' + claim.id + '" data-modal="switch-manager"></a>' : ''}
+                    <a href="#" class="btn-action icon-message _js-btn-show-modal" data-claim-id="${claim.id}" data-modal="chat"></a>
+                </div>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        document.querySelectorAll('.icon-switch').forEach(el => {
+            el.setAttribute('data-order', 'asc');
+        });
+        document.querySelector(`[data-column="${column}"]`).setAttribute('data-order', newOrder);
+        initTableEvents(); // Инициализация событий для новых элементов
+    }
+
+    initTableEvents(); // Инициализация событий при загрузке страницы
 });
 </script>
 
-    
 
+    
 <!-- Switch manager -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {

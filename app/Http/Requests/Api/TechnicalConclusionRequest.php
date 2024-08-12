@@ -16,9 +16,9 @@ class TechnicalConclusionRequest extends FormRequest
         return [
             '*.code_1C' => 'nullable|string|max:255',
             '*.id' => 'nullable|integer',
-            '*.warranty_claim_id' => 'required|integer',
-            '*.defect_code' => 'nullable|integer',
-            '*.symptom_code' => 'nullable|integer',
+            '*.warranty_claim_id' => 'required|string',
+            '*.defect_code' => 'nullable|string',
+            '*.symptom_code' => 'nullable|string',
             '*.conclusion' => 'required|string|max:500',
             '*.resolution' => 'required|string|max:500',
             '*.date' => 'required|date',

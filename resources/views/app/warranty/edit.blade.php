@@ -20,7 +20,7 @@
                     <button type="button" class="btn-border btn-blue btn-only-icon _js-btn-show-modal" data-modal="chat">
                         <span class="icon-message"></span>
                     </button>
-                    @if($currentClaim->status !== \App\Enums\WarrantyClaimStatusEnum::approved AND auth()->user()->role_id === 2 OR auth()->user()->role_id === 3)
+                    @if($currentClaim->status !== \App\Enums\WarrantyClaimStatusEnum::approved AND auth()->user()->role_id === 3)
                         <button type="button" class="btn-border btn-red _js-btn-show-modal" data-modal="switch-manager" data-claim-id="{{ $currentClaim->id }}">Змінити менеджера</button>
                     @endif
                 </div>
@@ -87,7 +87,7 @@
                             </div>
                             <div class="form-group long-width">
                                 <label for="service-center">Сервісний центр</label>
-                                <select name="service_partner" id="service-center" required @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) disabled @endif>
+                                <select name="service_partner" id="service-center" required @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>
                                     <option value="">Виберіть сервісний центр</option>
                                     @foreach($serviceCenters as $center)
                                     <option value="{{ $center->id }}" {{ old('service_partner', $currentClaim['service_partner'] ?? $currentClaim->service_partner) == $center->id ? 'selected' : '' }}>
@@ -98,7 +98,7 @@
                             </div>
                             <div class="form-group small-width">
                                 <label for="service-contract">Договір сервісу</label>
-                                <select name="service_contract" id="service-contract" class="form-control" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) disabled @endif>
+                                <select name="service_contract" id="service-contract" class="form-control" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>
                                     <option value="{{ old('service_contract', $defaultContract->id ?? '') }}">
                                         {{ old('service_contract', $defaultContract->number ?? 'Виберіть договір сервісу') }}
                                     </option>
@@ -116,23 +116,23 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="buyer-phone">Контактний телефон</label>
-                                    <input type="text" name="client_phone" id="buyer-phone" value="{{$talon->phone}}" readonly>
+                                    <input type="text" name="client_phone" id="buyer-phone" value="{{$talon->phone ?? 'Не вказано'}}" readonly>
                                 </div>
                             </div>
                         </div>
                         <div class="card-content card-form">
                             <p class="card-title">Дані того Хто звернувся</p>
-                            <button type="button" class="btn-link btn-copy btn-blue" onclick="copyToClipboard()" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) disabled @endif> Копіювати данні покупця</button>
+                            <button type="button" class="btn-link btn-copy btn-blue" onclick="copyToClipboard()" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif> Копіювати данні покупця</button>
       
                             <div class="inputs-group one-row">
                                 <div class="form-group required" data-valid="empty">
                                     <label for="sender-name">ПІБ</label>
-                                    <input type="text" name="sender_name" id="sender-name" value="{{ old('sender_name', $currentClaim->sender_name ?? '') }}"  placeholder="Прізвище Ім'я По батькові" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) readonly @endif>
+                                    <input type="text" name="sender_name" id="sender-name" value="{{ old('sender_name', $currentClaim->sender_name ?? '') }}"  placeholder="Прізвище Ім'я По батькові" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) readonly @endif>
                                     <div class="help-block" data-empty="Обов'язкове поле"></div>
                                 </div>
                                 <div class="form-group required" data-valid="empty">
                                     <label for="sender-phone">Контактний телефон</label>
-                                    <input type="text" name="sender_phone" id="sender-phone" value="{{ old('sender_phone', $currentClaim->sender_phone ?? $product->phone ?? '') }}" placeholder="+380501234567" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) readonly @endif>
+                                    <input type="text" name="sender_phone" id="sender-phone" value="{{ old('sender_phone', $currentClaim->sender_phone ?? $product->phone ?? '') }}" placeholder="+380501234567" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) readonly @endif>
                                     <div class="help-block" data-empty="Обов'язкове поле"></div>
                                 </div>
                             </div>
@@ -165,19 +165,19 @@
                             </div>
                             <div class="form-group">
                                 <label for="date-sale">Дата продажу</label>
-                                <input type="text" name="date_of_sale" id="date-sale" value="{{$currentClaim->date}}" readonly>
+                                <input type="text" name="date_of_sale" id="date-sale" value="{{$currentClaim->date_of_sale}}" readonly>
                             </div>
                             <div class="form-group required" data-valid="empty">
                                 <label for="date-start">Дата звернення в сервісний центр</label>
                                 <div class="input-wrapper">
-                                    <input type="text" name="date_of_claim" id="date-start" value="{{now()->format('d.m.Y')}}" class="_js-datepicker" @if($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) disabled @endif>
+                                    <input type="text" name="date_of_claim" id="date-start" value="{{now()->format('Y-m-d')}}" class="_js-datepicker" @if($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>
                                     <span class="icon-calendar"></span>
                                 </div>
-                                <div class="help-block" data-empty=""></div>
+                                <div class="help-block" data-empty="Обов'язкове поле"></div>
                             </div>
                             <div class="form-group">
                                 <label for="receipt-number">Номер квитанції сервісного центру</label>
-                                <input type="text" name="receipt_number" id="receipt-number" value="{{ old('receipt_number', $currentClaim->receipt_number ?? '') }}" placeholder="0000000000" @if($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) readonly @endif>
+                                <input type="text" name="receipt_number" id="receipt-number" value="{{ old('receipt_number', $currentClaim->receipt_number ?? '') }}" placeholder="0000000000" @if($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) readonly @endif>
                             </div>
                         </div>
                     </div>
@@ -186,12 +186,12 @@
                         <div class="inputs-group one-row">
                             <div class="form-group required" data-valid="empty">
                                 <label for="desc">Точний опис дефекту</label>
-                                <textarea name="details" id="desc" placeholder="Точний опис дефекту" rows="3" @if($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) readonly @endif>{{ old('details', $currentClaim->details ?? '') }}</textarea>
+                                <textarea name="details" id="desc" placeholder="Точний опис дефекту" rows="3" @if($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) readonly @endif>{{ old('details', $currentClaim->details ?? '') }}</textarea>
                                 <div class="help-block" data-empty="Обов'язкове поле"></div>
                             </div>
                             <div class="form-group required" data-valid="empty">
                                 <label for="reason">Причина дефекту</label>
-                                <textarea name="deteails_reason" id="reason" placeholder="Причина дефекту" rows="3" @if($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) readonly @endif>{{ old('deteails_reason', $currentClaim->deteails_reason ?? '') }}</textarea>
+                                <textarea name="deteails_reason" id="reason" placeholder="Причина дефекту" rows="3" @if($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) readonly @endif>{{ old('deteails_reason', $currentClaim->deteails_reason ?? '') }}</textarea>
                                 <div class="help-block" data-empty="Обов'язкове поле"></div>
                             </div>
                         </div>
@@ -201,10 +201,10 @@
                         <div class="inputs-group one-row">
                             <div class="form-group">
                                 <label for="comment_photo">Коментар</label>
-                                <textarea name="comment" id="comment" placeholder="Коментар до заяви" rows="3" @if($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) readonly @endif>{{ old('comment', $currentClaim->comment ?? '') }}</textarea>
+                                <textarea name="comment" id="comment" placeholder="Коментар до заяви" rows="3" @if($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) readonly @endif>{{ old('comment', $currentClaim->comment ?? '') }}</textarea>
                             </div>
                             <div class="form-group file">
-                                <input type="file" name="file[]" id="file" multiple @if($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) disabled @endif>
+                                <input type="file" name="file[]" id="file" multiple @if($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>
                                 <label for="file">
                                     <span class="icon-upload"></span>
                                     <span class="help-block">Обов'язково до заповнення</span>
@@ -228,8 +228,8 @@
                         <div class="card-title__wrapper">
                             <p class="card-title">Сервісні роботи</p>
                             
-                            <div class="form-group default-select">
-                                <select name="product_group" id="product-group">
+                            <div class="form-group uyu8-select">
+                                <select name="product_group" id="product-group" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>
                                     <option value="-1">Виберіть групу товару</option>
                                     @foreach($groups as $group)
                                         <option value="{{ $group->id }}">{{ $group->name }}</option>
@@ -260,7 +260,7 @@
                                             <div class="row">
                                                 <div class="cell">
                                                     <div class="form-group checkbox">
-                                                        <input type="checkbox" id="service-{{ $work->id }}" name="service_works[]" value="{{ $work->id }}" {{ $serviceWorks->contains($work->id) ? 'checked' : '' }}>
+                                                        <input type="checkbox" id="service-{{ $work->id }}" name="service_works[]" value="{{ $work->id }}" {{ $serviceWorks->contains($work->id) ? 'checked' : '' }} @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>
                                                         <label for="service-{{ $work->id }}"></label>
                                                     </div>
                                                 </div>
@@ -301,7 +301,7 @@
                                 <div class="display-grid col-2">
                                     <div class="form-group">
                                         <label for="comment_service">Опис додаткових робіт</label>
-                                        <textarea name="comment_service" id="comment_service" placeholder="Якщо виконувалися додаткові роботи, які не відображені в списку до вибору, опишіть їх в цьому полі" rows="3">{{ old('comment_service', $currentClaim->comment_service) }}</textarea>
+                                        <textarea name="comment_service" id="comment_service" placeholder="Якщо виконувалися додаткові роботи, які не відображені в списку до вибору, опишіть їх в цьому полі" rows="3" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>{{ old('comment_service', $currentClaim->comment_service) }}</textarea>
                                     </div>
                                 </div>
                             </div>
@@ -313,7 +313,7 @@
                             <p class="card-title">Використані запчастини</p>
                             <div class="form-group have-icon">
                                 <span class="icon icon-search-active"></span>
-                                <input type="text" id="search-articul" placeholder="XXXXXX-XXX">
+                                <input type="text" id="search-articul" placeholder="XXXXXX-XXX" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>
                             </div>
                         </div>
                     
@@ -429,7 +429,7 @@
                             <div class="display-grid col-2 gap-8">
                                 <div class="form-group _mb0">
                                     <label for="comment_part">Коментар</label>
-                                    <textarea id="comment_part" name="comment_part" placeholder="Не знайшли потрібні запчастини? Опишіть вашу проблему" rows="3">{{ old('comment_part', $currentClaim->comment_part) }}</textarea>
+                                    <textarea id="comment_part" name="comment_part" placeholder="Не знайшли потрібні запчастини? Опишіть вашу проблему" rows="3" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>{{ old('comment_part', $currentClaim->comment_part) }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -631,7 +631,6 @@ flex-direction: column;
 </style>
 
 <!-- Код для пошуку і збереження запчастини для сейв форми -->
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('search-articul');
@@ -639,36 +638,41 @@ document.addEventListener('DOMContentLoaded', function() {
     const addedPartsContainer = document.getElementById('added-parts-container');
     const totalPartsSumElement = document.getElementById('total-parts-sum');
     const discount = {{ $defaultDiscount ?? 0 }};
-    
+    let totalSum = 0;
     let addedParts = [];
 
-    // Функция для пересчета общей суммы запчастей
-    function calculateTotalPartsSum() {
-        let totalSum = 0;
-        addedPartsContainer.querySelectorAll('.row').forEach(row => {
+    function calculatePartsTotal() {
+        let totalPartsSum = 0;
+        const partRows = addedPartsContainer.querySelectorAll('.row');
+        partRows.forEach(row => {
             const sumInput = row.querySelector('input[name*="[sum]"]');
-            if (sumInput) {
-                const sum = parseFloat(sumInput.value) || 0;
-                totalSum += sum;
-            }
+            const sum = parseFloat(sumInput.value) || 0;
+            totalPartsSum += sum;
         });
-        totalPartsSumElement.textContent = totalSum.toFixed(2);
+        console.log("Calculated Total Sum:", totalPartsSum); // Отладочный вывод
+        return totalPartsSum;
     }
-    
+
+    function updatePartsTotal() {
+        const partsTotal = calculatePartsTotal();
+        console.log("Updating Total Parts Sum:", partsTotal); // Отладочный вывод
+        totalPartsSumElement.textContent = partsTotal.toFixed(2);
+        totalSum = partsTotal;
+    }
+
     searchInput.addEventListener('input', function() {
         const articul = this.value.trim();
-    
+
         if (articul.length >= 3) {
             fetch(`/parts/${articul}`)
                 .then(response => response.json())
                 .then(data => {
-                    partsContainer.innerHTML = ''; 
+                    partsContainer.innerHTML = '';
                     if (data.data.length > 0) {
                         data.data.forEach((part, index) => {
                             if (part.product_prices && part.product_prices.recommended_price) {
                                 const recommendedPrice = parseFloat(part.product_prices.recommended_price);
                                 const priceWithDiscountAndVat = (recommendedPrice * (1 - discount / 100)).toFixed(2);
-    
                                 const newRow = `
                                     <div class="row" data-articul="${part.articul}">
                                         <div class="cell">
@@ -691,7 +695,6 @@ document.addEventListener('DOMContentLoaded', function() {
                                                 <input type="number" name="spare_parts_temp[${index}][qty]" value="1" class="part-quantity">
                                             </div>
                                         </div>
-    
                                         <div class="cell">
                                             <div class="form-group">
                                                 <input type="text" name="spare_parts_temp[${index}][sum]" value="${priceWithDiscountAndVat}" readonly class="part-total">
@@ -710,32 +713,31 @@ document.addEventListener('DOMContentLoaded', function() {
                                         </div>
                                     </div>
                                 `;
-    
+
                                 partsContainer.insertAdjacentHTML('beforeend', newRow);
-    
+
                                 const currentRow = partsContainer.lastElementChild;
                                 currentRow.querySelector('.part-quantity').addEventListener('input', function() {
                                     const quantity = parseInt(this.value) || 0;
                                     const total = (priceWithDiscountAndVat * quantity).toFixed(2);
                                     currentRow.querySelector('.part-total').value = total;
                                 });
-    
+
                                 currentRow.querySelector('.add-part-btn').addEventListener('click', function() {
                                     const articul = currentRow.querySelector('input[name*="[spare_parts]"]').value;
-    
                                     if (addedParts.some(part => part.articul === articul)) {
                                         alert('Запчастина вже добавлена');
                                         return;
                                     }
-    
+
                                     const name = currentRow.querySelector('input[name*="[name]"]').value;
                                     const price = parseFloat(currentRow.querySelector('input[name*="[price]"]').value);
                                     const quantity = parseInt(currentRow.querySelector('.part-quantity').value);
                                     const total = parseFloat(currentRow.querySelector('.part-total').value);
                                     const checked = currentRow.querySelector(`#parts-${part.id}`).checked;
-    
+
                                     addedParts.push({ articul, name, price, quantity, total });
-    
+
                                     const addedRow = `
                                         <div class="row" data-articul="${articul}">
                                             <div class="cell">
@@ -776,10 +778,10 @@ document.addEventListener('DOMContentLoaded', function() {
                                             </div>
                                         </div>
                                     `;
-    
+
                                     addedPartsContainer.insertAdjacentHTML('beforeend', addedRow);
-                                    calculateTotalPartsSum();
-    
+                                    updatePartsTotal(); // Обновляем сумму после добавления части
+
                                     const removeButton = addedPartsContainer.querySelector('.row:last-child .remove-part-btn');
                                     removeButton.addEventListener('click', function() {
                                         const row = this.closest('.row');
@@ -787,7 +789,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                         const articul = row.getAttribute('data-articul');
                                         addedParts = addedParts.filter(part => part.articul !== articul);
                                         row.remove();
-                                        calculateTotalPartsSum();
+                                        updatePartsTotal(); // Обновляем сумму после удаления части
                                     });
                                 });
                             }
@@ -802,13 +804,34 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Инициализация подсчета суммы при загрузке страницы
-    calculateTotalPartsSum();
+    updatePartsTotal(); // Инициализируем сумму при загрузке страницы
 });
 
+</script>
 
-    </script>
+<!-- Дизейбл для селекта при невыбранном сервис-центре -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const serviceCenterSelect = document.getElementById('service-center');
+    const productGroupSelect = document.getElementById('product-group');
+    const partGroupSelect = document.getElementById('search-articul');
 
+    function toggleProductGroupSelect() {
+        if (serviceCenterSelect.value === '') {
+            productGroupSelect.disabled = true;
+            partGroupSelect.disabled = true;
+        } else {
+            productGroupSelect.disabled = false;
+            partGroupSelect.disabled = false;   
+        }
+    }
+
+    toggleProductGroupSelect();
+
+    serviceCenterSelect.addEventListener('change', toggleProductGroupSelect);
+    partGroupSelect.addEventListener('change', toggleProductGroupSelect);
+});
+</script>
 
 <!-- Загальний підсумок сервісних робіт -->
 <script>
