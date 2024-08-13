@@ -85,10 +85,10 @@
                                 <label for="autor-name">Відповідальний</label>
                                 <input type="text" id="autor-name" value="{{ $currentClaim->manager->first_name_ru ?? 'Не вказано' }}" readonly>
                             </div>
-                            <div class="form-group long-width">
+                            <div class="form-group required default-select show-placeholder" data-valid="default-select">
                                 <label for="service-center">Сервісний центр</label>
-                                <select name="service_partner" id="service-center" required @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>
-                                    <option value="">Виберіть сервісний центр</option>
+                                <select name="service_partner" id="service-center" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>
+                                    <option value="-1">Виберіть сервісний центр</option>
                                     @foreach($serviceCenters as $center)
                                     <option value="{{ $center->id }}" {{ old('service_partner', $currentClaim['service_partner'] ?? $currentClaim->service_partner) == $center->id ? 'selected' : '' }}>
                                         {{ $center->full_name_ru }}
@@ -478,160 +478,6 @@
     </div>
 
     <div id="datepicker-container"></div>
-
-<style>
-
-.modal {
-    display: none;
-    transition: opacity 0.4s;
-}
-
-.modal-overlay {
-position: fixed;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-background: rgba(0, 0, 0, 0.5);
-display: none;
-z-index: 10;
-transition: opacity 0.4s;
-}
-
-.modal.open {
-    z-index: 11;
-}
-
-.modal.fade-in {
-    display: block;
-    opacity: 0;
-    transition: opacity 0.4s;
-}
-
-.modal.fade-out {
-    opacity: 0;
-    transition: opacity 0.4s;
-    display: none;
-}
-
-.pagination-container {
-    max-width: 300px;
-    margin-left: 0;
-    margin-top: 20px;
-}
-
-.search-results {
-    background: #fff;
-    max-height: 200px;
-    overflow-y: auto;
-    position: absolute;
-    width: 100%;
-    z-index: 1000;
-}
-
-.search-results div {
-    padding: 5px;
-    cursor: pointer;
-}
-
-.search-results div:hover {
-    background: #f0f0f0;
-}
-
-.added-parts-container {
-    margin-top: 20px;
-}
-
-.added-parts-container p {
-    font-weight: bold;
-}
-
-.card-title.sub-title {
-    margin-left: 1%;
-}
-
-.inputs-group .form-group {
-flex: 1 1 100%;
-margin-bottom: 0;
-display: flex;
-flex-direction: column;
-}
-
-.inputs-group .form-group.wider-width {
-    flex: 1 1 5%;
-}
-
-.inputs-group .form-group.widest-width {
-    flex: 1 1 45%;
-}
-
-.inputs-group .form-group.longest-width {
-    flex: 1 1 30%;
-}
-
-.inputs-group .form-group.small-width {
-    flex: 1 1 30%;
-}
-
-.inputs-group .form-group label {
-    font-size: 16px;
-    font-weight: 600;
-    line-height: 24px;
-    margin-bottom: 8px;
-}
-
-.inputs-group .form-group input[type=text],
-.inputs-group .form-group select {
-    border: 1px solid #ced4da;
-    background: #fff;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 24px;
-    padding: 11px 12px;
-    border-radius: 2px;
-    width: 100%;
-    outline: 0;
-}
-
-.inputs-group .form-group input[type=text]:focus,
-.inputs-group .form-group select:focus {
-    border-color: #0679e3;
-}
-
-.inputs-group .form-group input[type=text]::placeholder,
-.inputs-group .form-group select::placeholder {
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 24px;
-    color: #939a9e;
-}
-
-.inputs-group.one-row {
-    display: flex;
-    gap: 20px;
-    align-items: flex-start;
-}
-
-.inputs-group .form-group._bg-white input:read-only,
-.inputs-group .form-group._bg-white input:-moz-read-only {
-    background-color: #fff;
-}
-
-.form-group {
-    margin-bottom: 25px;
-    position: relative;
-}
-
-.ts-link {
-        font-size: 24px;
-        font-weight: 600;
-        line-height: 24px;
-        margin-bottom: 20px;
-        color: #0561b6;
-        text-decoration: underline;
-}
-
-</style>
 
 
 <!-- Код для пошуку і збереження запчастини для сейв форми -->

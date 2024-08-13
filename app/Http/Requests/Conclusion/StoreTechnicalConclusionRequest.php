@@ -17,9 +17,9 @@ class StoreTechnicalConclusionRequest extends FormRequest
             'code_1C' => 'nullable',
             'defect_code' => 'required|integer',
             'symptom_code' => 'required|integer',
-            'resolution' => 'required|string|max:500',
+            'resolution' => 'nullable|string|max:500',
             'appeal_type' => 'required',
-            'conclusion' => 'required|string|max:500',
+            'conclusion' => 'nullable|string|max:500',
         ];
     }
 
