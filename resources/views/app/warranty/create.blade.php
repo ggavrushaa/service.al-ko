@@ -1132,8 +1132,15 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch(`/service/${groupId}`)
             .then(response => response.json())
             .then(data => {
-                serviceWorksContainer.innerHTML = ''; 
                 let totalDuration = 0;
+                let nonCkeckedElements = serviceWorksContainer.querySelectorAll('input[name="service_works[]"]:not(:checked)');
+                console.log(nonCkeckedElements);
+
+                //serviceWorksContainer.innerHTML = ''; 
+
+                nonCkeckedElements.forEach(nonCkeckedElement => {
+                    nonCkeckedElement.closest('.row').remove();
+                })
 
                 data.forEach(work => {
                     const isChecked = currentClaimServiceWorks.includes(work.id) || (savedCheckboxStates[groupId] && savedCheckboxStates[groupId][work.id]);
@@ -1197,7 +1204,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         calculateTotalSum();
                     });
 
-                    serviceWorksContainer.appendChild(row);
+                    // serviceWorksContainer.appendChild(row);
+
+                    serviceWorksContainer.insertAdjacentElement('beforeend', row)
                 });
 
                 totalDurationElement.textContent = totalDuration.toFixed(2);
