@@ -137,7 +137,7 @@
     </div>
 
 
-    <form id="form-save" action="{{ route('technical-conclusions.save', $warrantyClaim->id) }}" method="POST" style="display: none;">
+    <form id="save-and-exit-form" action="{{ route('technical-conclusions.save', $warrantyClaim->id) }}" method="POST" style="display: none;">
         @csrf
         <input type="hidden" name="defect_code" id="hidden-defect-code">
         <input type="hidden" name="symptom_code" id="hidden-symptom-code">

@@ -160,15 +160,13 @@ class WarrantyClaimController extends Controller
             ->orWhere('factory_number', $factory_number)
             ->first();
 
-        if (!$warrantyClaim) {
-        // Если заявка не найдена, ищем талон для создания новой заявки
         $talon = GuaranteeCoupon::where('barcode', $barcode)
-            ->where('factory_number', $factory_number)
+            ->orWhere('factory_number', $factory_number)
             ->firstOrFail();
-
-
+            
         $product = Products::where('id', $talon->product_id ?? null)->first();
 
+        if (!$warrantyClaim) {
         // Создаем новую заявку
         $maxDocumentNumber = DB::connection('second_db')->table('warranty_claims')->max('number');
         $maxDocumentNumber = $maxDocumentNumber ? intval($maxDocumentNumber) : 0;

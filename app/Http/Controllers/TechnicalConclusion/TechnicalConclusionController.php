@@ -131,31 +131,17 @@ class TechnicalConclusionController extends Controller
         return redirect()->back()->with('status', 'Акт технічної експертизи оновлено та затверджено');
     }
 
-    public function save(Request $request, $id)
+    public function save(StoreTechnicalConclusionRequest $request, $id)
     {
-        Log::info('Technical Conclusion request:', $request->all());
-        $validatedData = $request->validate([
-            'conclusion' => 'nullable|string',
-            'resolution' => 'nullable|string',
-            'defect_code' => 'nullable|integer',
-            'symptom_code' => 'nullable|integer',
-            'appeal_type' => 'nullable|string',
-        ]);
+        $validatedData = $request->validated();
 
-        $technicalConclusion = TechnicalConclusion::where('warranty_claim_id', $id)->first();
+        $technicalConclusion = new TechnicalConclusion($validatedData);
+        $technicalConclusion->warranty_claim_id = $id;
+        $technicalConclusion->date = date('Y-m-d');
+        $technicalConclusion->code_1C = rand(100000, 999999);
+        $technicalConclusion->save();
 
-        if ($technicalConclusion) {
-            $technicalConclusion->update($validatedData);
-        } else {
-            $technicalConclusion = new TechnicalConclusion($validatedData);
-            $technicalConclusion->warranty_claim_id = $id;
-            $technicalConclusion->date = date('Y-m-d');
-            $technicalConclusion->code_1C = null;
-            $technicalConclusion->save();
-        }
-        Log::info('Technical Conclusion saved:', $validatedData);
-
-        return redirect()->back()->with('status', 'Акт технічної експертизи збережено');
+        return redirect()->route('app.conclusion.index');
     }
 
     
