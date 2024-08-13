@@ -371,10 +371,16 @@ if (btnsRemoveImage.length > 0) {
             e.preventDefault();
             var action = btn.dataset.action;
             fetch(action, {
-                method: 'post'
+                method: 'post',
+                headers: {
+                  'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
             }).then(function (response) {
                 return response.json;
             }).then(function (response) {
+              if(response.status) {
+                btn.closest('.img').remove();
+              }
                 console.log(response);
             });
         });

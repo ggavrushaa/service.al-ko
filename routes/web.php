@@ -120,6 +120,7 @@ Route::delete('/warranty-claims/{id}', [WarrantyClaimController::class, 'delete'
 
 Route::get('/warranty-claims/sort', [WarrantyClaimController::class, 'sort'])->name('warranty-claims.sort');
 
+Route::post('/warranty-image/{id}', [WarrantyClaimController::class, 'destroyImage'])->name('warranty-image.remove');
 
 
 Route::group(['middleware' => ['guest']], function () {

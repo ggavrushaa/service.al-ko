@@ -571,5 +571,16 @@ class WarrantyClaimController extends Controller
         return response()->json(['success' => false, 'message' => 'Заява не знайдена'], 404);
     }
 
+    public function destroyImage($id)
+    {
+        $file = WarrantyClaimFile::find($id);
+        if($file) {
+            $file->delete();
+            return response()->json(['success' => true, ]);
+        } else {
+            return response()->json(['success' => false]);
+        }
+    }
+
 
 }

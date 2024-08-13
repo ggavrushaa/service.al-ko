@@ -221,7 +221,7 @@
                                 @foreach ($currentClaim->files as $file)
                                 <div class="img">
                                     <img src="{{ asset($file->path) }}" alt="{{ $file->filename }}">
-                                    <button type="button" class="icon-trash" data-index="0"></button>
+                                    <button type="button" class="icon-trash js-remove-image" data-action="{{ route('warranty-image.remove', ['id' => $file->id]) }}"></button>
                                 </div>
                                 @endforeach
                             </div>
@@ -1575,6 +1575,6 @@ document.addEventListener('DOMContentLoaded', function() {
     <script src="/cdn/js/tippy-bundle.umd.min.js"></script>
     <script src="/cdn/js/maskinput.js" id="maskinput-script" defer></script>
     <script src="/cdn/js/custom-select.js"></script>
-    <script src="/js/components.js?v=002"></script>
+    <script src="/js/components.js?v=003"></script>
     <script src="/js/main.js?v=003"></script>
 </x-layouts.base>
