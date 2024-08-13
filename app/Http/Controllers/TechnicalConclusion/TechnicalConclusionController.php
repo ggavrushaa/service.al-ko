@@ -98,6 +98,21 @@ class TechnicalConclusionController extends Controller
         $managers = User::all();
         $conclusion = TechnicalConclusion::where('warranty_claim_id', $id)->first();
         
+        $conclusion = TechnicalConclusion::where('warranty_claim_id', $id)->first();
+    
+        if (!$conclusion) {
+            $conclusion = TechnicalConclusion::create([
+                'warranty_claim_id' => $id,
+                'defect_code' => null, 
+                'symptom_code' => null, 
+                'appeal_type' => null, 
+                'conclusion' => null, 
+                'resolution' => null, 
+                'date' => now(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
 
         return view('app.conclusion.edit', compact('warrantyClaim', 'defectCodes', 'symptomCodes', 'appealTypes', 'managers', 'autor', 'conclusion'));
     }
@@ -119,7 +134,7 @@ class TechnicalConclusionController extends Controller
         $technicalConclusion = new TechnicalConclusion($validatedData);
         $technicalConclusion->warranty_claim_id = $id;
         $technicalConclusion->date = date('Y-m-d');
-        $technicalConclusion->code_1C = rand(100000, 999999);
+        $technicalConclusion->code_1C = null;
         $technicalConclusion->save();
 
         $warrantyClaim = WarrantyClaim::findOrFail($id);
@@ -135,13 +150,22 @@ class TechnicalConclusionController extends Controller
     {
         $validatedData = $request->validated();
 
-        $technicalConclusion = new TechnicalConclusion($validatedData);
-        $technicalConclusion->warranty_claim_id = $id;
-        $technicalConclusion->date = date('Y-m-d');
-        $technicalConclusion->code_1C = rand(100000, 999999);
+        $technicalConclusion = TechnicalConclusion::where('warranty_claim_id', $id)->first();
+        $technicalConclusion->update($validatedData);
         $technicalConclusion->save();
 
-        return redirect()->route('app.conclusion.index');
+        return redirect()->back()->with('status', 'Акт технічної експертизи оновлено');
+    }
+
+    public function exit(StoreTechnicalConclusionRequest $request, $id)
+    {
+        $validatedData = $request->validated();
+
+        $technicalConclusion = TechnicalConclusion::where('warranty_claim_id', $id)->first();
+        $technicalConclusion->update($validatedData);
+        $technicalConclusion->save();
+
+        return redirect()->route('app.conclusion.index')->with('status', 'Акт технічної експертизи збережено');
     }
 
     

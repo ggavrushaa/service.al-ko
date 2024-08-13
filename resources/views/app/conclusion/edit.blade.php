@@ -14,7 +14,7 @@
                     @if ($warrantyClaim->status === \App\Enums\WarrantyClaimStatusEnum::review && auth()->user()->role_id === 2)
                         <button type="button" class="btn-primary btn-blue" onclick="document.getElementById('form-create').submit()">Затвердити</button>
                         <button type="button" class="btn-border btn-blue" onclick="submitSaveForm()">Зберегти</button>
-                        <button type="button" class="btn-border btn-red" onclick="document.getElementById('save-and-exit-form').submit()">Зберегти і Вийти</button>
+                        <button type="submit" class="btn-border btn-red" onclick="submitSaveAndExitForm()">Зберегти і Вийти</button>
                     @elseif ($warrantyClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved)
                         <span class="btn-link btn-green text-only">Затверджено</span>
                     @endif
@@ -96,7 +96,7 @@
                                 <label for="defect_code">Код дефекту</label>
                                 <select name="defect_code" id="defect_code" @if($warrantyClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) disabled @endif>
                                     @foreach($defectCodes as $code)
-                                        <option value="{{ $code->id }}" @if($conclusion->defect_code == $code->id) selected @endif>{{ $code->name }}</option>
+                                        <option value="{{ $code->id }}" @if(isset($conclusion) && $conclusion->defect_code == $code->id) selected @endif>{{ $code->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -104,7 +104,7 @@
                                 <label for="symptom_code">Код симптому</label>
                                 <select name="symptom_code" id="symptom_code" @if($warrantyClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) disabled @endif>
                                     @foreach($symptomCodes as $code)
-                                        <option value="{{ $code->id }}" @if($conclusion->symptom_code == $code->id) selected @endif>{{ $code->name }}</option>
+                                        <option value="{{ $code->id }}" @if(isset($conclusion) && $conclusion->symptom_code == $code->id) selected @endif>{{ $code->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -112,9 +112,9 @@
                                 <label for="appeal_type">Тип звернення</label>
                                 <select name="appeal_type" id="appeal_type" @if($warrantyClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) disabled @endif>
                                     @foreach($appealTypes as $type)
-                                        <option value="{{ $type->value }}" @if($conclusion->appeal_type == $type->value) selected @endif>
-                                            {{ $type->name() }}
-                                        </option>
+                                    <option value="{{ $type->value }}" @if(isset($conclusion) && $conclusion->appeal_type == $type) selected @endif>
+                                        {{ $type->name() }}
+                                    </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -137,13 +137,22 @@
     </div>
 
 
-    <form id="save-and-exit-form" action="{{ route('technical-conclusions.save', $warrantyClaim->id) }}" method="POST" style="display: none;">
+    <form id="form-save" action="{{ route('technical-conclusions.save', $warrantyClaim->id) }}" method="POST" style="display: none;">
         @csrf
         <input type="hidden" name="defect_code" id="hidden-defect-code">
         <input type="hidden" name="symptom_code" id="hidden-symptom-code">
         <input type="hidden" name="appeal_type" id="hidden-appeal-type">
         <input type="hidden" name="conclusion" id="hidden-conclusion">
         <input type="hidden" name="resolution" id="hidden-resolution">
+    </form>
+
+    <form id="form-save-and-exit" action="{{ route('conclusions.save-and-exit', $warrantyClaim->id) }}" method="POST" style="display: none;">
+        @csrf
+        <input type="hidden" name="defect_code" id="exit-defect-code">
+        <input type="hidden" name="symptom_code" id="exit-symptom-code">
+        <input type="hidden" name="appeal_type" id="exit-appeal-type">
+        <input type="hidden" name="conclusion" id="exit-conclusion">
+        <input type="hidden" name="resolution" id="exit-resolution">
     </form>
 
     <div class="modal-overlay"></div>
@@ -316,27 +325,36 @@
             const conclusion = document.getElementById('conclusion') ? document.getElementById('conclusion').value : null;
             const resolution = document.getElementById('resolution') ? document.getElementById('resolution').value : null;
 
-            const serviceWorks = Array.from(document.querySelectorAll('input[name="service_works[]"]')).map(el => el.value);
-            const spareParts = Array.from(document.querySelectorAll('#added-parts-container .row')).map(row => {
-                return {
-                    spare_parts: row.querySelector('input[name*="[spare_parts]"]').value,
-                    name: row.querySelector('input[name*="[name]"]').value,
-                    price: row.querySelector('input[name*="[price]"]').value,
-                    qty: row.querySelector('input[name*="[qty]"]').value,
-                    sum: row.querySelector('input[name*="[sum]"]').value
-                };
-            });
 
             if (document.getElementById('hidden-defect-code')) document.getElementById('hidden-defect-code').value = defectCode;
             if (document.getElementById('hidden-symptom-code')) document.getElementById('hidden-symptom-code').value = symptomCode;
             if (document.getElementById('hidden-appeal-type')) document.getElementById('hidden-appeal-type').value = appealType;
             if (document.getElementById('hidden-conclusion')) document.getElementById('hidden-conclusion').value = conclusion;
             if (document.getElementById('hidden-resolution')) document.getElementById('hidden-resolution').value = resolution;
-            if (document.getElementById('hidden-service-works')) document.getElementById('hidden-service-works').value = JSON.stringify(serviceWorks);
-            if (document.getElementById('hidden-spare-parts')) document.getElementById('hidden-spare-parts').value = JSON.stringify(spareParts);
 
             document.getElementById('form-save').submit();
         }
+    </script>
+
+    <!-- save and exit -->
+    <script>
+    function submitSaveAndExitForm() {
+        const defectCode = document.getElementById('defect_code') ? document.getElementById('defect_code').value : null;
+        const symptomCode = document.getElementById('symptom_code') ? document.getElementById('symptom_code').value : null;
+        const appealType = document.getElementById('appeal_type') ? document.getElementById('appeal_type').value : null;
+        const conclusion = document.getElementById('conclusion') ? document.getElementById('conclusion').value : null;
+        const resolution = document.getElementById('resolution') ? document.getElementById('resolution').value : null;
+
+        console.log({ defectCode, symptomCode, appealType, conclusion, resolution });
+
+        document.getElementById('exit-defect-code').value = defectCode;
+        document.getElementById('exit-symptom-code').value = symptomCode;
+        document.getElementById('exit-appeal-type').value = appealType;
+        document.getElementById('exit-conclusion').value = conclusion;
+        document.getElementById('exit-resolution').value = resolution;
+
+        document.getElementById('form-save-and-exit').submit();
+    }
     </script>
 
 </x-layouts.base>

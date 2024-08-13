@@ -72,6 +72,9 @@ Route::group(['middleware' => ['auth',]], function () {
     // Збереження акту
     Route::post('/technical-conclusions/{id}/save', [TechnicalConclusionController::class, 'save'])->name('technical-conclusions.save');
 
+    // Збереження акту і виход
+    Route::post('/technical-conclusions/{id}/save-and-exit', [TechnicalConclusionController::class, 'exit'])->name('conclusions.save-and-exit');
+
     // Підбір контракту по сервісному центру
     Route::post('/get-contract-details', [WarrantyClaimController::class, 'getContractDetails']);
 
@@ -120,6 +123,7 @@ Route::delete('/warranty-claims/{id}', [WarrantyClaimController::class, 'delete'
 
 Route::get('/warranty-claims/sort', [WarrantyClaimController::class, 'sort'])->name('warranty-claims.sort');
 
+// Видалення зображення
 Route::post('/warranty-image/{id}', [WarrantyClaimController::class, 'destroyImage'])->name('warranty-image.remove');
 
 
