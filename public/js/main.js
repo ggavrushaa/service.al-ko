@@ -157,6 +157,7 @@ function handleFiles() {
 }
 function drawUploadedPhoto(uploadedFileList, input) {
     var wrapper = document.querySelector('.image-preview'),
+        uploadedImages = wrapper.querySelectorAll('._uploaded-image'),
         form = wrapper.closest('form'),
         fileInputElement = document.querySelector('#file'),
         containerDataTransfer = new DataTransfer();
@@ -165,8 +166,13 @@ function drawUploadedPhoto(uploadedFileList, input) {
     form.addEventListener('submit', (e) => {
         e.preventDefault();
     })
-        
-    wrapper.innerHTML = '';
+
+    //wrapper.innerHTML = '';
+    if(uploadedImages.length > 0){
+        uploadedImages.forEach(uploadedImage => {
+            uploadedImage.remove();
+        })
+    }
 
     if (uploadedFileList.length > 0) {
         uploadedFileList.forEach(function (file, index) {
@@ -175,7 +181,7 @@ function drawUploadedPhoto(uploadedFileList, input) {
                 // uploadedFileList.push(file);
 
                 var block = document.createElement('div');
-                block.className = 'img';
+                block.className = 'img _uploaded-image';
                 var btn = document.createElement('button');
                 btn.type = 'button';
                 btn.className = 'icon-trash';
@@ -183,21 +189,22 @@ function drawUploadedPhoto(uploadedFileList, input) {
                 btn.addEventListener('click', removeImagePreview);
                 var img = document.createElement('img');
                 img.src = reader.result;
+                
                 block.insertAdjacentElement('beforeend', img);
                 block.insertAdjacentElement('beforeend', btn);
                 wrapper.insertAdjacentElement('beforeend', block);
             });
             reader.readAsDataURL(file);
-            
+
             var blob = new Blob([file], {
                 type: file.type
             });
 
-            let file1 = new File([blob], file.name, {type: file.type, lastModified: file.lastModified, size: file.size, webkitRelativePath: file.webkitRelativePath, lastModifiedDate:file.lastModifiedDate});
-            
+            let file1 = new File([blob], file.name, { type: file.type, lastModified: file.lastModified, size: file.size, webkitRelativePath: file.webkitRelativePath, lastModifiedDate: file.lastModifiedDate });
+
             containerDataTransfer.items.add(file1);
             fileInputElement.files = containerDataTransfer.files;
-                                    
+
         });
     }
     function removeImagePreview() {
@@ -373,15 +380,14 @@ if (btnsRemoveImage.length > 0) {
             fetch(action, {
                 method: 'post',
                 headers: {
-                  'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                 },
-            }).then(function (response) {
-                return response.json;
-            }).then(function (response) {
-              if(response.status) {
-                btn.closest('.img').remove();
-              }
-                console.log(response);
+            })
+            .then(response => response.json())
+            .then(function (response) {
+                if (response.success) {
+                    btn.closest('.img').remove();
+                }
             });
         });
     });
