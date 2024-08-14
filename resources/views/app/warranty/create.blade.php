@@ -73,7 +73,8 @@
                                 <label for="autor-name">Відповідальний</label>
                                 <input type="text" id="autor-name" value="{{ $currentClaim->manager->first_name_ru ?? 'Не вказано' }}" readonly>
                             </div>
-                            <div class="form-group">
+
+                            <div class="form-group required default-select show-placeholder" data-valid="vanilla-select">
                                 <label for="service-center">Сервісний центр</label>
                                 <select name="service_partner" id="service-center" required @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>
                                     <option value="-1">Виберіть сервісний центр</option>
