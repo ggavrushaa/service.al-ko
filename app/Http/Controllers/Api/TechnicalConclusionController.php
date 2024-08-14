@@ -68,15 +68,15 @@ class TechnicalConclusionController extends Controller
 
                 // Ищем ID по коду 1С в таблице defect_codes
                 $defectCode = DefectCodes::where('code_1C', $data['defect_code'])->first();
-                if (!$defectCode) {
-                    throw new \Exception("Defect code with code_1C {$data['defect_code']} not found");
-                }
+                // if (!$defectCode) {
+                //     throw new \Exception("Defect code with code_1C {$data['defect_code']} not found");
+                // }
 
                 // Ищем ID по коду 1С в таблице symptom_codes
                 $symptomCode = SymptomCodes::where('code_1C', $data['symptom_code'])->first();
-                if (!$symptomCode) {
-                    throw new \Exception("Symptom code with code_1C {$data['symptom_code']} not found");
-                }
+                // if (!$symptomCode) {
+                //     throw new \Exception("Symptom code with code_1C {$data['symptom_code']} not found");
+                // }
 
                 $technicalConclusion = TechnicalConclusion::updateOrCreate(
                     ['code_1C' => $data['code_1C']],

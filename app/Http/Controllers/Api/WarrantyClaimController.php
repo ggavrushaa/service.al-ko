@@ -10,6 +10,7 @@ use App\Models\WarrantyClaim;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Enums\WarrantyClaimStatusEnum;
 use App\Models\WarrantyClaimServiceWork;
 use App\Http\Requests\Api\WarrantyClaimRequest;
 
@@ -141,6 +142,7 @@ class WarrantyClaimController extends Controller
         ->with(['spareParts', 'files', 'serviceWorksAPI'])
         ->whereNull('code_1C')
         ->where('updated_at', '>', DB::raw($formattedDateFrom))
+        ->where('status', '=', WarrantyClaimStatusEnum::sent)
         ->get();
         $newWarrantyClaims = $newWarrantyClaims->map(function ($claim) {
                 $claim->created = date('Y-m-d H:i:s', strtotime($claim->created_at));

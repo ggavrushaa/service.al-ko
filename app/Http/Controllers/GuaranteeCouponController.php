@@ -31,8 +31,7 @@ class GuaranteeCouponController extends Controller
         $talons = $query->get();
     
         if ($talons->isEmpty()) {
-            // Обработка 
-            return to_route('app.search')->withErrors('Не знайдено жодного талону');
+            return to_route('app.home.index')->withErrors('Не знайдено жодного талону');
         }
     
         if ($talons->count() === 1) {

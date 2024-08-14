@@ -4,16 +4,16 @@ namespace App\Enums;
 
 enum ClaimTypeEnum : string
 {
-    case warrantyRepair = 'Гарантійний ремонт';
-    case nonWarrantyRepair = 'Негарантійний ремонт';
-    case returnOrReplacement = 'Повернення/заміна';
+    case warrantyRepair = 'Гарантия';
+    case nonWarrantyRepair = 'НеГарантия';
+    case returnOrReplacement = 'ВозвратОбмен';
 
     public function name(): string
     {
         return match ($this) {
-            self::warrantyRepair => "Гарантійний ремонт",
-            self::nonWarrantyRepair => "Негарантійний ремонт",
-            self::returnOrReplacement => "Повернення/заміна",
+            self::warrantyRepair => "Гарантия",
+            self::nonWarrantyRepair => "НеГарантия",
+            self::returnOrReplacement => "ВозвратОбмен",
         };
     }
 }

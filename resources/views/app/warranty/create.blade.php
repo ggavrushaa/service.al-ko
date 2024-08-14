@@ -73,9 +73,9 @@
                                 <label for="autor-name">Відповідальний</label>
                                 <input type="text" id="autor-name" value="{{ $currentClaim->manager->first_name_ru ?? 'Не вказано' }}" readonly>
                             </div>
-                            <div class="form-group required default-select show-placeholder" data-valid="default-select">
+                            <div class="form-group">
                                 <label for="service-center">Сервісний центр</label>
-                                <select name="service_partner" id="service-center" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>
+                                <select name="service_partner" id="service-center" required @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>
                                     <option value="-1">Виберіть сервісний центр</option>
                                     @foreach($serviceCenters as $center)
                                     <option value="{{ $center->id }}" {{ old('service_partner', $currentClaim['service_partner'] ?? $currentClaim->service_partner) == $center->id ? 'selected' : '' }}>
@@ -1039,7 +1039,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                         <div class="cell">
                             <div class="form-group">
-                                <input type="number" name="hours[]" value="${duration.toFixed(2)}" class="work-hours" data-price="${contractPrice.toFixed(2)}">
+                                <input type="number" step="0.01" name="hours[]" value="${duration.toFixed(2)}" class="work-hours" data-price="${contractPrice.toFixed(2)}">
                             </div>
                         </div>
                         <div class="cell">
