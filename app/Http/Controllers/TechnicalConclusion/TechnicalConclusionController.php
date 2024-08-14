@@ -131,10 +131,8 @@ class TechnicalConclusionController extends Controller
     {
         $validatedData = $request->validated();
 
-        $technicalConclusion = new TechnicalConclusion($validatedData);
-        $technicalConclusion->warranty_claim_id = $id;
-        $technicalConclusion->date = date('Y-m-d');
-        $technicalConclusion->code_1C = null;
+        $technicalConclusion = TechnicalConclusion::where('warranty_claim_id', $id)->first();
+        $technicalConclusion->update($validatedData);
         $technicalConclusion->save();
 
         $warrantyClaim = WarrantyClaim::findOrFail($id);

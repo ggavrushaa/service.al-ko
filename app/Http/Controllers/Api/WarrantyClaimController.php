@@ -198,6 +198,7 @@ class WarrantyClaimController extends Controller
             ->with(['spareParts', 'files', 'serviceWorksAPI'])  
             ->whereNotNull('code_1C')
             ->where('updated_at', '>', DB::raw($formattedDateFrom))
+            ->where('status', '=', WarrantyClaimStatusEnum::sent)
             ->get();
             $updatedWarrantyClaims = $updatedWarrantyClaims->map(function ($claim) {
                 $claim->created = date('Y-m-d H:i:s', strtotime($claim->created_at));

@@ -66,7 +66,7 @@ class PartsController extends Controller
             $part = WarrantyClaimSpareParts::findOrFail($id);
             $part->delete();
 
-            return response()->json(['success' => true, 'message' => 'Запчасть удалена']);
+            return response()->json(['success' => true, 'message' => 'Запчасть видалена']);
         } catch (\Exception $e) {
             Log::error('Error deleting spare part: ' . $e->getMessage());
             return response()->json(['success' => false, 'error' => 'Error deleting spare part'], 500);

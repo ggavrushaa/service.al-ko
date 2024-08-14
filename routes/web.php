@@ -126,6 +126,9 @@ Route::get('/warranty-claims/sort', [WarrantyClaimController::class, 'sort'])->n
 // Видалення зображення
 Route::post('/warranty-image/{id}', [WarrantyClaimController::class, 'destroyImage'])->name('warranty-image.remove');
 
+// Видалення запчастини
+Route::post('/warranty-claim-spareparts/{id}', [PartsController::class, 'destroy'])->name('spareparts.destroy');
+
 
 Route::group(['middleware' => ['guest']], function () {
      Route::get('/login', [LoginController::class, 'index'])->name('index');
