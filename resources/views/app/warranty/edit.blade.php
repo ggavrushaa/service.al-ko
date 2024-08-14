@@ -339,73 +339,97 @@
                                         <div class="cell">Артикул</div>
                                         <div class="cell">Назва</div>
                                         <div class="cell">Ціна</div>
+                                        <div class="cell">Знижка, %</div>
                                         <div class="cell">Кількість</div>
-                                        {{-- <div class="cell">Знижка, %</div> --}}
                                         <div class="cell">Всього зі знижкою, грн</div>
                                         <div class="cell">Замовити</div>
                                         <div class="cell">Дія</div>
                                     </div>
                                 </div>
-                                <div class="table-body" id="parts-container">
-                                    <!-- Запчастини для пошуку -->
-                                </div>
-                                <div class="table-parts">
-                                    <div class="table-body">
-                                        <div class="row title-only">
-                                            <p>Додані запчастини</p>
-                                        </div>
-                                        <div id="added-parts-container">
-                                                @foreach($spareParts as $index => $part)
-                                                <div class="row" data-articul="{{ $part->spare_parts }}">
-                                                    <div class="cell">
-                                                        <div class="form-group _bg-white">
-                                                            <input type="text" name="spare_parts[{{ $index }}][spare_parts]" value="{{ $part->spare_parts }}" readonly>
-                                                        </div>
-                                                    </div>
-                                                    <div class="cell">
-                                                        <div class="form-group">
-                                                            <input type="text" name="spare_parts[{{ $index }}][name]" value="{{ $part->name }}" readonly>
-                                                        </div>
-                                                    </div>
-                                                    <div class="cell">
-                                                        <div class="form-group">
-                                                            <input type="text" name="spare_parts[{{ $index }}][price]" value="{{ $part->price }}" readonly>
-                                                        </div>
-                                                    </div>
-                                                    <div class="cell">
-                                                        <div class="form-group _bg-white">
-                                                            <input type="text" name="spare_parts[{{ $index }}][qty]" value="{{ $part->qty }}" readonly>
-                                                        </div>
-                                                    </div>
-                                                    <div class="cell">
-                                                        <div class="form-group">
-                                                            <input type="text" name="spare_parts[{{ $index }}][sum]" value="{{ $part->sum }}" readonly>
-                                                        </div>
-                                                    </div>
-                                                    <div class="cell">
-                                                        <div class="form-group checkbox">
-                                                            <input type="checkbox" id="parts-{{ $part->id }}" checked disabled>
-                                                            <label for="parts-{{ $part->id }}"></label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="cell">
-                                                        <button type="button" class="btn-border btn-red btn-action remove-part-btn">
-                                                            <span class="icon-minus"></span>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                                @endforeach
-                                            </div>
+                                <div class="table-body">
+                                    <div class="row-group" id="parts-container">
+                                        <!-- Запчастини для пошуку -->
                                     </div>
+                                    
+
+                                    <div class="row title-only">
+                                        <p>Додані запчастини</p>
+                                    </div>
+
+                                    <div class="row-group" id="added-parts-container">
+                                        @foreach($spareParts as $index => $part)
+                                        <div class="row" data-articul="{{ $part->spare_parts }}">
+                                            <div class="cell">
+                                                <div class="form-group _bg-white">
+                                                    <input type="text" name="spare_parts[{{ $index }}][spare_parts]" value="{{ $part->spare_parts }}" readonly>
+                                                </div>
+                                            </div>
+                                            <div class="cell">
+                                                <div class="form-group">
+                                                    <input type="text" name="spare_parts[{{ $index }}][name]" value="{{ $part->name }}" readonly>
+                                                </div>
+                                            </div>
+                                            <div class="cell">
+                                                <div class="form-group">
+                                                    <input type="text" name="spare_parts[{{ $index }}][price]" value="{{ $part->price }}" readonly>
+                                                </div>
+                                            </div>
+                                            <div class="cell">
+                                                <div class="form-group">
+                                                    <input type="text" name="spare_parts[{{ $index }}][discount]" value="{{ $part->discount }}" readonly>
+                                                </div>
+                                            </div>
+                                            <div class="cell">
+                                                <div class="form-group _bg-white">
+                                                    <input type="text" name="spare_parts[{{ $index }}][qty]" value="{{ $part->qty }}" readonly>
+                                                </div>
+                                            </div>
+                                            <div class="cell">
+                                                <div class="form-group">
+                                                    <input class="part-total" type="text" name="spare_parts[{{ $index }}][sum]" value="{{ $part->sum }}" readonly>
+                                                </div>
+                                            </div>
+                                            <div class="cell">
+                                                <div class="form-group checkbox">
+                                                    <input type="checkbox" id="parts-{{ $part->id }}" checked disabled>
+                                                    <label for="parts-{{ $part->id }}"></label>
+                                                </div>
+                                            </div>
+                                            <div class="cell">
+                                                <button type="button" class="btn-border btn-red btn-action remove-part-btn _js-remove-part-from-server" data-action="/url/">
+                                                    <span class="icon-minus"></span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        @endforeach
+                                    </div>
+
+
                                 </div>
+
+                                
+                                
+                                
+                                
+                                <!-- <div class="table-parts">
+                                    <div class="table-body">
+                                        
+                                        
+                                    </div>
+                                </div> -->
                                 <div class="table-footer">
                                     <div class="row">
                                         <div class="cell">Підсумок</div>
                                         <div class="cell"></div>
                                         <div class="cell"></div>
                                         <div class="cell"></div>
-                                        <div class="cell" id="total-parts-sum">0</div>
                                         <div class="cell"></div>
+                                        <div class="cell" id="total-parts-sum">
+                                            0
+                                        </div>
+                                        <div class="cell">
+                                            <input type="hidden" value="0" name="total-parts-sum">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -414,6 +438,7 @@
                                 <div class="table-footer">
                                     <div class="row">
                                         <div class="cell">Загальна вартість по документу</div>
+                                        <div class="cell"></div>
                                         <div class="cell"></div>
                                         <div class="cell"></div>
                                         <div class="cell"></div>
@@ -518,21 +543,23 @@
             const partsTotal = calculatePartsTotal();
             console.log("Updating Total Parts Sum:", partsTotal);
             totalPartsSumElement.textContent = partsTotal.toFixed(2);
+            document.querySelector('input[name="total-parts-sum"]').value = partsTotal.toFixed(2);
         }
     
         searchInput.addEventListener('input', function() {
             const articul = this.value.trim();
-    
+            
             if (articul.length >= 3) {
                 fetch(`/parts/${articul}`)
                     .then(response => response.json())
                     .then(data => {
                         partsContainer.innerHTML = '';
-                        if (data.data.length > 0) {
+                        if (data.data.length > 0) {                            
                             data.data.forEach((part, index) => {
                                 if (part.product_prices && part.product_prices.recommended_price) {
                                     const recommendedPrice = parseFloat(part.product_prices.recommended_price);
                                     const priceWithDiscountAndVat = (recommendedPrice * (1 - discount / 100)).toFixed(2);
+                                    
                                     const newRow = `
                                         <div class="row" data-articul="${part.articul}">
                                             <div class="cell">
@@ -551,13 +578,18 @@
                                                 </div>
                                             </div>
                                             <div class="cell">
+                                                <div class="form-group">
+                                                    <input type="text" name="spare_parts_temp[${index}][discount]" value="${discount}" readonly>
+                                                </div>
+                                            </div>
+                                            <div class="cell">
                                                 <div class="form-group _bg-white">
                                                     <input type="number" name="spare_parts_temp[${index}][qty]" value="1" class="part-quantity">
                                                 </div>
                                             </div>
                                             <div class="cell">
                                                 <div class="form-group">
-                                                    <input type="text" name="spare_parts_temp[${index}][sum]" value="${priceWithDiscountAndVat}" readonly class="part-total">
+                                                    <input  type="text" name="spare_parts_temp[${index}][sum]" value="${priceWithDiscountAndVat}" readonly class="part-total">
                                                 </div>
                                             </div>
                                             <div class="cell">
@@ -573,10 +605,12 @@
                                             </div>
                                         </div>
                                     `;
+                                                                    
     
                                     partsContainer.insertAdjacentHTML('beforeend', newRow);
     
                                     const currentRow = partsContainer.lastElementChild;
+                                    
                                     currentRow.querySelector('.part-quantity').addEventListener('input', function() {
                                         const quantity = parseInt(this.value) || 0;
                                         const total = (priceWithDiscountAndVat * quantity).toFixed(2);
@@ -616,13 +650,18 @@
                                                     </div>
                                                 </div>
                                                 <div class="cell">
+                                                    <div class="form-group">
+                                                        <input type="text" name="spare_parts_temp[${index}][discount]" value="${discount}" readonly>
+                                                    </div>
+                                                </div>
+                                                <div class="cell">
                                                     <div class="form-group _bg-white">
                                                         <input type="text" name="spare_parts[${addedParts.length - 1}][qty]" value="${quantity}" readonly>
                                                     </div>
                                                 </div>
                                                 <div class="cell">
                                                     <div class="form-group">
-                                                        <input type="text" name="spare_parts[${addedParts.length - 1}][sum]" value="${total.toFixed(2)}" readonly>
+                                                        <input  type="text" name="spare_parts[${addedParts.length - 1}][sum]" value="${total.toFixed(2)}" readonly>
                                                     </div>
                                                 </div>
                                                 <div class="cell">
@@ -665,9 +704,8 @@
         });
     
         updatePartsTotal(); 
-    });
-    
-    </script>
+    });    
+</script>
 
 
 <!-- Дизейбл для селекта при невыбранном сервис-центре -->
@@ -707,12 +745,18 @@
         // Преобразуем текстовое содержание в числа
         const totalPartsSum = parseFloat(totalPartsSumElement.textContent) || 0;
         const totalSum = parseFloat(totalSumElement.textContent) || 0;
-
+        
         // Рассчитываем общую сумму
         const finalSum = totalPartsSum + totalSum;
 
         // Обновляем элемент с общей суммой
         totalSumFinalElement.textContent = finalSum.toFixed(2);
+
+        // Записати загальну вартість запчастин у прихований інпут
+        document.querySelector('input[name="total-parts-sum"]').value = totalPartsSum;
+
+        console.log('mutation');
+        
     }
 
     // Обновляем итоговую сумму сразу после загрузки страницы
@@ -1258,12 +1302,16 @@ document.addEventListener('DOMContentLoaded', function() {
         const searchInput = document.getElementById('search-articul');
         const partsContainer = document.getElementById('parts-container');
         const addedPartsContainer = document.getElementById('added-parts-container');
-        const totalSumElement = document.getElementById('total-sum');
+        const totalSumElement = document.getElementById('total-parts-sum');
+        //const totalPartsSumElement = document.getElementById('total-parts-sum');
         const addedPartsHiddenContainer = document.getElementById('added-parts-hidden');
         const discount = {{ $defaultDiscount ?? 0 }};
 
-        let totalSum = 0;
+        let totalSum = +document.querySelector('input[name="total-parts-sum"]').value;
         let addedParts = [];
+
+        console.log(document.querySelector('input[name="total-parts-sum"]'));
+        
 
         searchInput.addEventListener('input', function () {
             const articul = this.value.trim();
@@ -1274,6 +1322,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     .then(data => {
                         partsContainer.innerHTML = '';
                         if (data.data.length > 0) {
+                            
+                            const titleRow = '<div class="row title-only"><p>Результати пошуку</p></div>';
+                            partsContainer.insertAdjacentHTML('beforeend', titleRow);
+
                             data.data.forEach((part, index) => {
                                 if (part.product_prices && part.product_prices.recommended_price) {
                                     const recommendedPrice = parseFloat(part.product_prices.recommended_price);
@@ -1297,13 +1349,18 @@ document.addEventListener('DOMContentLoaded', function() {
                                                 </div>
                                             </div>
                                             <div class="cell">
+                                                <div class="form-group">
+                                                    <input type="text" name="spare_parts_temp[${index}]discount]" value="${discount}" readonly>
+                                                </div>
+                                            </div>
+                                            <div class="cell">
                                                 <div class="form-group _bg-white">
                                                     <input type="number" name="spare_parts_temp[${index}][qty]" value="1" class="part-quantity">
                                                 </div>
                                             </div>
                                             <div class="cell">
                                                 <div class="form-group">
-                                                    <input type="text" name="spare_parts_temp[${index}][sum]" value="${priceWithDiscount}" readonly class="part-total">
+                                                    <input  type="text" name="spare_parts_temp[${index}][sum]" value="${priceWithDiscount}" readonly class="part-total">
                                                 </div>
                                             </div>
                                             <div class="cell">
@@ -1329,13 +1386,16 @@ document.addEventListener('DOMContentLoaded', function() {
                                         currentRow.querySelector('.part-total').value = total;
                                     });
 
-                                    currentRow.querySelector('.add-part-btn').addEventListener('click', function () {
+                                    currentRow.querySelector('.add-part-btn').addEventListener('click', function (e) {
                                         const articul = currentRow.querySelector('input[name*="[spare_parts]"]').value;
+                                        const btn = e.target.closest('button');
+                                        totalSum = +document.querySelector('input[name="total-parts-sum"]').value;
 
                                         if (addedParts.some(part => part.articul === articul)) {
                                             alert('Запчастина вже добавлена');
                                             return;
                                         }
+                                        btn.disabled = true;
 
                                         const name = currentRow.querySelector('input[name*="[name]"]').value;
                                         const price = parseFloat(currentRow.querySelector('input[name*="[price]"]').value);
@@ -1343,7 +1403,9 @@ document.addEventListener('DOMContentLoaded', function() {
                                         const total = parseFloat(currentRow.querySelector('.part-total').value);
                                         const checked = currentRow.querySelector(`#parts-${part.id}`).checked;
 
-                                        addedParts.push({ articul, name, price, quantity, total });
+
+
+                                        addedParts.push({ articul, name, price, quantity, total });                                        
 
                                         const addedRow = `
                                             <div class="row" data-articul="${articul}">
@@ -1363,13 +1425,18 @@ document.addEventListener('DOMContentLoaded', function() {
                                                     </div>
                                                 </div>
                                                 <div class="cell">
+                                                    <div class="form-group">
+                                                        <input type="text" name="spare_parts_temp[${index}]discount]" value="${discount}" readonly>
+                                                    </div>
+                                                </div>
+                                                <div class="cell">
                                                     <div class="form-group _bg-white">
                                                         <input type="text" name="spare_parts[${addedParts.length - 1}][qty]" value="${quantity}" readonly>
                                                     </div>
                                                 </div>
                                                 <div class="cell">
                                                     <div class="form-group">
-                                                        <input type="text" name="spare_parts[${addedParts.length - 1}][sum]" value="${total.toFixed(2)}" readonly>
+                                                        <input class="part-total"  type="text" name="spare_parts[${addedParts.length - 1}][sum]" value="${total.toFixed(2)}" readonly>
                                                     </div>
                                                 </div>
                                                 <div class="cell">
@@ -1392,12 +1459,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
                                         const removeButton = addedPartsContainer.querySelector('.row:last-child .remove-part-btn');
                                         removeButton.addEventListener('click', function () {
+                                            totalSum = +document.querySelector('input[name="total-parts-sum"]').value;
                                             const row = this.closest('.row');
-                                            const rowTotal = parseFloat(row.querySelectorAll('input[type="text"]')[4].value);
+                                            const rowTotal = parseFloat(row.querySelector('.part-total').value);
                                             totalSum -= rowTotal;
                                             totalSumElement.textContent = totalSum.toFixed(2);
                                             const articul = row.getAttribute('data-articul');
                                             addedParts = addedParts.filter(part => part.articul !== articul);
+                                            
                                             row.remove();
                                         });
 
@@ -1432,6 +1501,53 @@ document.addEventListener('DOMContentLoaded', function() {
                 partsContainer.innerHTML = '';
             }
         });
+
+
+        // Видалити запчистини із сервера
+        const removePartFromServer = document.querySelectorAll('._js-remove-part-from-server');
+        if(removePartFromServer.length > 0){
+            removePartFromServer.forEach(btn => {
+                btn.addEventListener('click', () => {
+
+
+                    const row = btn.closest('.row');
+                    const rowTotal = parseFloat(row.querySelector('.part-total').value);
+                    let totalSum = +document.querySelector('input[name="total-parts-sum"]').value;
+                    const totalSumElement = document.getElementById('total-parts-sum');
+
+                    totalSum -= rowTotal;
+                    totalSumElement.textContent = totalSum.toFixed(2);
+                    
+                    row.remove();
+
+                    
+
+                    var action = btn.dataset.action;
+                    fetch(action, {
+                        method: 'post',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                    })
+                    .then(response => response.json())
+                    .then(function (response) {
+                        if (response.success) {
+                            
+                            const row = btn.closest('.row');
+                            const rowTotal = parseFloat(row.querySelector('.part-total').value);
+                            let totalSum = +document.querySelector('input[name="total-parts-sum"]').value;
+                            const totalSumElement = document.getElementById('total-parts-sum');
+
+                            totalSum -= rowTotal;
+                            totalSumElement.textContent = totalSum.toFixed(2);
+                            
+                            row.remove();
+
+                        }
+                    });
+                })
+            })
+        }
     });
 </script>
 
