@@ -22,6 +22,7 @@ use App\Enums\WarrantyClaimStatusEnum;
 use App\Models\WarrantyClaimSpareParts;
 use App\Models\WarrantyClaimServiceWork;
 use App\Http\Requests\WarrantyClaimRequest;
+use App\Models\TechnicalConclusion\TechnicalConclusion;
 
 class WarrantyClaimController extends Controller
 {
@@ -151,7 +152,7 @@ class WarrantyClaimController extends Controller
             $work->total_price = $work->duration_decimal * $serviceWorksPrice;
         }
     
-        return view('app.warranty.edit', compact('talon', 'groups', 'works', 'documentNumber', 'product', 'products', 'serviceCenters', 'currentClaim', 'defaultServicePartner', 'defaultDiscount', 'defaultContract', 'spareParts', 'serviceWorks', ));
+        return view('app.warranty.edit', compact('talon', 'groups', 'works', 'documentNumber', 'product', 'products', 'serviceCenters', 'currentClaim', 'defaultServicePartner', 'defaultDiscount', 'defaultContract', 'spareParts', 'serviceWorks'));
     }
 
     public function create($barcode, $factory_number = null)

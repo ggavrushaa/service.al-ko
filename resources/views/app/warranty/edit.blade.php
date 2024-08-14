@@ -4,7 +4,17 @@
     <div class="main" id="main">
         <div class="page-warranty-create">
             <div class="page-name sticky">
-                <h1>Гарантійна заява</h1>
+                {{-- <h1>Гарантійна заява</h1> --}}
+                <ul class="fake-breadcrumb">
+                    <li>
+                        <h1>Гарантійна заява</h1>
+                    </li>
+                    @if($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review)
+                        <li>
+                                <h1><a href="{{ route('technical-conclusions.create', $currentClaim->id) }}">Акт технічної експертизи</a></h1>
+                        </li>
+                    @endif
+                </ul>
                 <div class="btns">
                     @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::new)
                         <button type="submit" class="btn-primary btn-blue" form="send-to-save">Зберегти</button>
