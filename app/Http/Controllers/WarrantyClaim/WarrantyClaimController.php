@@ -17,6 +17,7 @@ use App\Models\WarrantyClaimFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Enums\WarrantyClaimStatusEnum;
 use App\Models\WarrantyClaimSpareParts;
 use App\Models\WarrantyClaimServiceWork;
@@ -160,8 +161,9 @@ class WarrantyClaimController extends Controller
             ->orWhere('factory_number', $factory_number)
             ->first();
 
-        $talon = GuaranteeCoupon::where('barcode', $barcode)
-            ->orWhere('factory_number', $factory_number)
+        $talon = GuaranteeCoupon::where('status', 'ACTIVE')
+            ->where('barcode', $barcode)
+            ->where('factory_number', $factory_number)
             ->firstOrFail();
             
         $product = Products::where('id', $talon->product_id ?? null)->first();
@@ -519,6 +521,9 @@ class WarrantyClaimController extends Controller
     {
         $warrantyClaim = WarrantyClaim::findOrFail($id);
         $warrantyClaim->status = WarrantyClaimStatusEnum::review;
+        if($warrantyClaim->manager_id == null){
+            $warrantyClaim->manager_id = Auth::user()->id;
+        }
         $warrantyClaim->save();
 
         return redirect()->back()->with('status', 'Розглядається');

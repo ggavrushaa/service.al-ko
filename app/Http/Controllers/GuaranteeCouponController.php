@@ -36,7 +36,7 @@ class GuaranteeCouponController extends Controller
     
         if ($talons->count() === 1) {
             // Если найден только один талон
-            $talon = $talons->first();
+            $talon = $talons->where('status', 'ACTIVE')->first();
             return redirect()->route('app.warranty.create', [
                 'barcode' => $talon->barcode,
                 'factory_number' => $talon->factory_number,
