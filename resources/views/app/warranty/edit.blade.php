@@ -97,7 +97,7 @@
                             </div>
 
                             <!-- Давати класс "show-placeholder" тільки тоді, коли немає обраного пункту. Тобто ми хочемо показати placeholder.  -->
-                            <div class="form-group required default-select show-placeholder" data-valid="vanilla-select">
+                            <div class="form-group default-select show-placeholder">
                                 <label for="service-center">Сервісний центр</label>
                                 <select name="service_partner" id="service-center" required @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>
                                     <option value="-1">Виберіть сервісний центр</option>
@@ -396,7 +396,7 @@
                                                 </div>
                                             </div>
                                             <div class="cell">
-                                                <button type="button" class="btn-border btn-red btn-action remove-part-btn _js-remove-part-from-server" data-action="/url/">
+                                                <button type="button" class="btn-border btn-red btn-action remove-part-btn _js-remove-part-from-server" data-action="{{route('parts.destroy', $part->id)}}">
                                                     <span class="icon-minus"></span>
                                                 </button>
                                             </div>
@@ -1269,7 +1269,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    if (serviceCenterSelect.value) {
+    if (serviceCenterSelect.value !== '-1') {
         loadContractDetails(serviceCenterSelect.value);
     }
 });
@@ -1345,7 +1345,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                             </div>
                                             <div class="cell">
                                                 <div class="form-group">
-                                                    <input type="text" name="spare_parts_temp[${index}][price]" value="${priceWithDiscount}" readonly>
+                                                    <input type="text" name="spare_parts_temp[${index}][price]" value="${recommendedPrice}" readonly>
                                                 </div>
                                             </div>
                                             <div class="cell">
@@ -1394,8 +1394,9 @@ document.addEventListener('DOMContentLoaded', function() {
                                         if (addedParts.some(part => part.articul === articul)) {
                                             alert('Запчастина вже добавлена');
                                             return;
-                                        }
-                                        btn.disabled = true;
+                                        } 
+                                        
+                                        // btn.disabled = false;
 
                                         const name = currentRow.querySelector('input[name*="[name]"]').value;
                                         const price = parseFloat(currentRow.querySelector('input[name*="[price]"]').value);
@@ -1508,19 +1509,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if(removePartFromServer.length > 0){
             removePartFromServer.forEach(btn => {
                 btn.addEventListener('click', () => {
-
-
-                    const row = btn.closest('.row');
-                    const rowTotal = parseFloat(row.querySelector('.part-total').value);
-                    let totalSum = +document.querySelector('input[name="total-parts-sum"]').value;
-                    const totalSumElement = document.getElementById('total-parts-sum');
-
-                    totalSum -= rowTotal;
-                    totalSumElement.textContent = totalSum.toFixed(2);
-                    
-                    row.remove();
-
-                    
 
                     var action = btn.dataset.action;
                     fetch(action, {

@@ -68,6 +68,7 @@ Route::group(['middleware' => ['auth',]], function () {
 
     // Пошук запчастин
     Route::get('/parts/{articul}/{page?}', [PartsController::class, 'search'])->name('parts.search');
+    Route::post('/parts-destroy/{id}', [PartsController::class, 'destroy'])->name('parts.destroy');
 
     // Збереження акту
     Route::post('/technical-conclusions/{id}/save', [TechnicalConclusionController::class, 'save'])->name('technical-conclusions.save');
