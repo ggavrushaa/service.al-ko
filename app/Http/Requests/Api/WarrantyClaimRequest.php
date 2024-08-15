@@ -56,7 +56,7 @@ class WarrantyClaimRequest extends FormRequest
             '*.service_works' => 'nullable|array',
             '*.service_works.*.code_1c' => 'nullable|string|max:40',
             '*.service_works.*.line_number' => 'nullable|integer',
-            '*.service_works.*.qty' => 'nullable|integer',
+            '*.service_works.*.qty' => 'nullable|decimal:0,2',
             '*.service_works.*.price' => 'nullable|numeric',
             '*.service_works.*.discount' => 'nullable|numeric',
             '*.service_works.*.sum' => 'nullable|numeric',
