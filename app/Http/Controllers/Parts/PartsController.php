@@ -21,6 +21,7 @@ class PartsController extends Controller
                             $query->where('price_type_id', 127);
                         }])
                         ->paginate($perPage, ['*'], 'page', $page);
+        
 
         return response()->json($parts);
     }

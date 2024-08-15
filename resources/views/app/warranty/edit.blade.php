@@ -17,10 +17,10 @@
                 </ul>
                 <div class="btns">
                     @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::new)
-                        <button type="submit" class="btn-primary btn-blue" form="send-to-save">Зберегти</button>
-                        <button type="submit" class="btn-primary btn-blue" form="send-to-review-form">Відправити</button>
+                        <button type="submit" class="btn-primary btn-blue" value="send_to_save" form="send-to-save">Зберегти</button>
+                        <button type="submit" class="btn-primary btn-blue" value="send_to_review" form="send-to-review-form">Відправити</button>
                     @elseif ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::sent && auth()->user()->role_id === 2 OR auth()->user()->role_id === 3)
-                        <button type="submit" class="btn-primary btn-blue" form="take-to-work-form">Взяти в роботу</button>
+                        <button type="submit" class="btn-primary btn-blue" value="take_to_work" form="take-to-work-form">Взяти в роботу</button>
                     @elseif ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review && auth()->user()->role_id === 2)
                         <a href="{{ route('technical-conclusions.create', $currentClaim->id) }}" class="btn-primary btn-blue">Створити Акт</a>
                     @endif
@@ -402,7 +402,7 @@
                                             </div>
                                             <div class="cell">
                                                 <div class="form-group checkbox">
-                                                    <input type="checkbox" id="parts-{{ $part->id }}" checked disabled>
+                                                    <input type="checkbox" id="parts-{{ $part->id }}" disabled>
                                                     <label for="parts-{{ $part->id }}"></label>
                                                 </div>
                                             </div>
@@ -491,41 +491,8 @@
                     </div>
                     
                 </div>
+                <input type="hidden" name="button">
             </form>
-
-            @if ($currentClaim && $currentClaim->id)
-            <form action="{{ route('warranty-claims.send-to-review', $currentClaim->id) }}" id="send-to-review-form" method="POST" style="display: none;" class="js-form-validation">
-                @csrf
-                <input type="hidden" name="barcode" value="{{ $currentClaim->barcode }}">
-                <input type="hidden" name="factory_number" value="{{ $currentClaim->factory_number }}">
-                <input type="hidden" name="client_name" value="{{ $currentClaim->client_name }}">
-                <input type="hidden" name="product_name" value="{{ $currentClaim->product_name }}">
-                <input type="hidden" name="product_article" value="{{ $currentClaim->product_article }}">
-                <input type="hidden" name="number" value="{{ $currentClaim->number }}">
-                <input type="hidden" name="date" value="{{ $currentClaim->date }}">
-                <input type="hidden" name="date_of_sale" value="{{ $currentClaim->date_of_sale }}">
-                <input type="hidden" name="date_of_claim" value="{{ $currentClaim->date_of_claim }}">
-                <input type="hidden" name="status" value="{{ $currentClaim->status }}">
-                <input type="hidden" name="service_partner" value="{{ $currentClaim->service_partner }}">
-                <input type="hidden" name="service_contract" value="{{ $currentClaim->service_contract }}">
-                <input type="hidden" name="client_phone" value="{{ $currentClaim->client_phone }}">
-                <input type="hidden" name="sender_name" value="{{ $currentClaim->sender_name }}">
-                <input type="hidden" name="sender_phone" value="{{ $currentClaim->sender_phone }}">
-                <input type="hidden" name="details" value="{{ $currentClaim->details }}">
-                <input type="hidden" name="deteails_reason" value="{{ $currentClaim->deteails_reason }}">
-                <input type="hidden" name="product_group_id" value="{{ $currentClaim->product_group_id }}">
-                {{-- <input type="hidden" name="service_works[]" value="{{ json_encode($currentClaim->serviceWorks->pluck('id')->toArray()) }}">
-                 --}}
-                 <input type="hidden" name="service_works" id="service-works-hidden">
-
-                <div id="added-parts-hidden"></div>
-        
-            </form>
-
-            <form action="{{ route('warranty-claims.take-to-work', $currentClaim->id) }}" id="take-to-work-form" method="GET" style="display: none;">
-                @csrf
-            </form>
-        @endif
         </div>
     </div>
 
