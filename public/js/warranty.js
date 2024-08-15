@@ -1,23 +1,102 @@
 //Дизейбл для селекта при невыбранном сервис-центре
-const serviceCenterSelect = document.querySelector('#service-center');
-const searchInputWorks = document.querySelector('#product-group');
-const searchInputParts = document.querySelector('#search-articul');
+const serviceCenterSelect = document.querySelector('#service-center'),
+    contractSelect = document.querySelector('#service-contract'),
+    searchInputWorks = document.querySelector('#product-group'),
+    searchInputParts = document.querySelector('#search-articul');
 
-function toggleProductGroupSelect() {
-    console.log(serviceCenterSelect.value);
+let contractPriceInput = document.querySelector('input[name="contract_price"]'),
+    contractDicountInput = document.querySelector('input[name="contract_discount"]'),
+    contractPrice = +contractPriceInput.value,
+    contractDicount = +contractDicountInput.value;
+
+contractPriceInput.addEventListener('change', () => {
+    contractPrice = +contractPriceInput.value;
+    console.log(contractPrice);
     
-    if (serviceCenterSelect.value === '-1') {
+})
+
+contractDicountInput.addEventListener('change', () => {
+    contractDicount = +contractDicountInput.value;
+})
+
+
+serviceCenterSelect.addEventListener('change', serviceCenterHandler);
+
+function serviceCenterHandler(){
+    const serviceCenterValue = serviceCenterSelect.value.trim();
+
+    if (serviceCenterValue === "-1" || serviceCenterValue === "") {
+        
         searchInputWorks.disabled = true;
         searchInputParts.disabled = true;
-    } else {
-        searchInputWorks.disabled = false;
-        searchInputParts.disabled = false;
-    }
-}
-toggleProductGroupSelect();
+        // contractSelect.disabled = true;
+        //contractSelect.value = '-1';
 
-serviceCenterSelect.addEventListener('change', toggleProductGroupSelect);
-searchInputParts.addEventListener('change', toggleProductGroupSelect);
+        contractPriceInput.value = 0;
+        contractDicountInput.value = 0;
+        
+        contractPriceInput.dispatchEvent(new Event('change'));
+        contractDicountInput.dispatchEvent(new Event('change'));
+            
+
+        return false;
+    }
+
+    searchInputWorks.disabled = false;
+    searchInputParts.disabled = false;
+    // contractSelect.disabled = false;
+
+
+    fetch('/get-contract-details', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({ service_center_id: serviceCenterValue })
+    })
+    .then(response => response.json())
+    .then(data => {
+        // console.log(data);
+        
+        if (data.contract) {
+            const {discount, service_works_price} = data.contract;
+
+            const option = document.createElement('option');
+            option.value = data.contract.id;
+            option.textContent = `${data.contract.number}`;
+            
+            contractSelect.innerHTML = ''; 
+            contractSelect.appendChild(option);
+            contractSelect.value = data.contract.id;
+
+            
+            
+            contractPriceInput.value = service_works_price;
+            contractDicountInput.value = discount;
+
+            contractPriceInput.dispatchEvent(new Event('change'));
+            contractDicountInput.dispatchEvent(new Event('change'));
+        } else {
+            console.error('Contract not found');
+        }
+    })
+    .catch(error => {
+        console.error('Error fetching contract details:', error);
+    });
+
+    // console.log(serviceCenterValue);
+}
+serviceCenterHandler();
+
+//// Визначити на яку кнопку натиснули
+document.querySelectorAll('.page-name .btn-primary').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        
+        document.querySelector('#send-to-save input[name="button"]').value = btn.value;
+    })
+})
 
 
 /////// Роботи
@@ -29,7 +108,6 @@ if (searchInputWorks) {
 
         if (value === '-1' || value === '') return false;
 
-
         loadServiceWorks(value);
     })
 }
@@ -37,14 +115,13 @@ if (searchInputWorks) {
 
 function loadServiceWorks(groupId) {
     // saveCheckboxStates(productGroupSelect.value);
-    const contractPrice = +document.querySelector('input[name="contract_price"]').value;
     const serviceWorksContainer = document.querySelector('#service-works-container');
 
     fetch(`/service/${groupId}`)
         .then(response => response.json())
         .then(data => {
 
-            console.log(data);
+            // console.log(data);
             let totalDuration = 0;
             let nonCkeckedElements = serviceWorksContainer.querySelectorAll('input[name="service_works[]"]:not(:checked)');
 
@@ -161,11 +238,12 @@ function drawFoundParts(parts) {
     partsContainer.insertAdjacentHTML('beforeend', titleRow);
 
 
+    // console.log(contractPrice);
+    
     parts.forEach((part) => {
         const { id, articul, name, checked, product_prices } = part,
-            discount = 10,
             recommendedPrice = parseFloat(product_prices.recommended_price),
-            priceWithDiscount = (recommendedPrice * (1 - discount / 100)).toFixed(2);
+            priceWithDiscount = (recommendedPrice * (1 - contractDicount / 100)).toFixed(2);
 
 
         const row = `
@@ -187,7 +265,7 @@ function drawFoundParts(parts) {
                 </div>
                 <div class="cell">
                     <div class="form-group">
-                        <input type="text" name="spare_parts_temp[${id}][discount]" value="${discount}" readonly>
+                        <input type="text" name="spare_parts_temp[${id}][discount]" value="${contractDicount}" readonly>
                     </div>
                 </div>
                 <div class="cell">

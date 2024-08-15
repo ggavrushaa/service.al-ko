@@ -97,7 +97,7 @@
                             </div>
 
                             <!-- Давати класс "show-placeholder" тільки тоді, коли немає обраного пункту. Тобто ми хочемо показати placeholder.  -->
-                            <div class="form-group default-select show-placeholder">
+                            <div class="form-group default-select">
                                 <label for="service-center">Сервісний центр</label>
                                 <select name="service_partner" id="service-center" required @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>
                                     <option value="-1">Виберіть сервісний центр</option>
@@ -491,6 +491,10 @@
                     </div>
                     
                 </div>
+
+                <input type="hidden" name="contract_price" value="{{ $defaultContract ? $defaultContract->service_works_price : 0 }}">
+                <input type="hidden" name="contract_discount" value="{{ $defaultDiscount ?? 0 }}">
+                
                 <input type="hidden" name="button">
             </form>
         </div>
