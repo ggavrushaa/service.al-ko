@@ -251,6 +251,8 @@
                                     @endforeach
                                 </select>
                             </div>
+
+                            <input type="hidden" name="contract_price" value="{{ $defaultContract ? $defaultContract->service_works_price : 0 }}">
                         </div>
                         
                         <div class="display-grid">
@@ -275,7 +277,7 @@
                                             <div class="row">
                                                 <div class="cell">
                                                     <div class="form-group checkbox">
-                                                        <input type="checkbox" id="service-{{ $work->id }}" name="service_works[]" value="{{ $work->id }}" {{ $serviceWorks->contains($work->id) ? 'checked' : '' }} @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>
+                                                        <input type="checkbox" id="service-{{ $work->id }}" name="service_works[]" onchange="calcPrice();" value="{{ $work->id }}" {{ $serviceWorks->contains($work->id) ? 'checked' : '' }} @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>
                                                         <label for="service-{{ $work->id }}"></label>
                                                     </div>
                                                 </div>
@@ -286,17 +288,20 @@
                                                 </div>
                                                 <div class="cell">
                                                     <div class="form-group">
-                                                        <input type="text" value="{{ number_format($work->price, 2) }}" readonly>
+                                                        <input type="text" value="{{ number_format($work->price, 2) }}" class='work-price' readonly>
                                                     </div>
                                                 </div>
                                                 <div class="cell">
                                                     <div class="form-group">
-                                                        <input type="number" step="0.01" name="hours[]" value="{{ number_format($work->duration_decimal, 2) }}" class="work-hours" data-price="{{ $work->price }}">
+                                                        <input type="number" step="0.01" name="hours[]" value="{{ number_format($work->duration_decimal, 2) }}" class="work-hours"
+                                                            oninput="workCounter(event)"
+                                                            onkeyup="workCounterHandler(event)"
+                                                        >
                                                     </div>
                                                 </div>
                                                 <div class="cell">
                                                     <div class="form-group">
-                                                        <input type="text" value="{{ $work->duration_decimal * $work->price }}" class="work-total-price" readonly>
+                                                        <input type="text" value="{{ $work->duration_decimal * $work->price }}" class="total-price" readonly>
                                                     </div>
                                                 </div>
                                             </div>
@@ -307,8 +312,14 @@
                                             <div class="cell">Загальна вартість робіт</div>
                                             <div class="cell"></div>
                                             <div class="cell"></div>
-                                            <div class="cell" id="total-duration">0</div>
-                                            <div class="cell" id="total-sum">0.00</div>
+                                            <div class="cell" id="total-duration">
+                                                <span>0.00</span>
+                                                <input type="hidden" name="total-duration">
+                                            </div>
+                                            <div class="cell" id="total-sum">
+                                                <span>0.00</span>
+                                                <input type="hidden" name="total-sum">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -396,7 +407,7 @@
                                                 </div>
                                             </div>
                                             <div class="cell">
-                                                <button type="button" class="btn-border btn-red btn-action remove-part-btn _js-remove-part-from-server" data-action="{{route('parts.destroy', $part->id)}}">
+                                                <button type="button" class="btn-border btn-red btn-action remove-part-btn" data-action="{{route('parts.destroy', $part->id)}}" onclick="removePartHandler(this)">
                                                     <span class="icon-minus"></span>
                                                 </button>
                                             </div>
@@ -425,7 +436,8 @@
                                         <div class="cell"></div>
                                         <div class="cell"></div>
                                         <div class="cell" id="total-parts-sum">
-                                            0
+                                            <span>0</span>
+                                            <input type="hidden" name="total-parts-sum" value="0">
                                         </div>
                                         <div class="cell">
                                             <input type="hidden" value="0" name="total-parts-sum">
@@ -442,7 +454,10 @@
                                         <div class="cell"></div>
                                         <div class="cell"></div>
                                         <div class="cell"></div>
-                                        <div class="cell" id="total-sum-final">0</div>
+                                        <div class="cell" id="total-sum-final">
+                                            <span>0</span>
+                                            <input type="hidden" name="total-sum-final" value="0">
+                                        </div>
                                         <div class="cell"></div>
                                     </div>
                                 </div>
@@ -517,8 +532,10 @@
     <div id="datepicker-container"></div>
 
 
+
+
 <!-- Код для пошуку і збереження запчастини для сейв форми -->
-<script>
+<!-- <script>
     document.addEventListener('DOMContentLoaded', function() {
         const searchInput = document.getElementById('search-articul');
         const partsContainer = document.getElementById('parts-container');
@@ -705,11 +722,11 @@
     
         updatePartsTotal(); 
     });    
-</script>
+</script> -->
 
 
 <!-- Дизейбл для селекта при невыбранном сервис-центре -->
-<script>
+<!-- <script>
     document.addEventListener('DOMContentLoaded', function () {
     const serviceCenterSelect = document.getElementById('service-center');
     const productGroupSelect = document.getElementById('product-group');
@@ -730,10 +747,10 @@
     serviceCenterSelect.addEventListener('change', toggleProductGroupSelect);
     partGroupSelect.addEventListener('change', toggleProductGroupSelect);
 });
-</script>
+</script> -->
 
 <!-- Общая сумма по документу -->
-<script>
+<!-- <script>
     document.addEventListener('DOMContentLoaded', function() {
     // Получаем элементы по их ID
     const totalPartsSumElement = document.getElementById('total-parts-sum');
@@ -770,10 +787,10 @@
     observer.observe(totalSumElement, { childList: true, subtree: true, characterData: true });
 });
 
-</script>
+</script> -->
 
 <!-- Загальний підсумок сервісних робіт -->
-<script>
+<!-- <script>
 document.addEventListener('DOMContentLoaded', function() {
     const serviceWorksContainer = document.getElementById('service-works-container');
     const totalDurationElement = document.getElementById('total-duration');
@@ -815,10 +832,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     calculateTotals(); // Initial calculation
 });
-</script>
+</script> -->
 
 <!-- Відправка сервісних работ при кнопці Відправити -->
-<script>
+<!-- <script>
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('send-to-review-form');
     const serviceWorksHiddenContainer = document.getElementById('service-works-hidden');
@@ -846,10 +863,10 @@ document.addEventListener('DOMContentLoaded', function() {
         form.submit();
     });
 });
-</script>
+</script> -->
     
 <!-- Відображення менеджерів в модалці -->
-<script>
+<!-- <script>
     document.addEventListener('DOMContentLoaded', function () {
 
     const showModalButtons = document.querySelectorAll('._js-btn-show-modal[data-modal="switch-manager"]');
@@ -1007,10 +1024,10 @@ document.addEventListener('DOMContentLoaded', function() {
         tick();
     }
 });
-</script>
+</script> -->
 
     <!-- Форматування дати -->
-    <script>
+    <!-- <script>
         document.addEventListener('DOMContentLoaded', function () {
             const dateStartInput = document.getElementById('date-start');
             const dateSaleInput = document.getElementById('date-sale');
@@ -1032,10 +1049,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 formatDate(dateSaleInput);
             });
         });
-    </script>
+    </script> -->
 
     <!-- Збереження заяви-->
-    <script>
+    <!-- <script>
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('form-create');
             const submitButton = document.getElementById('save-claim-btn');
@@ -1045,10 +1062,10 @@ document.addEventListener('DOMContentLoaded', function() {
           //      form.submit();
            // });
         });
-    </script>
+    </script> -->
 
     <!-- Код для генерації сервісних робот для певної групи товарів -->
-<script>
+<!-- <script>
 document.addEventListener('DOMContentLoaded', function() {
     const productGroupSelect = document.getElementById('product-group');
     const serviceWorksContainer = document.getElementById('service-works-container');
@@ -1200,11 +1217,11 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-</script>    
+</script>     -->
     
 
 <!-- Копіювання данних ПІБ та телефон -->
-<script>
+<!-- <script>
     function copyToClipboard() {
         // Get the input elements
     var buyerName = document.getElementById("buyer-name").value;
@@ -1218,11 +1235,11 @@ document.addEventListener('DOMContentLoaded', function() {
     senderName.value = buyerName;
     senderPhone.value = buyerPhone;
 }
-</script>
+</script> -->
 
 
 <!-- Код для автозаповнення контрактів по сервісним центрам -->
-<script>
+<!-- <script>
 document.addEventListener('DOMContentLoaded', function() {
     const serviceCenterSelect = document.getElementById('service-center');
     const serviceContractSelect = document.getElementById('service-contract');
@@ -1274,10 +1291,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-</script>
+</script> -->
 
 <!-- Дата -->
-<script>
+<!-- <script>
  document.addEventListener('DOMContentLoaded', function() {
     const dateInputs = document.querySelectorAll('._js-datepicker');
     dateInputs.forEach((input, index) => {
@@ -1294,10 +1311,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
-</script>
+</script> -->
 
 <!-- Збереження запчастин для Відправити -->
-<script>
+<!-- <script>
+
+
+
     document.addEventListener('DOMContentLoaded', function () {
         const searchInput = document.getElementById('search-articul');
         const partsContainer = document.getElementById('parts-container');
@@ -1537,7 +1557,9 @@ document.addEventListener('DOMContentLoaded', function() {
             })
         }
     });
-</script>
+</script> -->
+
+
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.4/dist/js/datepicker-full.min.js"></script>
@@ -1548,4 +1570,5 @@ document.addEventListener('DOMContentLoaded', function() {
     <script src="/cdn/js/custom-select.js"></script>
     <script src="/js/components.js?v=003"></script>
     <script src="/js/main.js?v=003"></script>
+    <script src="/js/warranty.js?v=003"></script>
 </x-layouts.base>
