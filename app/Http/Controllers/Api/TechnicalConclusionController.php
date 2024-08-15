@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\WarrantyClaimStatusEnum;
 use Carbon\Carbon;
 use App\Models\DefectCodes;
 use App\Models\SymptomCodes;
@@ -37,6 +38,7 @@ class TechnicalConclusionController extends Controller
                 'conclusion' => $conclusion->conclusion,
                 'resolution' => $conclusion->resolution,
                 'date' => $conclusion->date,
+                'appeal_type' => $conclusion->appeal_type,
                 'created_at' => Carbon::parse($conclusion->created_at)->format('Y-m-d H:i:s'),
                 'updated_at' => Carbon::parse($conclusion->updated_at)->format('Y-m-d H:i:s'),
             ];
@@ -78,8 +80,14 @@ class TechnicalConclusionController extends Controller
                 //     throw new \Exception("Symptom code with code_1C {$data['symptom_code']} not found");
                 // }
 
+                $technicalConclusion = TechnicalConclusion::where('code_1C', $data['code_1C'])
+                    ->orWhere(function ($query) use ($warrantyClaim) {
+                        $query->where('warranty_claim_id', $warrantyClaim->id);
+                    })
+                    ->first();
+
                 $technicalConclusion = TechnicalConclusion::updateOrCreate(
-                    ['code_1C' => $data['code_1C']],
+                    ['id' => $technicalConclusion ? $technicalConclusion->id : null],
                     [
                         'warranty_claim_id' => $warrantyClaim->id,
                         'defect_code' => $defectCode ? $defectCode->id : null,
@@ -89,12 +97,18 @@ class TechnicalConclusionController extends Controller
                         'date' => $data['date'],
                         'appeal_type' => $data['appeal_type'],
                         'number_1c' => $data['number_1c'],
-                    ]
+                        'status_1c' => $data['status_1c'],
+                    ],
                 );
+                
+                if($technicalConclusion['status_1c'] == 1) {
+                    $warrantyClaim->status = WarrantyClaimStatusEnum::approved->value;
+                    $warrantyClaim->save();
+                }
 
                 if ($technicalConclusion->wasRecentlyCreated) {
                     $createdCount++;
-                    $action = 'Создано';
+                    $action = 'Создано'; 
                 } else {
                     $updatedCount++;
                     $action = 'Оновлено';

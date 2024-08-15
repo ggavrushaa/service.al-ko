@@ -84,13 +84,9 @@ class WarrantyClaimController extends Controller
             ->where('factory_number', $warrantyClaim->factory_number)
             ->first();
 
-
         $product = Products::where('id', $talon->product_id ?? null)->first();
 
-        $maxDocumentNumber = DB::connection('second_db')->table('warranty_claims')->max('number');
-        $maxDocumentNumber = $maxDocumentNumber ? intval($maxDocumentNumber) : 0;
-        $documentNumber = $maxDocumentNumber + 1;
-
+        $documentNumber = $warrantyClaim->number;
         $products = Products::paginate(10);
         $groups = ProductGroup::all();
         $works = ServiceWorks::all();

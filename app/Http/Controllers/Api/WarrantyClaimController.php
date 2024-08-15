@@ -71,7 +71,7 @@ class WarrantyClaimController extends Controller
                     }
                     $data['autor'] = $user->id;
                     unset($data['autor_name']);
-
+                    
                     $warrantyClaim = WarrantyClaim::create($data);
                     $createdCount++;
                 }

@@ -20,7 +20,7 @@ class TechnicalConclusion extends Model
     protected $fillable = [ 
         'warranty_claim_id', 'date',
         'defect_code', 'symptom_code', 'resolution',  
-        'appeal_type', 'conclusion', 'code_1C',
+        'appeal_type', 'conclusion', 'code_1C', 'number_1c', 'status_1c',
     ];
 
     protected $casts = [

@@ -19,6 +19,8 @@ class WarrantyClaimRequest extends FormRequest
             // '*.id' => 'nullable|integer',
             '*.code_1C' => 'required|string|max:255',
             '*.number' => 'nullable|integer',
+            '*.number_1c' => 'nullable',
+            '*.status_1c' => 'nullable',
             '*.product_name' => 'nullable|string|max:255',
             '*.product_article' => 'nullable|string|max:255',
             '*.factory_number' => 'nullable|string|max:255',
