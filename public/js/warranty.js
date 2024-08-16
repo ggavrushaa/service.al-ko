@@ -137,7 +137,8 @@ document.querySelectorAll('.page-name .btn-primary').forEach(btn => {
         e.preventDefault();
 
         document.querySelector('#send-to-save input[name="button"]').value = btn.value;
-    
+        
+
         
         if (validateForm(btn.form)) {
             btn.form.submit();
@@ -178,6 +179,7 @@ function loadServiceWorks(groupId) {
             })
 
 
+            // spare_parts_temp[${id}][spare_parts]
             data.forEach(work => {
                 let { id, name, duration_decimal } = work;
 
@@ -189,23 +191,23 @@ function loadServiceWorks(groupId) {
                         <div class="row">
                             <div class="cell">
                                 <div class="form-group checkbox">
-                                    <input type="checkbox" id="service-${id}" name="service_works[]" value="${id}" onchange="calcPrice();">
+                                    <input type="checkbox" id="service-${id}" name="service_works[[${id}]['checked']]" onchange="calcPrice();">
                                     <label for="service-${id}"></label>
                                 </div>
                             </div>
                             <div class="cell">
                                 <div class="form-group">
-                                    <input type="text" value="${name}" readonly>
+                                    <input type="text" name="service_works[[${id}]['name']]" value="${name}" readonly>
                                 </div>
                             </div>
                             <div class="cell">
                                 <div class="form-group">
-                                    <input type="text" value="${contractPrice.toFixed(2)}" class='work-price' readonly>
+                                    <input type="text" name="service_works[[${id}]['price']]" value="${contractPrice.toFixed(2)}" class='work-price' readonly>
                                 </div>
                             </div>
                             <div class="cell">
                                 <div class="form-group">
-                                    <input type="number" step="0.01" name="hours[]" value="${duration_decimal.toFixed(2)}" class="work-hours" 
+                                    <input type="number" step="0.01" name="service_works[[${id}]['hours']]" value="${duration_decimal.toFixed(2)}" class="work-hours" 
                                         oninput="workCounter(event)"
                                         onkeyup="workCounterHandler(event)"
                                     >
@@ -213,7 +215,7 @@ function loadServiceWorks(groupId) {
                             </div>
                             <div class="cell">
                                 <div class="form-group">
-                                    <input type="text" value="${totalPrice.toFixed(2)}" class="total-price" readonly>
+                                    <input type="text" service_works[[${id}]['total-price']] value="${totalPrice.toFixed(2)}" class="total-price" readonly>
                                 </div>
                             </div>
                         </div>

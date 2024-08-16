@@ -107,7 +107,7 @@ function handleFiles() {
   var fileList = this.files,
     formGroup = this.closest('.form-group'),
     helpBlock = formGroup.querySelector('.help-block');
-  console.log(input.files);
+  // console.log(input.files);
   var validation = validationFiles(fileList, ['jpg', 'jpeg', 'png'], 5000000);
   formGroup.classList.remove('has-error');
   if (!validation.status) {
@@ -157,9 +157,20 @@ function handleFiles() {
 }
 function drawUploadedPhoto(uploadedFileList, input) {
   var wrapper = document.querySelector('.image-preview'),
-    form = wrapper.closest('form');
-  wrapper.innerHTML = '';
-  console.log(form);
+    uploadedImages = wrapper.querySelectorAll('._uploaded-image'),
+    form = wrapper.closest('form'),
+    fileInputElement = document.querySelector('#file'),
+    containerDataTransfer = new DataTransfer();
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+  });
+
+  //wrapper.innerHTML = '';
+  if (uploadedImages.length > 0) {
+    uploadedImages.forEach(function (uploadedImage) {
+      uploadedImage.remove();
+    });
+  }
   if (uploadedFileList.length > 0) {
     uploadedFileList.forEach(function (file, index) {
       var reader = new FileReader();
@@ -167,7 +178,7 @@ function drawUploadedPhoto(uploadedFileList, input) {
         // uploadedFileList.push(file);
 
         var block = document.createElement('div');
-        block.className = 'img';
+        block.className = 'img _uploaded-image';
         var btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'icon-trash';
@@ -180,13 +191,18 @@ function drawUploadedPhoto(uploadedFileList, input) {
         wrapper.insertAdjacentElement('beforeend', block);
       });
       reader.readAsDataURL(file);
-      if (form) {
-        var formData = new FormData(form);
-        var blob = new Blob([file], {
-          type: file.type
-        });
-        formData.append('files[]', blob, file.name);
-      }
+      var blob = new Blob([file], {
+        type: file.type
+      });
+      var file1 = new File([blob], file.name, {
+        type: file.type,
+        lastModified: file.lastModified,
+        size: file.size,
+        webkitRelativePath: file.webkitRelativePath,
+        lastModifiedDate: file.lastModifiedDate
+      });
+      containerDataTransfer.items.add(file1);
+      fileInputElement.files = containerDataTransfer.files;
     });
   }
   function removeImagePreview() {
@@ -315,7 +331,7 @@ if (document.querySelector('.swiper-gallery')) {
   });
 }
 
-// Form validation before submit 
+// Form validation before submit
 var formsValidation = document.querySelectorAll('.js-form-validation');
 if (formsValidation.length > 0) {
   formsValidation.forEach(function (form) {
@@ -360,11 +376,16 @@ if (btnsRemoveImage.length > 0) {
       e.preventDefault();
       var action = btn.dataset.action;
       fetch(action, {
-        method: 'post'
+        method: 'post',
+        headers: {
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
       }).then(function (response) {
-        return response.json;
+        return response.json();
       }).then(function (response) {
-        console.log(response);
+        if (response.success) {
+          btn.closest('.img').remove();
+        }
       });
     });
   });
