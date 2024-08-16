@@ -20,12 +20,8 @@ class GuaranteeCouponController extends Controller
     
         if ($request->filled('barcode')) {
             $query->where('barcode', $request->barcode)
+                ->orWhere('factory_number', $request->factory_number)
                 ->where('status', 'ACTIVE');
-        }
-    
-        if ($request->filled('factory_number')) {
-            $query->where('factory_number', $request->factory_number)
-                ->where('status', 'ACTIVE');;
         }
     
         $talons = $query->get();
