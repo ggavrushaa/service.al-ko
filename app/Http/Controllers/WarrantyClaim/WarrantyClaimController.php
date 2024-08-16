@@ -262,12 +262,11 @@ class WarrantyClaimController extends Controller
         $contract = Contract::where('partner_id', $serviceCenterId)
                             ->where('contract_type', 'Сервис')
                             ->orderBy('added_time', 'desc')
-                            ->first();
+                            ->get();
 
         if ($contract) {
             return response()->json([
                 'contract' => $contract->toArray(),
-                'discount' => $contract->discount,
             ]);
         }
 
