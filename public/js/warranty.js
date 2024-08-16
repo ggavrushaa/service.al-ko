@@ -148,16 +148,14 @@ contractSelect.addEventListener('change', () => {
     const val = contractSelect.value;
 
     if (val === '-1') {
-
         contractPriceInput.value = 0;
         contractDicountInput.value = 0;
 
         contractPriceInput.dispatchEvent(new Event('change'));
         contractDicountInput.dispatchEvent(new Event('change'));
-    }else{
-        
-        contractPriceInput.value = contractSelect.dataset.price;
-        contractDicountInput.value = contractSelect.dataset.discount;
+    }else{        
+        contractPriceInput.value = contractSelect.options[contractSelect.selectedIndex].dataset.price;
+        contractDicountInput.value = contractSelect.options[contractSelect.selectedIndex].dataset.discount;
 
         contractPriceInput.dispatchEvent(new Event('change'));
         contractDicountInput.dispatchEvent(new Event('change'));
