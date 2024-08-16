@@ -43,6 +43,21 @@ contractDicountInput.addEventListener('change', () => {
 
 serviceCenterSelect.addEventListener('change', serviceCenterHandler);
 
+// function updatePrice(option){
+//     if (serviceCenterValue === "-1" || serviceCenterValue === "") {
+        
+//         contractPriceInput.value = 0;
+//         contractDicountInput.value = 0;
+
+//         contractPriceInput.dispatchEvent(new Event('change'));
+//         contractDicountInput.dispatchEvent(new Event('change'));
+
+//         return false;
+//     }
+
+
+// }
+
 function serviceCenterHandler() {
     const serviceCenterValue = serviceCenterSelect.value.trim();
 
@@ -95,11 +110,13 @@ function serviceCenterHandler() {
                 contractSelect.innerHTML = '';
 
                 data.forEach(contract => {
-                    const { id, number, name } = contract;
+                    const { id, number, name, service_works_price, discount } = contract;
 
                     const option = document.createElement('option');
                     option.value = id;
                     option.textContent = `${name}`;
+                    option.dataset.price = service_works_price;
+                    option.dataset.discount = discount;
 
                     contractSelect.insertAdjacentElement('afterend', option);
                     contractSelect.appendChild(option);
@@ -126,6 +143,26 @@ function serviceCenterHandler() {
     // console.log(serviceCenterValue);
 }
 serviceCenterHandler();
+
+contractSelect.addEventListener('change', () => {
+    const val = contractSelect.value;
+
+    if (val === '-1') {
+
+        contractPriceInput.value = 0;
+        contractDicountInput.value = 0;
+
+        contractPriceInput.dispatchEvent(new Event('change'));
+        contractDicountInput.dispatchEvent(new Event('change'));
+    }else{
+        
+        contractPriceInput.value = contractSelect.dataset.price;
+        contractDicountInput.value = contractSelect.dataset.discount;
+
+        contractPriceInput.dispatchEvent(new Event('change'));
+        contractDicountInput.dispatchEvent(new Event('change'));
+    }
+})
 
 //// Визначити на яку кнопку натиснули
 document.querySelectorAll('.page-name .btn-primary').forEach(btn => {
@@ -233,8 +270,6 @@ const workCounterHandler = debounce((event) => workCounter(event), 500);
 function workCounter(event) {
     const regex = /^(?!0)\d+(\.\d+)?$/;
     const input = event.target;
-
-
 
     if (event.type === 'keyup' && !regex.test(input.value)) input.value = 1;
 
