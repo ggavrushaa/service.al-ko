@@ -276,23 +276,23 @@
                                             <div class="row">
                                                 <div class="cell">
                                                     <div class="form-group checkbox">
-                                                        <input type="checkbox" id="service-{{ $work->id }}" name="service_works[[{{ $work->id }}][checkbox]]" onchange="calcPrice();" {{ $serviceWorks->contains($work->id) ? 'checked' : '' }} @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>
+                                                        <input type="checkbox" id="service-{{ $work->id }}" name="service_works[{{ $work->id }}][checkbox]" onchange="calcPrice();" {{ $serviceWorks->contains($work->id) ? 'checked' : '' }} @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>
                                                         <label for="service-{{ $work->id }}"></label>
                                                     </div>
                                                 </div>
                                                 <div class="cell">
                                                     <div class="form-group">
-                                                        <input type="text" name="service_works[[{{ $work->id }}][name]]" value="{{ $work->name }}" readonly>
+                                                        <input type="text" name="service_works[{{ $work->id }}][name]" value="{{ $work->name }}" readonly>
                                                     </div>
                                                 </div>
                                                 <div class="cell">
                                                     <div class="form-group">
-                                                        <input type="text" name="service_works[[{{ $work->id }}][price]]" value="{{ number_format($work->price, 2) }}" class='work-price' readonly>
+                                                        <input type="text" name="service_works[{{ $work->id }}][price]" value="{{ number_format($work->price, 2) }}" class='work-price' readonly>
                                                     </div>
                                                 </div>
                                                 <div class="cell">
                                                     <div class="form-group">
-                                                        <input type="number" step="0.01" name="service_works[[{{ $work->id }}][hours]]" value="{{ number_format($work->duration_decimal, 2) }}" class="work-hours"
+                                                        <input type="number" step="0.01" name="service_works[{{ $work->id }}][hours]" value="{{ number_format($work->duration_decimal, 2) }}" class="work-hours"
                                                             oninput="workCounter(event)"
                                                             onkeyup="workCounterHandler(event)"
                                                         >
@@ -300,7 +300,7 @@
                                                 </div>
                                                 <div class="cell">
                                                     <div class="form-group">
-                                                        <input type="text" name="service_works[[{{ $work->id }}][total-price]]" value="{{ $work->duration_decimal * $work->price }}" class="total-price" readonly>
+                                                        <input type="text" name="service_works[{{ $work->id }}][total-price]" value="{{ $work->duration_decimal * $work->price }}" class="total-price" readonly>
                                                     </div>
                                                 </div>
                                             </div>
