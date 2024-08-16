@@ -99,11 +99,11 @@ function serviceCenterHandler() {
 
                     console.log(contract);
                     
-                    const { id, number } = contract;
+                    const { id, number, name } = contract;
 
                     const option = document.createElement('option');
                     option.value = id;
-                    option.textContent = `${number}`;
+                    option.textContent = `${name}`;
 
                     contractSelect.innerHTML = '';
                     contractSelect.appendChild(option);
@@ -191,23 +191,23 @@ function loadServiceWorks(groupId) {
                         <div class="row">
                             <div class="cell">
                                 <div class="form-group checkbox">
-                                    <input type="checkbox" id="service-${id}" name="service_works[[${id}]['checked']]" onchange="calcPrice();">
+                                    <input type="checkbox" id="service-${id}" name="service_works[[${id}][checkbox]]" onchange="calcPrice();">
                                     <label for="service-${id}"></label>
                                 </div>
                             </div>
                             <div class="cell">
                                 <div class="form-group">
-                                    <input type="text" name="service_works[[${id}]['name']]" value="${name}" readonly>
+                                    <input type="text" name="service_works[[${id}][name]]" value="${name}" readonly>
                                 </div>
                             </div>
                             <div class="cell">
                                 <div class="form-group">
-                                    <input type="text" name="service_works[[${id}]['price']]" value="${contractPrice.toFixed(2)}" class='work-price' readonly>
+                                    <input type="text" name="service_works[[${id}][price]]" value="${contractPrice.toFixed(2)}" class='work-price' readonly>
                                 </div>
                             </div>
                             <div class="cell">
                                 <div class="form-group">
-                                    <input type="number" step="0.01" name="service_works[[${id}]['hours']]" value="${duration_decimal.toFixed(2)}" class="work-hours" 
+                                    <input type="number" step="0.01" name="service_works[[${id}][hours]]" value="${duration_decimal.toFixed(2)}" class="work-hours" 
                                         oninput="workCounter(event)"
                                         onkeyup="workCounterHandler(event)"
                                     >
@@ -215,7 +215,7 @@ function loadServiceWorks(groupId) {
                             </div>
                             <div class="cell">
                                 <div class="form-group">
-                                    <input type="text" service_works[[${id}]['total-price']] value="${totalPrice.toFixed(2)}" class="total-price" readonly>
+                                    <input type="text" name="service_works[[${id}][total-price]]" value="${totalPrice.toFixed(2)}" class="total-price" readonly>
                                 </div>
                             </div>
                         </div>
@@ -237,12 +237,15 @@ function workCounter(event) {
     const regex = /^(?!0)\d+(\.\d+)?$/;
     const input = event.target;
 
+    
+
     if (event.type === 'keyup' && !regex.test(input.value)) input.value = 1;
 
     const value = +input.value,
         row = input.closest('.row'),
         price = parseFloat(row.querySelector('.work-price').value),
         total = (price * value).toFixed(2);
+
 
     row.querySelector('.total-price').value = total;
 
@@ -537,9 +540,9 @@ function partCounter(event) {
 function calcPrice() {
     const priceParts__html = document.querySelector('#total-parts-sum span'),
         priceParts__input = document.querySelector('#total-parts-sum input'),
-        priceWork__html = document.querySelector('#total-sum span'),
-        priceWork__input = document.querySelector('#total-sum input');
-    priceTotal__html = document.querySelector('#total-sum-final span'),
+        priceWork__html = document.querySelector('#total-works-sum span'),
+        priceWork__input = document.querySelector('#total-works-sum input');
+        priceTotal__html = document.querySelector('#total-sum-final span'),
         priceTotal__input = document.querySelector('#total-sum-final input');
 
 
@@ -559,6 +562,12 @@ function calcPrice() {
     // Set price total
     priceTotal__html.innerHTML = totalPrice;
     priceTotal__input.value = totalPrice;
+
+
+    console.log('Works:', document.querySelector('#total-works-sum input').value);
+    console.log('Parts:', document.querySelector('#total-parts-sum input').value);
+    console.log('Total:', document.querySelector('#total-sum-final input').value);
+    
 }
 calcPrice();
 
@@ -578,7 +587,10 @@ function getTotalPriceParts() {
 
 // Вартість робіт
 function getTotalPriceWorks() {
-    const addedWorkssRows = document.querySelectorAll('#service-works-container input[name="service_works[]"]:checked');
+    // const addedWorkssRows = document.querySelectorAll('#service-works-container input[name="service_works[]"]:checked');
+    const addedWorkssRows = document.querySelectorAll('#service-works-container input[name*="[checkbox]"]:checked');
+
+        
     let totalPrice = 0;
     let totalHours = 0;
 
@@ -594,6 +606,7 @@ function getTotalPriceWorks() {
     }
 
     document.querySelector('#total-duration span').innerHTML = totalHours.toFixed(2);
+    document.querySelector('#total-duration input').value = totalHours.toFixed(2);
 
     return totalPrice.toFixed(2);
 }
