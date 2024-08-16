@@ -12,7 +12,6 @@
                 </div>
             </div>
 
-
             <div class="modal-overlay"></div>
 
             <!--         modal switch manager -->

@@ -432,18 +432,6 @@ class WarrantyClaimController extends Controller
         return response()->json($contracts);
     }
 
-    public function takeToWork($id)
-    {
-        $warrantyClaim = WarrantyClaim::findOrFail($id);
-        $warrantyClaim->status = WarrantyClaimStatusEnum::review;
-        if($warrantyClaim->manager_id == null){
-            $warrantyClaim->manager_id = Auth::user()->id;
-        }
-        $warrantyClaim->save();
-
-        return redirect()->back()->with('status', 'Розглядається');
-    }
-
     public function sort(Request $request)
     {
         $column = $request->input('column');
