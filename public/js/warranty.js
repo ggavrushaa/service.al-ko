@@ -495,10 +495,12 @@ function partCounter(event) {
 
 
     if(row.closest('#added-parts-container')){
-        document.querySelector(`#parts-container .row[data-id="${row.dataset.id}"] .part-quantity`).value = value;
-
-        document.querySelector(`#parts-container .row[data-id="${row.dataset.id}"] .part-quantity`).dispatchEvent(new Event('input'));
+        if (document.querySelector(`#parts-container .row[data-id="${row.dataset.id}"]`)) {
+            document.querySelector(`#parts-container .row[data-id="${row.dataset.id}"] .part-quantity`).value = value;
+            document.querySelector(`#parts-container .row[data-id="${row.dataset.id}"] .part-quantity`).dispatchEvent(new Event('input'));
+        }
         
+    
         // document.querySelector(`#parts-container .row[data-id="${row.dataset.id} .part-quantity"]`).value = value;
         calcPrice();
     }

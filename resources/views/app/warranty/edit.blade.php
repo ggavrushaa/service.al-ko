@@ -369,7 +369,7 @@
 
                                     <div class="row-group" id="added-parts-container">
                                         @foreach($spareParts as $index => $part)
-                                        <div class="row" data-articul="{{ $part->spare_parts }}">
+                                        <div class="row" data-articul="{{ $part->spare_parts }}" data-id="{{ $part->id }}">
                                             <div class="cell">
                                                 <div class="form-group _bg-white">
                                                     <input type="text" name="spare_parts[{{ $index }}][spare_parts]" value="{{ $part->spare_parts }}" readonly>
