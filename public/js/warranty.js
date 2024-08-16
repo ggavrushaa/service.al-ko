@@ -730,82 +730,77 @@ window.addEventListener('DOMContentLoaded', () => {
             })
             .catch(error => console.error('Error updating manager:', error));
     });
-
-    function displayManagers(managers) {
-        modalBody.innerHTML = '';
-        managers.forEach(manager => {
-            const managerRow = `
-                <div class="form-group radio">
-                    <input type="radio" id="manager-${manager.id}" name="manager" value="${manager.id}">
-                    <label for="manager-${manager.id}">${manager.first_name_ru}</label>
-                </div>
-            `;
-            modalBody.insertAdjacentHTML('beforeend', managerRow);
-        });
-    }
-
-    function fadeIn(element) {
-        if (!element) {
-            console.error('fadeIn: element is null');
-            return;
-        }
-
-        let opacity = 0;
-        element.style.opacity = opacity;
-        element.style.display = 'block';
-
-        const last = +new Date();
-        const tick = function () {
-            opacity += (new Date() - last) / 400;
-            element.style.opacity = opacity;
-            if (opacity < 1) {
-                (window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16);
-            }
-        };
-
-        tick();
-    }
-
-    function fadeOut(element, callback) {
-        if (!element) {
-            console.error('fadeOut: element is null');
-            return;
-        }
-
-        let opacity = 1;
-        const last = +new Date();
-        const tick = function () {
-            opacity -= (new Date() - last) / 400;
-            element.style.opacity = opacity;
-            if (opacity > 0) {
-                (window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16);
-            } else {
-                element.style.display = 'none';
-                if (typeof callback === 'function') {
-                    callback();
-                }
-            }
-        };
-
-        tick();
-    }
-
-
-    function copyToClipboard() {
-        // Get the input elements
-        var buyerName = document.getElementById("buyer-name").value;
-        var buyerPhone = document.getElementById("buyer-phone").value;
-
-        // Get the input elements for the sender
-        var senderName = document.getElementById("sender-name");
-        var senderPhone = document.getElementById("sender-phone");
-
-        // Set the values of the sender inputs to the buyer values
-        senderName.value = buyerName;
-        senderPhone.value = buyerPhone;
-    }
-
-
-
-
 })
+function displayManagers(managers) {
+    modalBody.innerHTML = '';
+    managers.forEach(manager => {
+        const managerRow = `
+            <div class="form-group radio">
+                <input type="radio" id="manager-${manager.id}" name="manager" value="${manager.id}">
+                <label for="manager-${manager.id}">${manager.first_name_ru}</label>
+            </div>
+        `;
+        modalBody.insertAdjacentHTML('beforeend', managerRow);
+    });
+}
+
+function fadeIn(element) {
+    if (!element) {
+        console.error('fadeIn: element is null');
+        return;
+    }
+
+    let opacity = 0;
+    element.style.opacity = opacity;
+    element.style.display = 'block';
+
+    const last = +new Date();
+    const tick = function () {
+        opacity += (new Date() - last) / 400;
+        element.style.opacity = opacity;
+        if (opacity < 1) {
+            (window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16);
+        }
+    };
+
+    tick();
+}
+
+function fadeOut(element, callback) {
+    if (!element) {
+        console.error('fadeOut: element is null');
+        return;
+    }
+
+    let opacity = 1;
+    const last = +new Date();
+    const tick = function () {
+        opacity -= (new Date() - last) / 400;
+        element.style.opacity = opacity;
+        if (opacity > 0) {
+            (window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16);
+        } else {
+            element.style.display = 'none';
+            if (typeof callback === 'function') {
+                callback();
+            }
+        }
+    };
+
+    tick();
+}
+
+
+function copyToClipboard() {
+    // Get the input elements
+    var buyerName = document.getElementById("buyer-name").value;
+    var buyerPhone = document.getElementById("buyer-phone").value;
+
+    // Get the input elements for the sender
+    var senderName = document.getElementById("sender-name");
+    var senderPhone = document.getElementById("sender-phone");
+
+    // Set the values of the sender inputs to the buyer values
+    senderName.value = buyerName;
+    senderPhone.value = buyerPhone;
+}
