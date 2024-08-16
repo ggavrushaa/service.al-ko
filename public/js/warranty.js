@@ -49,7 +49,7 @@ function serviceCenterHandler() {
     if (serviceCenterValue === "-1" || serviceCenterValue === "") {
 
         console.log(contractSelect);
-        
+
         searchInputWorks.disabled = true;
         searchInputParts.disabled = true;
         contractSelect.disabled = true;
@@ -66,7 +66,7 @@ function serviceCenterHandler() {
 
         contractPriceInput.value = 0;
         contractDicountInput.value = 0;
-        
+
 
         contractPriceInput.dispatchEvent(new Event('change'));
         contractDicountInput.dispatchEvent(new Event('change'));
@@ -98,7 +98,7 @@ function serviceCenterHandler() {
                 data.forEach(contract => {
 
                     console.log(contract);
-                    
+
                     const { id, number, name } = contract;
 
                     const option = document.createElement('option');
@@ -134,16 +134,17 @@ serviceCenterHandler();
 //// Визначити на яку кнопку натиснули
 document.querySelectorAll('.page-name .btn-primary').forEach(btn => {
     btn.addEventListener('click', (e) => {
-        e.preventDefault();
+        if (btn.form) {
+            e.preventDefault();
 
-        document.querySelector('#send-to-save input[name="button"]').value = btn.value;
-        
+            document.querySelector('#send-to-save input[name="button"]').value = btn.value;
 
-        
-        if (validateForm(btn.form)) {
-            btn.form.submit();
-          }
-        
+            if (validateForm(btn.form)) {
+                btn.form.submit();
+            }
+        }
+
+
     })
 })
 
@@ -237,7 +238,7 @@ function workCounter(event) {
     const regex = /^(?!0)\d+(\.\d+)?$/;
     const input = event.target;
 
-    
+
 
     if (event.type === 'keyup' && !regex.test(input.value)) input.value = 1;
 
@@ -263,7 +264,7 @@ if (document.querySelector('#works-select-all')) {
             worksCheckbox.forEach(work => {
                 if (document.querySelector('#works-select-all').checked) {
                     work.checked = true;
-                }else{
+                } else {
                     work.checked = false;
                 }
 
@@ -306,7 +307,7 @@ function drawFoundParts(parts) {
 
     partsContainer.innerHTML = '';
     // if (partsContainer.querySelector('.title-only')) {
-        // partsContainer.querySelector('.title-only').remove();
+    // partsContainer.querySelector('.title-only').remove();
     // }
     // Paste title
     const titleRow = '<div class="row title-only"><p>Результати пошуку</p></div>';
@@ -527,13 +528,13 @@ function partCounter(event) {
     row.querySelector('input[name*="[sum]"]').value = priceWithDiscount;
 
 
-    if(row.closest('#added-parts-container')){
+    if (row.closest('#added-parts-container')) {
         if (document.querySelector(`#parts-container .row[data-id="${row.dataset.id}"]`)) {
             document.querySelector(`#parts-container .row[data-id="${row.dataset.id}"] .part-quantity`).value = value;
             document.querySelector(`#parts-container .row[data-id="${row.dataset.id}"] .part-quantity`).dispatchEvent(new Event('input'));
         }
-        
-    
+
+
         // document.querySelector(`#parts-container .row[data-id="${row.dataset.id} .part-quantity"]`).value = value;
         calcPrice();
     }
@@ -544,7 +545,7 @@ function calcPrice() {
         priceParts__input = document.querySelector('#total-parts-sum input'),
         priceWork__html = document.querySelector('#total-works-sum span'),
         priceWork__input = document.querySelector('#total-works-sum input');
-        priceTotal__html = document.querySelector('#total-sum-final span'),
+    priceTotal__html = document.querySelector('#total-sum-final span'),
         priceTotal__input = document.querySelector('#total-sum-final input');
 
 
@@ -569,7 +570,7 @@ function calcPrice() {
     // console.log('Works:', document.querySelector('#total-works-sum input').value);
     // console.log('Parts:', document.querySelector('#total-parts-sum input').value);
     // console.log('Total:', document.querySelector('#total-sum-final input').value);
-    
+
 }
 calcPrice();
 
@@ -592,7 +593,7 @@ function getTotalPriceWorks() {
     // const addedWorkssRows = document.querySelectorAll('#service-works-container input[name="service_works[]"]:checked');
     const addedWorkssRows = document.querySelectorAll('#service-works-container input[name*="[checkbox]"]:checked');
 
-        
+
     let totalPrice = 0;
     let totalHours = 0;
 
@@ -806,5 +807,5 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
 
-    
+
 })
