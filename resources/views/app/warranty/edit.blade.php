@@ -262,8 +262,8 @@
                                         <div class="row">
                                             <div class="cell">
                                                 <div class="form-group checkbox">
-                                                    <input type="checkbox" id="parts-nn" >
-                                                    <label for="parts-nn"></label>
+                                                    <input type="checkbox" id="works-select-all">
+                                                    <label for="works-select-all"></label>
                                                 </div>
                                             </div>
                                             <div class="cell">Назва робіт</div>
