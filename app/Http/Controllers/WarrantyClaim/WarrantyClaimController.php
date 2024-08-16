@@ -319,11 +319,12 @@ class WarrantyClaimController extends Controller
      $serviceWorksPrice = $contract ? $contract->service_works_price : 0;
      $discount = $contract ? $contract->discount : 0;
 
+     WarrantyClaimServiceWork::where('warranty_claim_id', $warrantyClaim->id)->delete();
      $lineNumber = 1;
-     dd($data['service_works']);
     // Обработка и сохранение сервисных работ
     if (!empty($data['service_works'])) {
         foreach ($data['service_works'] as $index => $serviceWorkId) {
+            if (isset($serviceWorkId['checkbox']) && $serviceWorkId['checkbox'] === 'on') {
             $qty =  isset($data['hours'][$index]) ? (float) $data['hours'][$index] : 0.5;
             $price = $serviceWorksPrice;
             $sum = $price * $qty;
@@ -338,11 +339,13 @@ class WarrantyClaimController extends Controller
                     'discount' => $discount,
                     'price' => $price,
                     'sum' => $sum,
+                    'created_at' => Carbon::now(),
                 ]
             );
 
             $lineNumber++;
         }
+    }
 
         Log::info('Service works saved:', $data['service_works']);
     }
