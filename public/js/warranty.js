@@ -48,13 +48,25 @@ function serviceCenterHandler() {
 
     if (serviceCenterValue === "-1" || serviceCenterValue === "") {
 
+        console.log(contractSelect);
+        
         searchInputWorks.disabled = true;
         searchInputParts.disabled = true;
-        // contractSelect.disabled = true;
+        contractSelect.disabled = true;
         //contractSelect.value = '-1';
+
+        const option = document.createElement('option');
+        option.value = '-1';
+        option.textContent = 'Оберіть договір сервісу';
+
+        contractSelect.innerHTML = '';
+        contractSelect.appendChild(option);
+        contractSelect.value = '-1';
+        contractSelect.dispatchEvent(new Event('change'));
 
         contractPriceInput.value = 0;
         contractDicountInput.value = 0;
+        
 
         contractPriceInput.dispatchEvent(new Event('change'));
         contractDicountInput.dispatchEvent(new Event('change'));
@@ -80,18 +92,26 @@ function serviceCenterHandler() {
         .then(data => {
             // console.log(data);
 
-            if (data.contract) {
-                const { discount, service_works_price } = data.contract;
+            if (data.length > 0) {
+                contractSelect.disabled = false;
 
-                const option = document.createElement('option');
-                option.value = data.contract.id;
-                option.textContent = `${data.contract.number}`;
+                data.forEach(contract => {
 
-                contractSelect.innerHTML = '';
-                contractSelect.appendChild(option);
-                contractSelect.value = data.contract.id;
+                    console.log(contract);
+                    
+                    const { id, number } = contract;
 
+                    const option = document.createElement('option');
+                    option.value = id;
+                    option.textContent = `${number}`;
 
+                    contractSelect.innerHTML = '';
+                    contractSelect.appendChild(option);
+                })
+
+                const service_works_price = data[0].service_works_price;
+                const discount = data[0].discount;
+                contractSelect.value = data[0].id;
 
                 contractPriceInput.value = service_works_price;
                 contractDicountInput.value = discount;
