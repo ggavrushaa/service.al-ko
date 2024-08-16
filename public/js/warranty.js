@@ -191,23 +191,23 @@ function loadServiceWorks(groupId) {
                         <div class="row">
                             <div class="cell">
                                 <div class="form-group checkbox">
-                                    <input type="checkbox" id="service-${id}" name="service_works[[${id}][checkbox]]" onchange="calcPrice();">
+                                    <input type="checkbox" id="service-${id}" name="service_works[${id}][checkbox]" onchange="calcPrice();">
                                     <label for="service-${id}"></label>
                                 </div>
                             </div>
                             <div class="cell">
                                 <div class="form-group">
-                                    <input type="text" name="service_works[[${id}][name]]" value="${name}" readonly>
+                                    <input type="text" name="service_works[${id}][name]" value="${name}" readonly>
                                 </div>
                             </div>
                             <div class="cell">
                                 <div class="form-group">
-                                    <input type="text" name="service_works[[${id}][price]]" value="${contractPrice.toFixed(2)}" class='work-price' readonly>
+                                    <input type="text" name="service_works[${id}][price]" value="${contractPrice.toFixed(2)}" class='work-price' readonly>
                                 </div>
                             </div>
                             <div class="cell">
                                 <div class="form-group">
-                                    <input type="number" step="0.01" name="service_works[[${id}][hours]]" value="${duration_decimal.toFixed(2)}" class="work-hours" 
+                                    <input type="number" step="0.01" name="service_works[${id}][hours]" value="${duration_decimal.toFixed(2)}" class="work-hours" 
                                         oninput="workCounter(event)"
                                         onkeyup="workCounterHandler(event)"
                                     >
@@ -215,7 +215,7 @@ function loadServiceWorks(groupId) {
                             </div>
                             <div class="cell">
                                 <div class="form-group">
-                                    <input type="text" name="service_works[[${id}][total-price]]" value="${totalPrice.toFixed(2)}" class="total-price" readonly>
+                                    <input type="text" name="service_works[${id}][total-price]" value="${totalPrice.toFixed(2)}" class="total-price" readonly>
                                 </div>
                             </div>
                         </div>
@@ -257,13 +257,14 @@ function workCounter(event) {
 // Натиснули на чекбокс обрати всі роботи
 if (document.querySelector('#works-select-all')) {
     document.querySelector('#works-select-all').addEventListener('change', () => {
-        const worksCheckbox = document.querySelectorAll('#service-works-container [name="service_works[]"]');
+        const worksCheckbox = document.querySelectorAll('#service-works-container input[name*="[checkbox]"]');
+
         if (worksCheckbox.length > 0) {
             worksCheckbox.forEach(work => {
-                if (work.checked) {
-                    work.checked = false;
-                }else{
+                if (document.querySelector('#works-select-all').checked) {
                     work.checked = true;
+                }else{
+                    work.checked = false;
                 }
 
                 work.dispatchEvent(new Event('change'))
@@ -564,9 +565,9 @@ function calcPrice() {
     priceTotal__input.value = totalPrice;
 
 
-    console.log('Works:', document.querySelector('#total-works-sum input').value);
-    console.log('Parts:', document.querySelector('#total-parts-sum input').value);
-    console.log('Total:', document.querySelector('#total-sum-final input').value);
+    // console.log('Works:', document.querySelector('#total-works-sum input').value);
+    // console.log('Parts:', document.querySelector('#total-parts-sum input').value);
+    // console.log('Total:', document.querySelector('#total-sum-final input').value);
     
 }
 calcPrice();
