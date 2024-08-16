@@ -115,8 +115,8 @@ function serviceCenterHandler() {
                     const option = document.createElement('option');
                     option.value = id;
                     option.textContent = `${name}`;
-                    option.dataset.price = service_works_price;
-                    option.dataset.discount = discount;
+                    option.dataset.price = (service_works_price !== null) ? service_works_price : 0;
+                    option.dataset.discount = (discount !== null) ? discount : 0;
 
                     contractSelect.insertAdjacentElement('afterend', option);
                     contractSelect.appendChild(option);
