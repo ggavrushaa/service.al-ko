@@ -89,6 +89,7 @@ class TechnicalConclusionController extends Controller
                 $technicalConclusion = TechnicalConclusion::updateOrCreate(
                     ['id' => $technicalConclusion ? $technicalConclusion->id : null],
                     [
+                        'code_1C' => $data['code_1C'],
                         'warranty_claim_id' => $warrantyClaim->id,
                         'defect_code' => $defectCode ? $defectCode->id : null,
                         'symptom_code' => $symptomCode ? $symptomCode->id : null,
