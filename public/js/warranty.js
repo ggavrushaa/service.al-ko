@@ -92,6 +92,7 @@ function serviceCenterHandler() {
     // contractSelect.disabled = false;
 
 
+
     fetch('/get-contract-details', {
         method: 'POST',
         headers: {
@@ -142,7 +143,11 @@ function serviceCenterHandler() {
 
     // console.log(serviceCenterValue);
 }
-serviceCenterHandler();
+
+if(contractSelect.value.trim() === '-1'){
+    serviceCenterHandler();
+}
+
 
 contractSelect.addEventListener('change', () => {
     const val = contractSelect.value;
