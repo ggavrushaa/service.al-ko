@@ -265,9 +265,7 @@ class WarrantyClaimController extends Controller
                             ->get();
 
         if ($contract) {
-            return response()->json([
-                'contract' => $contract->toArray(),
-            ]);
+            return response()->json($contract->toArray());
         }
 
         return response()->json([
