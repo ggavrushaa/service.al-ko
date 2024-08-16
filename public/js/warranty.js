@@ -304,9 +304,10 @@ function searchPartsHandler(input) {
 function drawFoundParts(parts) {
     const partsContainer = document.querySelector('#parts-container');
 
-    if (partsContainer.querySelector('.title-only')) {
-        partsContainer.querySelector('.title-only').remove();
-    }
+    partsContainer.innerHTML = '';
+    // if (partsContainer.querySelector('.title-only')) {
+        // partsContainer.querySelector('.title-only').remove();
+    // }
     // Paste title
     const titleRow = '<div class="row title-only"><p>Результати пошуку</p></div>';
     partsContainer.insertAdjacentHTML('beforeend', titleRow);
