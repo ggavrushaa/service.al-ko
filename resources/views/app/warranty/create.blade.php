@@ -50,7 +50,7 @@
                 $technicalConcluison = session('conclusion');
             @endphp
 
-            <form action="{{ route('warranty-claims.save') }}" id="send-to-save" method="POST" enctype="multipart/form-data" class="js-form-validation">
+            <form action="{{ route('warranty-claims.save') }}" id="send-to-save" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 <div class="card-lists">

@@ -137,6 +137,12 @@ document.querySelectorAll('.page-name .btn-primary').forEach(btn => {
         e.preventDefault();
 
         document.querySelector('#send-to-save input[name="button"]').value = btn.value;
+    
+        
+        if (validateForm(btn.form)) {
+            btn.form.submit();
+          }
+        
     })
 })
 
