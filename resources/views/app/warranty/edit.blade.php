@@ -252,8 +252,6 @@
                                     @endforeach
                                 </select>
                             </div>
-
-                            <input type="hidden" name="contract_price" value="{{ $defaultContract ? $defaultContract->service_works_price : 0 }}">
                         </div>
                         
                         <div class="display-grid">

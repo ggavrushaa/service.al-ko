@@ -7,47 +7,47 @@
                 <h1>Гарантійна заява</h1>
                 <div class="btns">
                     @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::new)
-                        <button type="submit" class="btn-primary btn-blue" form="send-to-save">Створити</button>
+                    <button type="submit" class="btn-primary btn-blue" form="send-to-save">Створити</button>
                     @endif
                 </div>
             </div>
 
 
-        <div class="modal-overlay"></div>
-    
-        <!--         modal switch manager -->
-        <div class="modal modal-manager js-modal js-modal-switch-manager">
-            <button type="button" class="icon-close-fill btn-close _js-btn-close-modal" id="modal-close"></button>
-            <div class="modal-content">
-                <div class="manager-header">
-                    <p class="modal-title">Оберіть менеджера</p>
-                    <div class="form-group">
-                        <span class="icon-search"></span>
-                        <input type="text" placeholder="пошук" name="manager-search">
+            <div class="modal-overlay"></div>
+
+            <!--         modal switch manager -->
+            <div class="modal modal-manager js-modal js-modal-switch-manager">
+                <button type="button" class="icon-close-fill btn-close _js-btn-close-modal" id="modal-close"></button>
+                <div class="modal-content">
+                    <div class="manager-header">
+                        <p class="modal-title">Оберіть менеджера</p>
+                        <div class="form-group">
+                            <span class="icon-search"></span>
+                            <input type="text" placeholder="пошук" name="manager-search">
+                        </div>
+                    </div>
+                    <div class="manager-body custom-scrollbar">
+
+                    </div>
+                    <div class="manager-footer">
+                        <button type="button" class="btn-primary btn-blue change-manager-btn">Переназначити менеджера</button>
                     </div>
                 </div>
-                <div class="manager-body custom-scrollbar">
-
-                </div>
-                <div class="manager-footer">
-                    <button type="button" class="btn-primary btn-blue change-manager-btn">Переназначити менеджера</button>
-                </div>
             </div>
-        </div>
 
             @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
             @endif
 
             @php
-                $isDisabled = session('status') ? 'disabled' : '';
-                $technicalConcluison = session('conclusion');
+            $isDisabled = session('status') ? 'disabled' : '';
+            $technicalConcluison = session('conclusion');
             @endphp
 
             <form action="{{ route('warranty-claims.save') }}" id="send-to-save" method="POST" enctype="multipart/form-data">
@@ -82,8 +82,9 @@
                                     <option value="{{ $center->id }}" {{ old('service_partner', $currentClaim['service_partner'] ?? $currentClaim->service_partner) == $center->id ? 'selected' : '' }}>
                                         {{ $center->full_name_ru }}
                                     </option>
-                                @endforeach
+                                    @endforeach
                                 </select>
+                                <div class="help-block" data-empty="Обов'язкове поле"></div>
                             </div>
                             <div class="form-group small-width">
                                 <label for="service-contract">Договір сервісу</label>
@@ -112,11 +113,11 @@
                         <div class="card-content card-form">
                             <p class="card-title">Дані того Хто звернувся</p>
                             <button type="button" class="btn-link btn-copy btn-blue" onclick="copyToClipboard()" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif> Копіювати данні покупця</button>
-      
+
                             <div class="inputs-group one-row">
                                 <div class="form-group required" data-valid="empty">
                                     <label for="sender-name">ПІБ</label>
-                                    <input type="text" name="sender_name" id="sender-name" value="{{ old('sender_name', $currentClaim->sender_name ?? '') }}"  placeholder="Прізвище Ім'я По батькові" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) readonly @endif>
+                                    <input type="text" name="sender_name" id="sender-name" value="{{ old('sender_name', $currentClaim->sender_name ?? '') }}" placeholder="Прізвище Ім'я По батькові" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) readonly @endif>
                                     <div class="help-block" data-empty="Обов'язкове поле"></div>
                                 </div>
                                 <div class="form-group required" data-valid="empty">
@@ -208,7 +209,7 @@
                         <div class="inputs-group one-row">
                             <div class="image-preview">
                                 @foreach ($currentClaim->files as $file)
-                                    <img src="{{ url($file->path) }}" alt="{{ $file->filename }}">
+                                <img src="{{ url($file->path) }}" alt="{{ $file->filename }}">
                                 @endforeach
                             </div>
                         </div>
@@ -216,17 +217,17 @@
                     <div class="card-content card-form service-work">
                         <div class="card-title__wrapper">
                             <p class="card-title">Сервісні роботи</p>
-                            
+
                             <div class="form-group default-select">
                                 <select name="product_group" id="product-group" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>
                                     <option value="-1">Виберіть групу товару</option>
                                     @foreach($groups as $group)
-                                        <option value="{{ $group->id }}">{{ $group->name }}</option>
+                                    <option value="{{ $group->id }}">{{ $group->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
-                        
+
                         <div class="display-grid">
                             <div class="inputs-group one-column">
                                 <div class="table-parts">
@@ -234,7 +235,7 @@
                                         <div class="row">
                                             <div class="cell">
                                                 <div class="form-group checkbox">
-                                                    <input type="checkbox" id="works-select-all" >
+                                                    <input type="checkbox" id="works-select-all">
                                                     <label for="works-select-all"></label>
                                                 </div>
                                             </div>
@@ -246,37 +247,36 @@
                                     </div>
                                     <div class="table-body" id="service-works-container">
                                         @foreach($serviceWorks as $work)
-                                            <div class="row">
-                                                <div class="cell">
-                                                    <div class="form-group checkbox">
-                                                        <input type="checkbox" id="service-{{ $work->id }}" name="service_works[]" value="{{ $work->id }}" {{ $serviceWorks->contains($work->id) ? 'checked' : '' }} @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>
-                                                        <label for="service-{{ $work->id }}"></label>
-                                                    </div>
-                                                </div>
-                                                <div class="cell">
-                                                    <div class="form-group">
-                                                        <input type="text" value="{{ $work->name }}" readonly>
-                                                    </div>
-                                                </div>
-                                                <div class="cell">
-                                                    <div class="form-group">
-                                                        <input type="text" value="{{ number_format($work->price, 2) }}" class='work-price' readonly>
-                                                    </div>
-                                                </div>
-                                                <div class="cell">
-                                                    <div class="form-group">
-                                                        <input type="number" step="0,1" name="hours[]" value="{{ number_format($work->duration_decimal, 2) }}" class="work-hours"
-                                                            oninput="workCounter(event)"
-                                                            onkeyup="workCounterHandler(event)"
-                                                        >
-                                                    </div>
-                                                </div>
-                                                <div class="cell">
-                                                    <div class="form-group">
-                                                        <input type="text" value="{{ $work->duration_decimal * $work->price }}" class="total-price" readonly>
-                                                    </div>
+                                        <div class="row">
+                                            <div class="cell">
+                                                <div class="form-group checkbox">
+                                                    <input type="checkbox" id="service-{{ $work->id }}" name="service_works[[{{ $work->id }}][checkbox]]" value="{{ $work->id }}" {{ $serviceWorks->contains($work->id) ? 'checked' : '' }} @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>
+                                                    <label for="service-{{ $work->id }}"></label>
                                                 </div>
                                             </div>
+                                            <div class="cell">
+                                                <div class="form-group">
+                                                    <input type="text" name="service_works[[{{ $work->id }}][name]]" readonly>
+                                                </div>
+                                            </div>
+                                            <div class="cell">
+                                                <div class="form-group">
+                                                    <input type="text" name="service_works[[{{ $work->id }}][price]]" value="{{ number_format($work->price, 2) }}" class='work-price' readonly>
+                                                </div>
+                                            </div>
+                                            <div class="cell">
+                                                <div class="form-group">
+                                                    <input type="number" step="0,1" name="service_works[[{{ $work->id }}][hours]]" value="{{ number_format($work->duration_decimal, 2) }}" class="work-hours"
+                                                        oninput="workCounter(event)"
+                                                        onkeyup="workCounterHandler(event)">
+                                                </div>
+                                            </div>
+                                            <div class="cell">
+                                                <div class="form-group">
+                                                    <input type="text" name="service_works[[{{ $work->id }}][total-price]]" value="{{ $work->duration_decimal * $work->price }}" class="total-price" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
                                         @endforeach
                                     </div>
                                     <div class="table-footer">
@@ -288,14 +288,14 @@
                                                 <span>0.00</span>
                                                 <input type="hidden" name="total-duration">
                                             </div>
-                                            <div class="cell" id="total-sum">
+                                            <div class="cell" id="total-works-sum">
                                                 <span>0.00</span>
-                                                <input type="hidden" name="total-sum">
+                                                <input type="hidden" name="total-works-sum">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                    
+
                                 <div class="display-grid col-2">
                                     <div class="form-group">
                                         <label for="comment_service">Опис додаткових робіт</label>
@@ -305,7 +305,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="card-content card-form used-parts">
                         <div class="card-title__wrapper">
                             <p class="card-title">Використані запчастини</p>
@@ -314,7 +314,7 @@
                                 <input type="text" id="search-articul" placeholder="XXXXXX-XXX" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>
                             </div>
                         </div>
-                    
+
                         <div class="card-group">
                             <div class="table-parts">
                                 <div class="table-header">
@@ -366,9 +366,8 @@
                                             <div class="cell">
                                                 <div class="form-group _bg-white">
                                                     <input type="text" class="part-quantity" name="spare_parts[{{ $index }}][qty]" value="{{ $part->qty }}" min='1' readonly
-                                                        oninput="partCounter(event)" 
-                                                        onkeyup="partCounterHandler(event)"
-                                                    >
+                                                        oninput="partCounter(event)"
+                                                        onkeyup="partCounterHandler(event)">
                                                 </div>
                                             </div>
                                             <div class="cell">
@@ -389,10 +388,10 @@
                                             </div>
                                         </div>
                                         @endforeach
-                                    </div>
                                 </div>
+
                                 <div class="table-footer">
-                                <div class="row">
+                                    <div class="row">
                                         <div class="cell">Підсумок</div>
                                         <div class="cell"></div>
                                         <div class="cell"></div>
@@ -409,102 +408,65 @@
                                 </div>
                             </div>
                             
-                            <div class="table-parts only-footer">
-                                <div class="table-footer">
-                                    <div class="row">
+                        </div>
+
+                        <div class="table-parts only-footer">
+                            <div class="table-footer">
+                                <div class="row">
                                     <div class="cell">Загальна вартість по документу</div>
-                                        <div class="cell"></div>
-                                        <div class="cell"></div>
-                                        <div class="cell"></div>
-                                        <div class="cell"></div>
-                                        <div class="cell" id="total-sum-final">
-                                            <span>0</span>
-                                            <input type="hidden" name="total-sum-final" value="0">
-                                        </div>
-                                        <div class="cell"></div>
+                                    <div class="cell"></div>
+                                    <div class="cell"></div>
+                                    <div class="cell"></div>
+                                    <div class="cell"></div>
+                                    <div class="cell" id="total-sum-final">
+                                        <span>0</span>
+                                        <input type="hidden" name="total-sum-final" value="0">
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                    
-                        <div class="card-group">
-                            <p class="sub-title">Для пошуку потрібних запчастин  перейдіть за посиланням</p>
-                            <div class="display-grid col-2 gap-8">
-                                <div class="card-content card-text">
-                                    <h2 class="text-underline text-blue">AL-KO</h2>
-                                    <p>Після відкриття, у лівому верхньому куті виберіть директорію: <span class="text-red fw-600">ERSATZTEILSUCHE.</span></p>
-                                    <p>Після переходу на іншу сторінку, в правому кутку в порожнє поле внесіть артикульний номер виробу, що Вас цікавить (артикульний номер виробу можна подивитися в прайс-листі або на заводській наклейці).</p>
-                                    <p>Щоб дізнатися ціну на деталь, відкрийте каталог зап.частин (додаток №3 до договору з сервісного обслуговування). Комбінація Ctrl - F відкриває пошукове вікно, куди вноситься артикул зап.частини.</p>
-                                    <p>За необхідності можна зберігати і друкувати деталі з інтернет бази. Для цього необхідно зліва внизу натиснути кнопку <span class="text-red fw-600">Drucken</span>, після чого вибрати потрібну вам сторінку.</p>
-                                </div>
-                                <div class="card-content card-text">
-                                    <h2 class="text-underline text-blue">B&S</h2>
-                                    <p>Дотримуючись наведених інструкцій, знайдіть необхідну деталь для вашого продукту Briggs & Stratton</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-group _mb0">
-                            <div class="display-grid col-2 gap-8">
-                                <div class="form-group _mb0">
-                                    <label for="comment_part">Коментар</label>
-                                    <textarea id="comment_part" name="comment_part" placeholder="Не знайшли потрібні запчастини? Опишіть вашу проблему" rows="3" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>{{ old('comment_part', $currentClaim->comment_part) }}</textarea>
+                                    <div class="cell"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
+
+                    <div class="card-group">
+                        <p class="sub-title">Для пошуку потрібних запчастин перейдіть за посиланням</p>
+                        <div class="display-grid col-2 gap-8">
+                            <div class="card-content card-text">
+                                <h2 class="text-underline text-blue">AL-KO</h2>
+                                <p>Після відкриття, у лівому верхньому куті виберіть директорію: <span class="text-red fw-600">ERSATZTEILSUCHE.</span></p>
+                                <p>Після переходу на іншу сторінку, в правому кутку в порожнє поле внесіть артикульний номер виробу, що Вас цікавить (артикульний номер виробу можна подивитися в прайс-листі або на заводській наклейці).</p>
+                                <p>Щоб дізнатися ціну на деталь, відкрийте каталог зап.частин (додаток №3 до договору з сервісного обслуговування). Комбінація Ctrl - F відкриває пошукове вікно, куди вноситься артикул зап.частини.</p>
+                                <p>За необхідності можна зберігати і друкувати деталі з інтернет бази. Для цього необхідно зліва внизу натиснути кнопку <span class="text-red fw-600">Drucken</span>, після чого вибрати потрібну вам сторінку.</p>
+                            </div>
+                            <div class="card-content card-text">
+                                <h2 class="text-underline text-blue">B&S</h2>
+                                <p>Дотримуючись наведених інструкцій, знайдіть необхідну деталь для вашого продукту Briggs & Stratton</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-group _mb0">
+                        <div class="display-grid col-2 gap-8">
+                            <div class="form-group _mb0">
+                                <label for="comment_part">Коментар</label>
+                                <textarea id="comment_part" name="comment_part" placeholder="Не знайшли потрібні запчастини? Опишіть вашу проблему" rows="3" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>{{ old('comment_part', $currentClaim->comment_part) }}</textarea>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+
+                <input type="hidden" name="contract_price" value="{{ $defaultContract ? $defaultContract->service_works_price : 0 }}">
+                <input type="hidden" name="contract_discount" value="{{ $defaultDiscount ?? 0 }}">
+
+                <input type="hidden" name="button">
             </form>
-
-            <!-- @if ($currentClaim && $currentClaim->id)
-            <form action="{{ route('warranty-claims.send-to-review', $currentClaim->id) }}" id="send-to-review-form" method="POST" style="display: none;" class="js-form-validation">
-                @csrf
-                <input type="hidden" name="barcode" value="{{ $currentClaim->barcode }}">
-                <input type="hidden" name="factory_number" value="{{ $currentClaim->factory_number }}">
-                <input type="hidden" name="client_name" value="{{ $currentClaim->client_name }}">
-                <input type="hidden" name="product_name" value="{{ $currentClaim->product_name }}">
-                <input type="hidden" name="product_article" value="{{ $currentClaim->product_article }}">
-                <input type="hidden" name="number" value="{{ $currentClaim->number }}">
-                <input type="hidden" name="date" value="{{ $currentClaim->date }}">
-                <input type="hidden" name="date_of_sale" value="{{ $currentClaim->date_of_sale }}">
-                <input type="hidden" name="date_of_claim" value="{{ $currentClaim->date_of_claim }}">
-                <input type="hidden" name="status" value="{{ $currentClaim->status }}">
-                <input type="hidden" name="service_partner" value="{{ $currentClaim->service_partner }}">
-                <input type="hidden" name="service_contract" value="{{ $currentClaim->service_contract }}">
-                <input type="hidden" name="client_phone" value="{{ $currentClaim->client_phone }}">
-                <input type="hidden" name="sender_name" value="{{ $currentClaim->sender_name }}">
-                <input type="hidden" name="sender_phone" value="{{ $currentClaim->sender_phone }}">
-                <input type="hidden" name="details" value="{{ $currentClaim->details }}">
-                <input type="hidden" name="deteails_reason" value="{{ $currentClaim->deteails_reason }}">
-                <input type="hidden" name="product_group_id" value="{{ $currentClaim->product_group_id }}">
-                {{-- <input type="hidden" name="service_works[]" value="{{ json_encode($currentClaim->serviceWorks->pluck('id')->toArray()) }}">
-                 --}}
-                 <input type="hidden" name="service_works" id="service-works-hidden">
-
-                <div id="added-parts-hidden"></div>
-        
-            </form>
-
-            <form action="{{ route('warranty-claims.take-to-work', $currentClaim->id) }}" id="take-to-work-form" method="GET" style="display: none;">
-                @csrf
-            </form> -->
-
-
-            <input type="hidden" name="contract_price" value="{{ $defaultContract ? $defaultContract->service_works_price : 0 }}">
-            <input type="hidden" name="contract_discount" value="{{ $defaultDiscount ?? 0 }}">
-            
-            <input type="hidden" name="button">
-
-
-
-        @endif
         </div>
     </div>
 
     <div id="datepicker-container"></div>
 
-<!-- Дизейбл для селекта при невыбранном сервис-центре -->
-<!-- <script>
+    <!-- Дизейбл для селекта при невыбранном сервис-центре -->
+    <!-- <script>
     document.addEventListener('DOMContentLoaded', function () {
     const serviceCenterSelect = document.getElementById('service-center');
     const productGroupSelect = document.getElementById('product-group');
@@ -527,8 +489,8 @@
 });
 </script> -->
 
-<!-- Код для пошуку і збереження запчастини для сейв форми -->
-<!-- 
+    <!-- Код для пошуку і збереження запчастини для сейв форми -->
+    <!-- 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('search-articul');
@@ -706,8 +668,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>  -->
 
-<!-- Загальний підсумок сервісних робіт -->
-<!-- <script>
+    <!-- Загальний підсумок сервісних робіт -->
+    <!-- <script>
 document.addEventListener('DOMContentLoaded', function() {
     const serviceWorksContainer = document.getElementById('service-works-container');
     const totalDurationElement = document.getElementById('total-duration');
@@ -752,7 +714,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
  Відправка сервісних работ при кнопці Відправити -->
-<!-- <script>
+    <!-- <script>
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('send-to-review-form');
     const serviceWorksHiddenContainer = document.getElementById('service-works-hidden');
@@ -780,10 +742,10 @@ document.addEventListener('DOMContentLoaded', function() {
         form.submit();
     });
 }); -->
-<!-- </script> --> 
-    
-<!-- Відображення менеджерів в модалці -->
-<!-- <script>
+    <!-- </script> -->
+
+    <!-- Відображення менеджерів в модалці -->
+    <!-- <script>
     document.addEventListener('DOMContentLoaded', function () {
 
     const showModalButtons = document.querySelectorAll('._js-btn-show-modal[data-modal="switch-manager"]');
@@ -985,7 +947,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </script> -->
 
     <!-- Код для генерації сервісних робот для певної групи товарів -->
-<!-- <script>
+    <!-- <script>
 document.addEventListener('DOMContentLoaded', function() {
     const productGroupSelect = document.getElementById('product-group');
     const serviceWorksContainer = document.getElementById('service-works-container');
@@ -1138,10 +1100,10 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 </script>     -->
-    
 
-<!-- Копіювання данних ПІБ та телефон -->
-<!-- <script>
+
+    <!-- Копіювання данних ПІБ та телефон -->
+    <!-- <script>
     function copyToClipboard() {
         // Get the input elements
     var buyerName = document.getElementById("buyer-name").value;
@@ -1158,8 +1120,8 @@ document.addEventListener('DOMContentLoaded', function() {
 </script> -->
 
 
-<!-- Код для автозаповнення контрактів по сервісним центрам -->
-<!-- <script>
+    <!-- Код для автозаповнення контрактів по сервісним центрам -->
+    <!-- <script>
 document.addEventListener('DOMContentLoaded', function() {
     const serviceCenterSelect = document.getElementById('service-center');
     const serviceContractSelect = document.getElementById('service-contract');
@@ -1213,8 +1175,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </script> -->
 
-<!-- Дата -->
-<!-- <script>
+    <!-- Дата -->
+    <!-- <script>
  document.addEventListener('DOMContentLoaded', function() {
     const dateInputs = document.querySelectorAll('._js-datepicker');
     dateInputs.forEach((input, index) => {
@@ -1233,8 +1195,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script> -->
 
-<!-- Збереження запчастин для Відправити -->
-<!-- <script>
+    <!-- Збереження запчастин для Відправити -->
+    <!-- <script>
     document.addEventListener('DOMContentLoaded', function () {
         const searchInput = document.getElementById('search-articul');
         const partsContainer = document.getElementById('parts-container');

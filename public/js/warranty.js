@@ -4,6 +4,8 @@ const serviceCenterSelect = document.querySelector('#service-center'),
     searchInputWorks = document.querySelector('#product-group'),
     searchInputParts = document.querySelector('#search-articul');
 
+console.log(document.querySelector('input[name="contract_price"]'));
+
 let contractPriceInput = document.querySelector('input[name="contract_price"]'),
     contractDicountInput = document.querySelector('input[name="contract_discount"]'),
     contractPrice = +contractPriceInput.value,
