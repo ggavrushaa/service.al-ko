@@ -234,8 +234,8 @@
                                         <div class="row">
                                             <div class="cell">
                                                 <div class="form-group checkbox">
-                                                    <input type="checkbox" id="parts-nn" >
-                                                    <label for="parts-nn"></label>
+                                                    <input type="checkbox" id="works-select-all" >
+                                                    <label for="works-select-all"></label>
                                                 </div>
                                             </div>
                                             <div class="cell">Назва робіт</div>
@@ -260,17 +260,20 @@
                                                 </div>
                                                 <div class="cell">
                                                     <div class="form-group">
-                                                        <input type="text" value="{{ number_format($work->price, 2) }}" readonly>
+                                                        <input type="text" value="{{ number_format($work->price, 2) }}" class='work-price' readonly>
                                                     </div>
                                                 </div>
                                                 <div class="cell">
                                                     <div class="form-group">
-                                                        <input type="number" step="0,1" name="hours[]" value="{{ number_format($work->duration_decimal, 2) }}" class="work-hours" data-price="{{ $work->price }}">
+                                                        <input type="number" step="0,1" name="hours[]" value="{{ number_format($work->duration_decimal, 2) }}" class="work-hours"
+                                                            oninput="workCounter(event)"
+                                                            onkeyup="workCounterHandler(event)"
+                                                        >
                                                     </div>
                                                 </div>
                                                 <div class="cell">
                                                     <div class="form-group">
-                                                        <input type="text" value="{{ $work->duration_decimal * $work->price }}" class="work-total-price" readonly>
+                                                        <input type="text" value="{{ $work->duration_decimal * $work->price }}" class="total-price" readonly>
                                                     </div>
                                                 </div>
                                             </div>
@@ -281,8 +284,14 @@
                                             <div class="cell">Загальна вартість робіт</div>
                                             <div class="cell"></div>
                                             <div class="cell"></div>
-                                            <div class="cell" id="total-duration">0</div>
-                                            <div class="cell" id="total-sum">0.00</div>
+                                            <div class="cell" id="total-duration">
+                                                <span>0.00</span>
+                                                <input type="hidden" name="total-duration">
+                                            </div>
+                                            <div class="cell" id="total-sum">
+                                                <span>0.00</span>
+                                                <input type="hidden" name="total-sum">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -314,72 +323,88 @@
                                         <div class="cell">Назва</div>
                                         <div class="cell">Ціна</div>
                                         <div class="cell">Кількість</div>
-                                        {{-- <div class="cell">Знижка, %</div> --}}
+                                        <div class="cell">Знижка, %</div>
                                         <div class="cell">Всього зі знижкою, грн</div>
                                         <div class="cell">Замовити</div>
                                         <div class="cell">Дія</div>
                                     </div>
                                 </div>
-                                <div class="table-body" id="parts-container">
+                                <div class="table-body">
                                     <!-- Запчастини для пошуку -->
-                                </div>
-                                <div class="table-parts">
-                                    <div class="table-body">
-                                        <div class="row title-only">
-                                            <p>Додані запчастини</p>
-                                        </div>
-                                        <div id="added-parts-container">
-                                                @foreach($spareParts as $index => $part)
-                                                <div class="row" data-articul="{{ $part->spare_parts }}">
-                                                    <div class="cell">
-                                                        <div class="form-group _bg-white">
-                                                            <input type="text" name="spare_parts[{{ $index }}][spare_parts]" value="{{ $part->spare_parts }}" readonly>
-                                                        </div>
-                                                    </div>
-                                                    <div class="cell">
-                                                        <div class="form-group">
-                                                            <input type="text" name="spare_parts[{{ $index }}][name]" value="{{ $part->name }}" readonly>
-                                                        </div>
-                                                    </div>
-                                                    <div class="cell">
-                                                        <div class="form-group">
-                                                            <input type="text" name="spare_parts[{{ $index }}][price]" value="{{ $part->price }}" readonly>
-                                                        </div>
-                                                    </div>
-                                                    <div class="cell">
-                                                        <div class="form-group _bg-white">
-                                                            <input type="text" name="spare_parts[{{ $index }}][qty]" value="{{ $part->qty }}" readonly>
-                                                        </div>
-                                                    </div>
-                                                    <div class="cell">
-                                                        <div class="form-group">
-                                                            <input type="text" name="spare_parts[{{ $index }}][sum]" value="{{ $part->sum }}" readonly>
-                                                        </div>
-                                                    </div>
-                                                    <div class="cell">
-                                                        <div class="form-group checkbox">
-                                                            <input type="checkbox" id="parts-{{ $part->id }}" checked disabled>
-                                                            <label for="parts-{{ $part->id }}"></label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="cell">
-                                                        <button type="button" class="btn-border btn-red btn-action remove-part-btn">
-                                                            <span class="icon-minus"></span>
-                                                        </button>
-                                                    </div>
+
+                                    <div class="row-group" id="parts-container">
+                                        <!-- Запчастини для пошуку -->
+                                    </div>
+
+                                    <div class="row title-only">
+                                        <p>Додані запчастини</p>
+                                    </div>
+
+                                    <di class="row-group" id="added-parts-container">
+                                        @foreach($spareParts as $index => $part)
+                                        <div class="row" data-articul="{{ $part->spare_parts }}">
+                                            <div class="cell">
+                                                <div class="form-group _bg-white">
+                                                    <input type="text" name="spare_parts[{{ $index }}][spare_parts]" value="{{ $part->spare_parts }}" readonly>
                                                 </div>
-                                                @endforeach
                                             </div>
+                                            <div class="cell">
+                                                <div class="form-group">
+                                                    <input type="text" name="spare_parts[{{ $index }}][name]" value="{{ $part->name }}" readonly>
+                                                </div>
+                                            </div>
+                                            <div class="cell">
+                                                <div class="form-group">
+                                                    <input type="text" name="spare_parts[{{ $index }}][price]" value="{{ $part->price }}" readonly>
+                                                </div>
+                                            </div>
+                                            <div class="cell">
+                                                <div class="form-group">
+                                                    <input type="text" name="spare_parts[{{ $index }}][discount]" value="{{ $part->discount }}" readonly>
+                                                </div>
+                                            </div>
+                                            <div class="cell">
+                                                <div class="form-group _bg-white">
+                                                    <input type="text" class="part-quantity" name="spare_parts[{{ $index }}][qty]" value="{{ $part->qty }}" min='1' readonly
+                                                        oninput="partCounter(event)" 
+                                                        onkeyup="partCounterHandler(event)"
+                                                    >
+                                                </div>
+                                            </div>
+                                            <div class="cell">
+                                                <div class="form-group">
+                                                    <input type="text" class="part-total" name="spare_parts[{{ $index }}][sum]" value="{{ $part->sum }}" readonly>
+                                                </div>
+                                            </div>
+                                            <div class="cell">
+                                                <div class="form-group checkbox">
+                                                    <input type="checkbox" id="parts-{{ $part->id }}" checked disabled>
+                                                    <label for="parts-{{ $part->id }}"></label>
+                                                </div>
+                                            </div>
+                                            <div class="cell">
+                                                <button type="button" class="btn-border btn-red btn-action remove-part-btn">
+                                                    <span class="icon-minus"></span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        @endforeach
                                     </div>
                                 </div>
                                 <div class="table-footer">
-                                    <div class="row">
+                                <div class="row">
                                         <div class="cell">Підсумок</div>
                                         <div class="cell"></div>
                                         <div class="cell"></div>
                                         <div class="cell"></div>
-                                        <div class="cell" id="total-parts-sum">0</div>
                                         <div class="cell"></div>
+                                        <div class="cell" id="total-parts-sum">
+                                            <span>0</span>
+                                            <input type="hidden" name="total-parts-sum" value="0">
+                                        </div>
+                                        <div class="cell">
+                                            <input type="hidden" value="0" name="total-parts-sum">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -387,11 +412,15 @@
                             <div class="table-parts only-footer">
                                 <div class="table-footer">
                                     <div class="row">
-                                        <div class="cell">Загальна вартість по документу</div>
+                                    <div class="cell">Загальна вартість по документу</div>
                                         <div class="cell"></div>
                                         <div class="cell"></div>
                                         <div class="cell"></div>
-                                        <div class="cell" id="total-sum-final">0</div>
+                                        <div class="cell"></div>
+                                        <div class="cell" id="total-sum-final">
+                                            <span>0</span>
+                                            <input type="hidden" name="total-sum-final" value="0">
+                                        </div>
                                         <div class="cell"></div>
                                     </div>
                                 </div>
@@ -427,7 +456,7 @@
                 </div>
             </form>
 
-            @if ($currentClaim && $currentClaim->id)
+            <!-- @if ($currentClaim && $currentClaim->id)
             <form action="{{ route('warranty-claims.send-to-review', $currentClaim->id) }}" id="send-to-review-form" method="POST" style="display: none;" class="js-form-validation">
                 @csrf
                 <input type="hidden" name="barcode" value="{{ $currentClaim->barcode }}">
@@ -458,7 +487,16 @@
 
             <form action="{{ route('warranty-claims.take-to-work', $currentClaim->id) }}" id="take-to-work-form" method="GET" style="display: none;">
                 @csrf
-            </form>
+            </form> -->
+
+
+            <input type="hidden" name="contract_price" value="{{ $defaultContract ? $defaultContract->service_works_price : 0 }}">
+            <input type="hidden" name="contract_discount" value="{{ $defaultDiscount ?? 0 }}">
+            
+            <input type="hidden" name="button">
+
+
+
         @endif
         </div>
     </div>
@@ -713,8 +751,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<!-- Відправка сервісних работ при кнопці Відправити -->
-<script>
+ Відправка сервісних работ при кнопці Відправити -->
+<!-- <script>
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('send-to-review-form');
     const serviceWorksHiddenContainer = document.getElementById('service-works-hidden');
@@ -741,8 +779,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // Отправить форму
         form.submit();
     });
-});
-</script> -->
+}); -->
+<!-- </script> --> 
     
 <!-- Відображення менеджерів в модалці -->
 <!-- <script>

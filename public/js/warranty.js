@@ -314,8 +314,8 @@ function drawFoundParts(parts) {
                     <div class="form-group _bg-white">
                         <input type="number" name="spare_parts_temp[${id}][qty]" value="1" class="part-quantity" min='1' 
                             oninput="partCounter(event)" 
-                            onkeyup="partCounterHandler(event)
-                        ">
+                            onkeyup="partCounterHandler(event)"
+                        >
                     </div>
                 </div>
                 <div class="cell">
@@ -410,7 +410,7 @@ function addPartHandler(btn) {
                 </div>
                 <div class="cell">
                     <div class="form-group">
-                        <input class="part-total"  type="text" name="spare_parts[${id}][sum]" value="${total.toFixed(2)}" readonly>
+                        <input class="part-total" type="text" name="spare_parts[${id}][sum]" value="${total.toFixed(2)}" readonly>
                     </div>
                 </div>
                 <div class="cell">

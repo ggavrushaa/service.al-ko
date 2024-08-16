@@ -392,7 +392,10 @@
                                             </div>
                                             <div class="cell">
                                                 <div class="form-group _bg-white">
-                                                    <input type="text" name="spare_parts[{{ $index }}][qty]" value="{{ $part->qty }}" readonly>
+                                                    <input class="part-quantity" type="text" name="spare_parts[{{ $index }}][qty]" value="{{ $part->qty }}" min='1' readonly
+                                                        oninput="partCounter(event)" 
+                                                        onkeyup="partCounterHandler(event)"
+                                                    >
                                                 </div>
                                             </div>
                                             <div class="cell">
@@ -417,17 +420,6 @@
 
 
                                 </div>
-
-                                
-                                
-                                
-                                
-                                <!-- <div class="table-parts">
-                                    <div class="table-body">
-                                        
-                                        
-                                    </div>
-                                </div> -->
                                 <div class="table-footer">
                                     <div class="row">
                                         <div class="cell">Підсумок</div>
