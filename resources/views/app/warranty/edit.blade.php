@@ -97,7 +97,7 @@
                             </div>
 
                             <!-- Давати класс "show-placeholder" тільки тоді, коли немає обраного пункту. Тобто ми хочемо показати placeholder.  -->
-                            <div class="form-group default-select">
+                            <div class="form-group required default-select" data-valid="vanilla-select">
                                 <label for="service-center">Сервісний центр</label>
                                 <select name="service_partner" id="service-center" required @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>
                                     <option value="-1">Виберіть сервісний центр</option>
@@ -107,6 +107,7 @@
                                     </option>
                                 @endforeach
                                 </select>
+                                <div class="help-block" data-empty="Обов'язкове поле"></div>
                             </div>
                             <div class="form-group small-width default-select">
                                 <label for="service-contract">Договір сервісу</label>
