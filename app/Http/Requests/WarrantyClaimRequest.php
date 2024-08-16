@@ -41,7 +41,7 @@ class WarrantyClaimRequest extends FormRequest
             'comment_part' => 'nullable|string',
             'product_group_id' => 'nullable|integer',
             'service_works' => 'nullable|array',
-            'service_works.*' => 'string',
+            'service_works.*' => 'nullable',
             'hours' => 'nullable|array',
             'hours.*' => 'nullable|numeric|',
             'file[]' => 'nullable',
