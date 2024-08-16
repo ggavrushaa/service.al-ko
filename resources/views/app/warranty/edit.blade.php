@@ -433,7 +433,6 @@
                                             <input type="hidden" name="total-parts-sum" value="0">
                                         </div>
                                         <div class="cell">
-                                            <input type="hidden" value="0" name="total-parts-sum">
                                         </div>
                                     </div>
                                 </div>

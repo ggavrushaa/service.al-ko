@@ -319,17 +319,18 @@ class WarrantyClaimController extends Controller
      $serviceWorksPrice = $contract ? $contract->service_works_price : 0;
      $discount = $contract ? $contract->discount : 0;
 
+     $lineNumber = 1;
+     dd($data['service_works']);
     // Обработка и сохранение сервисных работ
     if (!empty($data['service_works'])) {
         foreach ($data['service_works'] as $index => $serviceWorkId) {
             $qty =  isset($data['hours'][$index]) ? (float) $data['hours'][$index] : 0.5;
             $price = $serviceWorksPrice;
             $sum = $price * $qty;
-            $lineNumber = $index + 1;
             WarrantyClaimServiceWork::updateOrCreate(
                 [
                     'warranty_claim_id' => $warrantyClaim->id,
-                    'service_work_id' => $serviceWorkId,
+                    'service_work_id' => $index,
                 ],
                 [
                     'line_number' => $lineNumber,
@@ -339,6 +340,8 @@ class WarrantyClaimController extends Controller
                     'sum' => $sum,
                 ]
             );
+
+            $lineNumber++;
         }
 
         Log::info('Service works saved:', $data['service_works']);
