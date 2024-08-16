@@ -47,9 +47,6 @@ function serviceCenterHandler() {
     const serviceCenterValue = serviceCenterSelect.value.trim();
 
     if (serviceCenterValue === "-1" || serviceCenterValue === "") {
-
-        console.log(contractSelect);
-
         searchInputWorks.disabled = true;
         searchInputParts.disabled = true;
         contractSelect.disabled = true;
@@ -95,17 +92,16 @@ function serviceCenterHandler() {
             if (data.length > 0) {
                 contractSelect.disabled = false;
 
+                contractSelect.innerHTML = '';
+
                 data.forEach(contract => {
-
-                    console.log(contract);
-
                     const { id, number, name } = contract;
 
                     const option = document.createElement('option');
                     option.value = id;
                     option.textContent = `${name}`;
 
-                    contractSelect.innerHTML = '';
+                    contractSelect.insertAdjacentElement('afterend', option);
                     contractSelect.appendChild(option);
                 })
 
@@ -653,7 +649,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
     showModalButtons.forEach(button => {
         button.addEventListener('click', function () {
-            console.log('Show modal button clicked');
             fetch('/managers')
                 .then(response => response.json())
                 .then(data => {
@@ -679,7 +674,6 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
     closeModalButton.addEventListener('click', function () {
-        console.log('Close modal button clicked');
         fadeOut(modal);
         modal.classList.remove('open');
         modalOverlay.classList.add('hide'); // добавлено

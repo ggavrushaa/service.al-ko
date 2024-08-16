@@ -42,7 +42,6 @@ window.addEventListener('load', function () {
     });
   }
   recalcAccordionHeight = function recalcAccordionHeight(accordion) {
-    console.log(accordion);
     var content_wrapper = accordion.querySelector('.js-accordion-content .accordion-content__wrapper');
     if (content_wrapper) {
       accordion.style.setProperty('--height', "".concat(content_wrapper.clientHeight, "px"));
@@ -211,7 +210,6 @@ function bodyLockToggle() {
 }
 function bodyUnlock() {
   var delay = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-  console.log('body unlock');
   var body = document.querySelector("body");
   if (bodyLockStatus) {
     var lock_padding = document.querySelectorAll("[data-lp]");
@@ -272,7 +270,6 @@ if (btnsOpenModal.length) {
       var modal = btn.dataset.modal;
       if (modal !== '' && modal !== undefined) {
         var modal_node = document.querySelector(".js-modal-".concat(modal));
-        console.log(modal_node);
         if (modal_node) {
           // Якщо необхідно кліком на одну й ту ж саму кнопку показувати/ховати модалку
           if (modal_node.dataset.toggle === '') {
@@ -433,7 +430,6 @@ function validate(form_group) {
         case 'vanilla-select':
           {
             form_group.querySelector('select').addEventListener('change', function () {
-              console.log(1488);
               if (form_group.classList.contains('required') || form_group.classList.contains('required-merged')) {
                 if (i === 0) {
                   error_count = +!validateField(form_group, valid_type);
