@@ -102,10 +102,10 @@
                                 <select name="service_partner" id="service-center" required @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>
                                     <option value="-1">Виберіть сервісний центр</option>
                                     @foreach($serviceCenters as $center)
-                                    <option value="{{ $center->id }}" {{ old('service_partner', $currentClaim['service_partner'] ?? $currentClaim->service_partner) == $center->id ? 'selected' : '' }}>
-                                        {{ $center->full_name_ru }}
-                                    </option>
-                                @endforeach
+                                        <option value="{{ $center->id }}" {{ old('service_partner', $currentClaim['service_partner'] ?? $currentClaim->service_partner) == $center->id ? 'selected' : '' }}>
+                                            {{ $center->full_name_ru }}
+                                        </option>
+                                    @endforeach
                                 </select>
                                 <div class="help-block" data-empty="Обов'язкове поле"></div>
                             </div>

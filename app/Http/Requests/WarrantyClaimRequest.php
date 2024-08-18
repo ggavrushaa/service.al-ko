@@ -54,7 +54,7 @@ class WarrantyClaimRequest extends FormRequest
             'spare_parts.*.qty' => 'nullable|integer',
             'spare_parts.*.price' => 'nullable|numeric',
             'spare_parts.*.sum' => 'nullable|numeric',
-            'buttons' => 'nullable',
+            'button' => 'nullable',
             'total-parts-sum' => 'nullable',
             'total-works-sum' => 'nullable',
         ];
