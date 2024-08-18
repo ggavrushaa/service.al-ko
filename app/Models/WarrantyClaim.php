@@ -26,6 +26,7 @@ class WarrantyClaim extends Model
         'comment', 'comment_service', 'comment_part', 
         'sender_name', 'sender_phone', 'receipt_number', 
         'details', 'deteails_reason', 'status', 'manager_id', 'number_1c', 'status_1c',
+        'spare_parts_sum', 'service_works_sum', 
     ];
 
     protected $casts = [

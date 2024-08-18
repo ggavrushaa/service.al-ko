@@ -39,8 +39,8 @@
                                 <div class="td">{{$claim->date}}</div>
                                 <div class="td">{{$claim->product_article}}</div>
                                 <div class="td">{{$claim->product_name}}</div>
-                                <div class="td">{{ $claim->spareParts->sum('sum') ?? 'Не вказано' }}</div>
-                                <div class="td">{{ $claim->serviceWorksAPI->sum('sum') ?? 'Не вказано' }}</div>
+                                <div class="td">{{ $claim->spare_parts_sum ?? 'Не вказано' }}</div>
+                                <div class="td">{{ $claim->service_works_sum ?? 'Не вказано' }}</div>
                                 <div class="td">
                                     <button type="button" class="btn-label blue">
                                         {{ $claim->status }}

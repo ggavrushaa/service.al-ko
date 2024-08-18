@@ -118,10 +118,12 @@ class WarrantyClaimController extends Controller
         $defaultDiscount = 0;
     
         if ($defaultServicePartner) {
-            $defaultContract = Contract::where('partner_id', $defaultServicePartner->id)
-                                       ->where('contract_type', 'Сервис')
-                                       ->orderBy('added_time', 'desc')
-                                       ->first();
+            $serviceContracts = Contract::where('partner_id', $defaultServicePartner->id)
+                                        ->where('contract_type', 'Сервис')
+                                        ->orderBy('added_time', 'desc')
+                                        ->get();
+    
+            $defaultContract = $serviceContracts->first();
         }
     
         if ($defaultContract) {
@@ -148,7 +150,7 @@ class WarrantyClaimController extends Controller
             $work->total_price = $work->duration_decimal * $serviceWorksPrice;
         }
     
-        return view('app.warranty.edit', compact('talon', 'groups', 'works', 'documentNumber', 'product', 'products', 'serviceCenters', 'currentClaim', 'defaultServicePartner', 'defaultDiscount', 'defaultContract', 'spareParts', 'serviceWorks'));
+        return view('app.warranty.edit', compact('talon', 'groups', 'works', 'documentNumber', 'product', 'products', 'serviceCenters', 'currentClaim', 'defaultServicePartner', 'defaultDiscount', 'defaultContract', 'spareParts', 'serviceWorks', 'serviceContracts',));
     }
 
     public function create($barcode, $factory_number = null)
@@ -277,7 +279,6 @@ class WarrantyClaimController extends Controller
     {
         Log::info('Request:', $request->all());
         $data = $request->validated();
-
         Log::info('Validated Data:', $data);
 
         try {
@@ -293,11 +294,23 @@ class WarrantyClaimController extends Controller
             return redirect()->back()->with('error', 'Неверный формат даты.');
         }
 
+        if (isset($data['total-parts-sum'])) {
+            $data['spare_parts_sum'] = $data['total-parts-sum'];
+            unset($data['total-parts-sum']);
+        }
+
+        if (isset($data['total-works-sum'])) {
+            $data['service_works_sum'] = $data['total-works-sum'];
+            unset($data['total-works-sum']);
+        }
+
         try {
             $warrantyClaim = WarrantyClaim::updateOrCreate(
                 ['id' => $request->id],
                 $data
             );
+
+            Log::info('Warranty Claim saved:', $warrantyClaim->toArray());
 
             if ($request->hasFile('file')) {
                 foreach ($request->file('file') as $file) {

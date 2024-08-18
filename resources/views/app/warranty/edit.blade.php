@@ -112,9 +112,13 @@
                             <div class="form-group small-width default-select">
                                 <label for="service-contract">Договір сервісу</label>
                                 <select name="service_contract" id="service-contract" class="form-control" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>
-                                    <option value="{{ old('service_contract', $defaultContract->id ?? '') }}">
-                                        {{ old('service_contract', $defaultContract->number ?? 'Виберіть договір сервісу') }}
-                                    </option>
+                                    <option value="-1">Виберіть договір сервісу</option>
+                                        @foreach($serviceContracts as $contract)
+                                            <option value="{{ $contract->id }}" 
+                                                    {{ old('service_contract', $currentClaim['service_contract'] ?? $defaultContract->id) == $contract->id ? 'selected' : '' }}>
+                                                {{ $contract->number }}
+                                            </option>
+                                        @endforeach
                                 </select>
                             </div>
                         </div>
