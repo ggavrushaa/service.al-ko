@@ -10,18 +10,19 @@ use App\Enums\ClaimTypeEnum;
 use App\Models\SymptomCodes;
 use Illuminate\Http\Request;
 use App\Models\WarrantyClaim;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Events\WarrantyClaimApproved;
 use App\Enums\WarrantyClaimStatusEnum;
 use App\Models\TechnicalConclusion\TechnicalConclusion;
 use App\Http\Requests\Conclusion\StoreTechnicalConclusionRequest;
-use Illuminate\Support\Facades\Log;
 
 class TechnicalConclusionController extends Controller
 {
     public function index()
     {
-        $conclusions = TechnicalConclusion::paginate(20);
+        $conclusions = TechnicalConclusion::orderBy('date', 'desc')->paginate(10);
         $authors = User::where('role_id', 2)->get();
 
         $warrantyClaims = [];
@@ -164,6 +165,27 @@ class TechnicalConclusionController extends Controller
         $technicalConclusion->save();
 
         return redirect()->route('app.conclusion.index')->with('status', 'Акт технічної експертизи збережено');
+    }
+
+    public function sort(Request $request)
+    {   
+        $column = $request->input('column');
+        $order = $request->input('order');
+        
+        if ($column === 'manager.first_name_ru') {
+            $column = 'users.first_name_ru';
+        }
+        
+        $conclusions = TechnicalConclusion::select('technical_conclusions.*')
+            ->join('warranty_claims', 'technical_conclusions.warranty_claim_id', '=', 'warranty_claims.id')
+            ->join('users', 'warranty_claims.manager_id', '=', 'users.id', 'left')
+            ->with(['warrantyClaim' => function($query) {
+                $query->with('manager', 'user');
+            }])
+            ->orderBy($column, $order)
+            ->paginate(20);
+
+        return response()->json($conclusions);
     }
 
     

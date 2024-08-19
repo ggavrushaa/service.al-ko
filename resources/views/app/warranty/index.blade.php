@@ -294,10 +294,10 @@ document.addEventListener('DOMContentLoaded', function () {
             el.setAttribute('data-order', 'asc');
         });
         document.querySelector(`[data-column="${column}"]`).setAttribute('data-order', newOrder);
-        initTableEvents(); // Инициализация событий для новых элементов
+        initTableEvents(); 
     }
 
-    initTableEvents(); // Инициализация событий при загрузке страницы
+    initTableEvents(); 
 });
 </script>
 

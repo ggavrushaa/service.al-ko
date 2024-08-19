@@ -123,6 +123,7 @@ Route::post('/warranty-claims/save', [WarrantyClaimController::class, 'save'])->
 Route::delete('/warranty-claims/{id}', [WarrantyClaimController::class, 'delete'])->name('warranty-claims.delete');
 
 Route::get('/warranty-claims/sort', [WarrantyClaimController::class, 'sort'])->name('warranty-claims.sort');
+Route::get('/technical-conclusions/sort', [TechnicalConclusionController::class, 'sort'])->name('technical-conclusions.sort');
 
 // Видалення зображення
 Route::post('/warranty-image/{id}', [WarrantyClaimController::class, 'destroyImage'])->name('warranty-image.remove');

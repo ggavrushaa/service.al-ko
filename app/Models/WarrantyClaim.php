@@ -43,6 +43,7 @@ class WarrantyClaim extends Model
         return $this->belongsTo(Contract::class, 'service_contract');
     }
 
+    
     public function autor()
     {
         return $this->belongsTo(UserPartner::class);
