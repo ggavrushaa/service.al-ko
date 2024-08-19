@@ -32,7 +32,8 @@ class TechnicalConclusionController extends Controller
             return [
                 'id' => $conclusion->id,
                 'code_1C' => $conclusion->code_1C,
-                'warranty_claim_code_id' => optional($conclusion->warrantyClaim)->code_1C,
+                'warranty_claim_code' => optional($conclusion->warrantyClaim)->code_1C,
+                'warranty_claim_id' => $conclusion->warranty_claim_id,
                 'defect_code' => optional($conclusion->defectCode)->code_1C,
                 'symptom_code' => optional($conclusion->symptomCode)->code_1C,
                 'conclusion' => $conclusion->conclusion,
