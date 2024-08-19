@@ -120,11 +120,11 @@
                             </div>
                         </div>
                         <div class="inputs-group one-row">
-                            <div class="form-group">
+                            <div class="form-group required" data-valid="empty">
                                 <label for="conclusion">Висновок</label>
-                                <textarea name="conclusion" id="conclusion" placeholder="Висновок" rows="3" @if($warrantyClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) readonly @endif>{{ $conclusion->conclusion ?? '' }}</textarea>
+                                <textarea name="conclusion" required id="conclusion" placeholder="Висновок" rows="3" @if($warrantyClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) readonly @endif>{{ $conclusion->conclusion ?? '' }}</textarea>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group required" data-valid="empty">
                                 <label for="resolution">Резолюція</label>
                                 <button type="button" class="btn-link btn-copy btn-blue pos-0 _js-btn-show-template-modal" @if($warrantyClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) disabled @endif>Підібрати Шаблон</button>
                                 <textarea name="resolution" id="resolution" placeholder="Резолюція" rows="3" @if($warrantyClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) readonly @endif>{{ $conclusion->resolution ?? '' }}</textarea>

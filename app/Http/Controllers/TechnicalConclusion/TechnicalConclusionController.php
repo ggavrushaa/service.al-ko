@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Events\WarrantyClaimApproved;
 use App\Enums\WarrantyClaimStatusEnum;
+use App\Http\Requests\Conclusion\ApproveTechnicalConclusionRequest;
 use App\Models\TechnicalConclusion\TechnicalConclusion;
 use App\Http\Requests\Conclusion\StoreTechnicalConclusionRequest;
 
@@ -128,7 +129,7 @@ class TechnicalConclusionController extends Controller
         return redirect()->route('warranty-claims.index')->with('status', 'Акт технічної експертизи створено');
     }
 
-    public function update(StoreTechnicalConclusionRequest $request, $id)
+    public function update(ApproveTechnicalConclusionRequest $request, $id)
     {
         $validatedData = $request->validated();
 
