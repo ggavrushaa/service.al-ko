@@ -107,7 +107,7 @@ class WarrantyClaimController extends Controller
                         throw new \Exception("Service work with code_1C {$work['code_1c']} not found");
                     }
                 }
-                
+
                 $warrantyClaim->service_works_sum = $serviceWorksSum;
                 $warrantyClaim->spare_parts_sum = $sparePartsSum;
                 $warrantyClaim->save();
@@ -147,13 +147,13 @@ class WarrantyClaimController extends Controller
         $formattedDateFrom = "'$dateFrom'";
 
         // Получение новых записей
-
         $newWarrantyClaims = WarrantyClaim::on('second_db')
-        ->with(['spareParts', 'files', 'serviceWorksAPI'])
-        ->whereNull('code_1C')
-        ->where('updated_at', '>', DB::raw($formattedDateFrom))
-        ->where('status', '!=', WarrantyClaimStatusEnum::new)
-        ->get();
+            ->with(['spareParts', 'files', 'serviceWorksAPI'])
+            ->whereNull('code_1C')
+            ->where('updated_at', '>', DB::raw($formattedDateFrom))
+            ->where('status', '!=', WarrantyClaimStatusEnum::new)
+            ->get();
+
         $newWarrantyClaims = $newWarrantyClaims->map(function ($claim) {
                 $claim->created = date('Y-m-d H:i:s', strtotime($claim->created_at));
                 $claim->updated = date('Y-m-d H:i:s', strtotime($claim->updated_at));
@@ -165,7 +165,9 @@ class WarrantyClaimController extends Controller
                 unset($claim->client_name);
                 unset($claim->client_phone);
                 unset($claim->product_group_id);
+                unset($claim->type_of_claim);
                 unset($claim['manager']);
+
 
                 $claim->spare_parts = $claim->spareParts->map(function ($part) {
                     return [
@@ -221,6 +223,7 @@ class WarrantyClaimController extends Controller
                 unset($claim->client_name);
                 unset($claim->client_phone);
                 unset($claim->product_group_id);
+                unset($claim->type_of_claim);
                 unset($claim['manager']);
 
                 $claim->spare_parts = $claim->spareParts->map(function ($part) {
