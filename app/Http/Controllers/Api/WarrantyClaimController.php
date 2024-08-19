@@ -76,14 +76,18 @@ class WarrantyClaimController extends Controller
                     $createdCount++;
                 }
     
+                $sparePartsSum = 0;
                 $warrantyClaim->spareParts()->delete();
                 foreach ($data['spare_parts'] as $part) {
                     $part['spare_parts'] = $part['spareparts_articul'];
                     unset($part['spareparts_articul']);
                     $part['sum'] = ($part['price'] - ($part['price'] * $part['discount'] / 100)) * $part['qty'];
+                    $sparePartsSum += $part['sum'];
                     $warrantyClaim->spareParts()->create($part);
                 }
-    
+
+
+                $serviceWorksSum = 0;
                 $warrantyClaim->files()->delete();
                 foreach ($data['files'] as $file) {
                     $warrantyClaim->files()->create($file);
@@ -96,12 +100,18 @@ class WarrantyClaimController extends Controller
                         $work['service_work_id'] = $serviceWork->id;
                         unset($work['code_1c']);
                         $work['sum'] = ($work['price'] - ($work['price'] * $work['discount'] / 100)) * $work['qty'];
+                        $serviceWorksSum += $work['sum'];
                         $work['warranty_claim_id'] = $warrantyClaim->id;
                         WarrantyClaimServiceWork::create($work);
                     } else {
                         throw new \Exception("Service work with code_1C {$work['code_1c']} not found");
                     }
                 }
+                
+                $warrantyClaim->service_works_sum = $serviceWorksSum;
+                $warrantyClaim->spare_parts_sum = $sparePartsSum;
+                $warrantyClaim->save();
+
             } catch (\Exception $e) {
                 // Добавляем ошибку в массив ошибок
                 $errors[] = [
