@@ -155,11 +155,6 @@ class WarrantyClaimController extends Controller
 
     public function create($barcode, $factory_number = null)
     {
-        $warrantyClaim = WarrantyClaim::with('user', 'manager', 'spareParts', 'serviceWorks')
-            ->where('barcode', $barcode)
-            ->orWhere('factory_number', $factory_number)
-            ->first();
-
         $talon = GuaranteeCoupon::where('status', 'ACTIVE')
             ->where('barcode', $barcode)
             ->where('factory_number', $factory_number)
@@ -167,7 +162,6 @@ class WarrantyClaimController extends Controller
             
         $product = Products::where('id', $talon->product_id ?? null)->first();
 
-        if (!$warrantyClaim) {
         // Создаем новую заявку
         $maxDocumentNumber = DB::connection('second_db')->table('warranty_claims')->max('number');
         $maxDocumentNumber = $maxDocumentNumber ? intval($maxDocumentNumber) : 0;
@@ -187,13 +181,7 @@ class WarrantyClaimController extends Controller
             'client_phone' => $talon->phone,
             'point_of_sale' => $talon->partner_name,
         ]);
-            // dd($warrantyClaim);
-            // $warrantyClaim->save();
         
-        } else {
-            $documentNumber = $warrantyClaim->number;
-        }
-
         $products = Products::paginate(10);
         $groups = ProductGroup::all();
         $works = ServiceWorks::all();
