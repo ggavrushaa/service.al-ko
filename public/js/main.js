@@ -343,6 +343,26 @@ if (formsValidation.length > 0) {
     });
   });
 }
+if (document.querySelector('._js-button-validation')) {
+  document.querySelectorAll('._js-button-validation').forEach(function (btn) {
+    var form = btn.form;
+    btn.addEventListener('click', function (e) {
+      if (form) {
+        e.preventDefault();
+        form.querySelector('input[name="button"]').value = btn.value;
+        if (validateForm(btn.form)) {
+          btn.form.submit();
+        }
+      }
+    });
+    window.addEventListener('keydown', function (event) {
+      if (event.key === 'Enter' && event.target.closest('textarea') === null) {
+        event.preventDefault();
+        return false;
+      }
+    });
+  });
+}
 
 // Btn required switcher
 var btnRequiredSwitcher = document.querySelectorAll('.js-btn-required-switcher');

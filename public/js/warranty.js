@@ -179,8 +179,6 @@ document.querySelectorAll('.page-name .btn-primary').forEach(btn => {
                 btn.form.submit();
             }
         }
-
-
     })
 })
 

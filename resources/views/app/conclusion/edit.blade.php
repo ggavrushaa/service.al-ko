@@ -12,9 +12,9 @@
                 </ul>
                 <div class="btns">
                     @if ($warrantyClaim->status === \App\Enums\WarrantyClaimStatusEnum::review && auth()->user()->role_id === 2)
-                        <button type="button" class="btn-primary btn-blue" onclick="document.getElementById('form-create').submit()">Затвердити</button>
-                        <button type="button" class="btn-border btn-blue" onclick="submitSaveForm()">Зберегти</button>
-                        <button type="submit" class="btn-border btn-red" onclick="submitSaveAndExitForm()">Зберегти і Вийти</button>
+                        <button type="button" class="btn-primary btn-blue _js-button-validation" form="form-create" value="approve">Затвердити</button>
+                        <button type="button" class="btn-border btn-blue _js-button-validation" form="form-create" value='save'>Зберегти</button>
+                        <button type="submit" class="btn-border btn-red _js-button-validation" form="form-create" value="save-exit">Зберегти і Вийти</button>
                     @elseif ($warrantyClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved)
                         <span class="btn-link btn-green text-only">Затверджено</span>
                     @endif
@@ -122,16 +122,21 @@
                         <div class="inputs-group one-row">
                             <div class="form-group required" data-valid="empty">
                                 <label for="conclusion">Висновок</label>
-                                <textarea name="conclusion" required id="conclusion" placeholder="Висновок" rows="3" @if($warrantyClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) readonly @endif>{{ $conclusion->conclusion ?? '' }}</textarea>
+                                <textarea name="conclusion" id="conclusion" placeholder="Висновок" rows="3" @if($warrantyClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) readonly @endif>{{ $conclusion->conclusion ?? '' }}</textarea>
+                                <div class="help-block" data-empty="Обов'язкове поле"></div>
                             </div>
                             <div class="form-group required" data-valid="empty">
                                 <label for="resolution">Резолюція</label>
                                 <button type="button" class="btn-link btn-copy btn-blue pos-0 _js-btn-show-template-modal" @if($warrantyClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) disabled @endif>Підібрати Шаблон</button>
                                 <textarea name="resolution" id="resolution" placeholder="Резолюція" rows="3" @if($warrantyClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) readonly @endif>{{ $conclusion->resolution ?? '' }}</textarea>
+                                <div class="help-block" data-empty="Обов'язкове поле"></div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+
+                <input type="hidden" name="button">
             </form>
         </div>
     </div>
