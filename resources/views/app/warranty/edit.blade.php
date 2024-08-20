@@ -21,7 +21,7 @@
                         <button type="submit" class="btn-primary btn-blue" value="send_to_review" form="send-to-save">Відправити</button>
                     @elseif ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::sent && auth()->user()->role_id === 2 OR auth()->user()->role_id === 3)
                         <button type="submit" class="btn-primary btn-blue" value="take_to_work" form="send-to-save">Взяти в роботу</button>
-                    @elseif ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review && auth()->user()->role_id === 2)
+                    @elseif ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review && auth()->user()->role_id === 2 OR auth()->user()->role_id === 3)
                         <a href="{{ route('technical-conclusions.create', $currentClaim->id) }}" class="btn-primary btn-blue">Створити Акт</a>
                     @endif       
                     @if ($currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved)

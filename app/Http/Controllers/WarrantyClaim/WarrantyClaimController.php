@@ -94,6 +94,10 @@ class WarrantyClaimController extends Controller
         $currentClaim = $warrantyClaim;
     
         $userId = auth()->id();
+        $userRole = auth()->user()->role;
+
+         if ($userRole->id === 1) {
+        // Если роль пользователя дилер, выбираем только связанные сервисные центры
         $userServiceCentres = DB::connection('second_db')->table('users_services_centres')
             ->where('user_id', $userId)
             ->select('user_partner_id', 'default')
@@ -110,9 +114,18 @@ class WarrantyClaimController extends Controller
             $center->default = $userServiceCentres->firstWhere('user_partner_id', $center->id)->default;
             return $center;
         });
+        } else {
+            // Если роль менеджера или администратора, выбираем все сервисные центры
+            $serviceCenters = DB::connection('mysql')->table('user_partners')
+                ->select('id', 'full_name_ru')
+                ->get();
+        }
 
-        $defaultServicePartner = $currentClaim->service_partner ? $serviceCenters->firstWhere('id', $currentClaim->service_partner) 
-         : $serviceCenters->firstWhere('default', 1);
+        $serviceContracts = collect();
+        $defaultServicePartner = $currentClaim->service_partner 
+            ? $serviceCenters->firstWhere('id', $currentClaim->service_partner) 
+            : ($serviceCenters->firstWhere('default', 1) ?: $serviceCenters->first());
+
 
         $defaultContract = null;
         $defaultDiscount = 0;
@@ -149,8 +162,16 @@ class WarrantyClaimController extends Controller
             $work->price = $serviceWorksPrice;
             $work->total_price = $work->duration_decimal * $serviceWorksPrice;
         }
+
+        $userPartners = UserPartner::whereHas('contracts', function($query) {
+            $query->where('contract_type', 'Сервис');
+        })->get();
+
     
-        return view('app.warranty.edit', compact('talon', 'groups', 'works', 'documentNumber', 'product', 'products', 'serviceCenters', 'currentClaim', 'defaultServicePartner', 'defaultDiscount', 'defaultContract', 'spareParts', 'serviceWorks', 'serviceContracts',));
+        return view('app.warranty.edit', 
+        compact('talon', 'groups', 'works', 'documentNumber', 'product', 'products', 
+        'serviceCenters', 'currentClaim', 'defaultServicePartner', 'defaultDiscount', 'defaultContract', 
+        'spareParts', 'serviceWorks', 'serviceContracts', 'userPartners'));
     }
 
     public function create($barcode, $factory_number = null)
