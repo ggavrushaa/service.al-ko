@@ -210,25 +210,38 @@ class WarrantyClaimController extends Controller
          $currentClaim = $warrantyClaim;
     
         $userId = auth()->id();
-        $userServiceCentres = DB::connection('second_db')->table('users_services_centres')
-            ->where('user_id', $userId)
-            ->select('user_partner_id', 'default')
-            ->get();
+        $userRole = auth()->user()->role;
 
-        $partnerIds = $userServiceCentres->pluck('user_partner_id');
+        if ($userRole->id === 1) {
+       // Если роль пользователя дилер, выбираем только связанные сервисные центры
+       $userServiceCentres = DB::connection('second_db')->table('users_services_centres')
+           ->where('user_id', $userId)
+           ->select('user_partner_id', 'default')
+           ->get();
 
-        $serviceCenters = DB::connection('mysql')->table('user_partners')
-            ->whereIn('id', $partnerIds)
-            ->select('id', 'full_name_ru')
-            ->get();
+       $partnerIds = $userServiceCentres->pluck('user_partner_id');
 
-        $serviceCenters = $serviceCenters->map(function ($center) use ($userServiceCentres) {
-            $center->default = $userServiceCentres->firstWhere('user_partner_id', $center->id)->default;
-            return $center;
-        });
+       $serviceCenters = DB::connection('mysql')->table('user_partners')
+           ->whereIn('id', $partnerIds)
+           ->select('id', 'full_name_ru')
+           ->get();
 
-        $defaultServicePartner = $currentClaim->service_partner ? $serviceCenters->firstWhere('id', $currentClaim->service_partner) 
-         : $serviceCenters->firstWhere('default', 1);
+       $serviceCenters = $serviceCenters->map(function ($center) use ($userServiceCentres) {
+           $center->default = $userServiceCentres->firstWhere('user_partner_id', $center->id)->default;
+           return $center;
+       });
+       } else {
+           // Если роль менеджера или администратора, выбираем все сервисные центры
+           $serviceCenters = DB::connection('mysql')->table('user_partners')
+               ->select('id', 'full_name_ru')
+               ->get();
+       }
+
+       $serviceContracts = collect();
+
+       $defaultServicePartner = $currentClaim->service_partner 
+       ? $serviceCenters->firstWhere('id', $currentClaim->service_partner) 
+       : ($serviceCenters->firstWhere('default', 1) ?: $serviceCenters->first());
 
         $defaultContract = null;
         $defaultDiscount = 0;
