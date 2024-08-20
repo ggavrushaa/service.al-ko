@@ -381,7 +381,7 @@ class WarrantyClaimController extends Controller
     if (!empty($data['service_works'])) {
         foreach ($data['service_works'] as $index => $serviceWorkId) {
             if (isset($serviceWorkId['checkbox']) && $serviceWorkId['checkbox'] === 'on') {
-            $qty =  isset($data['hours'][$index]) ? (float) $data['hours'][$index] : 0.5;
+            $qty = isset($serviceWorkId['hours']) ? str_replace(',', '.', $serviceWorkId['hours']) : '0.50';
             $price = $serviceWorksPrice;
             $sum = $price * $qty;
             WarrantyClaimServiceWork::updateOrCreate(
