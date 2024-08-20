@@ -19,17 +19,19 @@
                     @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::new)
                         <button type="submit" class="btn-primary btn-blue" value="send_to_save" form="send-to-save">Зберегти</button>
                         <button type="submit" class="btn-primary btn-blue" value="send_to_review" form="send-to-save">Відправити</button>
-                    @elseif ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::sent && auth()->user()->role_id === 2 OR auth()->user()->role_id === 3)
+                    @elseif ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::sent && (auth()->user()->role_id === 2 || auth()->user()->role_id === 3))
                         <button type="submit" class="btn-primary btn-blue" value="take_to_work" form="send-to-save">Взяти в роботу</button>
-                    @elseif ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review && auth()->user()->role_id === 2 OR auth()->user()->role_id === 3)
+                    @elseif ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review && (auth()->user()->role_id === 2 || auth()->user()->role_id === 3))
                         <a href="{{ route('technical-conclusions.create', $currentClaim->id) }}" class="btn-primary btn-blue">Створити Акт</a>
                     @endif       
                     @if ($currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved)
                         <span class="btn-link btn-green text-only">Затверджено</span>
                     @endif
-                    <button type="button" class="btn-border btn-blue btn-only-icon _js-btn-show-modal" data-modal="chat">
-                        <span class="icon-message"></span>
-                    </button>
+                    @if($currentClaim->autor AND $currentClaim->autor !== $currentClaim->manager_id AND $currentClaim->status !== \App\Enums\WarrantyClaimStatusEnum::approved)
+                        <button type="button" class="btn-border btn-blue btn-only-icon _js-btn-show-modal" data-modal="chat">
+                            <span class="icon-message"></span>
+                        </button>
+                    @endif
                     @if($currentClaim->status !== \App\Enums\WarrantyClaimStatusEnum::approved AND auth()->user()->role_id === 3)
                         <button type="button" class="btn-border btn-red _js-btn-show-modal" data-modal="switch-manager" data-claim-id="{{ $currentClaim->id }}">Змінити менеджера</button>
                     @endif
