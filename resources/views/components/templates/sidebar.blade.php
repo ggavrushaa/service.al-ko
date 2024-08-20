@@ -35,6 +35,7 @@
                     <div class="list-group">
                         <p class="list-group__title">Інше</p>
                         <ul>
+                            @if(auth()->check() && auth()->user()->role_id == 3)
                             <li class="{{Route::currentRouteName() == 'documentations.fees' || Route::currentRouteName() == 'documentations.fees' ? 'active' : ''}}">
                                 <a href="{{route('documentations.fees')}}" class="link">
                                     <span class="icon icon-docs"></span>
@@ -47,6 +48,7 @@
                                     <span class="text">Документація</span>
                                 </a>
                             </li>
+                            @endif
                             <li class="have-sublist js-accordion ">
                                 <button type="button" class="link js-accordion-btn">
                                     <span class="icon icon-book"></span>
@@ -63,7 +65,7 @@
                                     <li class="{{Route::currentRouteName() == 'app.service.index' ? 'active' : ''}}">
                                         <a href="{{route('app.service.index')}}" class="link">Сервісні роботи</a>
                                     </li>
-                                    @if(auth()->check() && auth()->user()->role_id !== 1)
+                                    @if(auth()->check() && auth()->user()->role_id == 3)
                                         <li class="{{Route::currentRouteName() == 'users.index' ? 'active' : ''}}">
                                             <a href="{{route('users.index')}}" class="link">Користувачі</a>
                                         </li>
