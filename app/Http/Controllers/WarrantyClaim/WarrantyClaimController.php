@@ -426,31 +426,6 @@ class WarrantyClaimController extends Controller
     
             $lineNumber++; // Увеличиваем line_number для следующей запчасти
         }
-
-        // if ($request->has('button')) {
-        //     Log::info('Button detected:', ['button' => $request->button]);
-        //     switch ($request->button) {
-        //         case 'send_to_review':
-        //             $warrantyClaim->status = WarrantyClaimStatusEnum::sent;
-        //             Log::info('Status set to sent');
-        //             $warrantyClaim->save();
-        //             break;
-        
-        //         case 'take_to_work':
-        //             $warrantyClaim->status = WarrantyClaimStatusEnum::review;
-        //             Log::info('Status set to review');
-        //             if ($warrantyClaim->manager_id === null) {
-        //                 $warrantyClaim->manager_id = Auth::user()->id;
-        //             }
-        //             $warrantyClaim->save();
-        //             if ($warrantyClaim->save()) {
-        //                 Log::info('Status successfully saved:', $warrantyClaim->status);
-        //             } else {
-        //                 Log::error('Failed to save status:', $warrantyClaim->status);
-        //             }
-        //             break;
-        //     }
-        // }
     
         Log::info('Spare parts saved:', $filteredSpareParts);
         Log::info('Warranty Claim updated status:', $warrantyClaim->toArray());

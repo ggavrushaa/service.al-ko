@@ -135,37 +135,22 @@ class TechnicalConclusionController extends Controller
 
         $technicalConclusion = TechnicalConclusion::where('warranty_claim_id', $id)->first();
         $technicalConclusion->update($validatedData);
-        $technicalConclusion->save();
 
-        $warrantyClaim = WarrantyClaim::findOrFail($id);
-        $warrantyClaim->status = WarrantyClaimStatusEnum::approved->value;
-        $warrantyClaim->save();
+        $action = $request->input('button');
 
-        event(new WarrantyClaimApproved($warrantyClaim));
+        if ($action == 'approve') {
+            $warrantyClaim = WarrantyClaim::findOrFail($id);
+            $warrantyClaim->status = WarrantyClaimStatusEnum::approved->value;
+            $warrantyClaim->save();
+    
+            event(new WarrantyClaimApproved($warrantyClaim));
+            return redirect()->back()->with('status', 'Акт технічної експертизи оновлено та затверджено');
+        } elseif ($action == 'save') {
+            return redirect()->back()->with('status', 'Акт технічної експертизи оновлено');
+        }  elseif ($action == 'save-exit') {
+            return redirect()->route('app.conclusion.index')->with('status', 'Акт технічної експертизи збережено');
+        }
 
-        return redirect()->back()->with('status', 'Акт технічної експертизи оновлено та затверджено');
-    }
-
-    public function save(StoreTechnicalConclusionRequest $request, $id)
-    {
-        $validatedData = $request->validated();
-
-        $technicalConclusion = TechnicalConclusion::where('warranty_claim_id', $id)->first();
-        $technicalConclusion->update($validatedData);
-        $technicalConclusion->save();
-
-        return redirect()->back()->with('status', 'Акт технічної експертизи оновлено');
-    }
-
-    public function exit(StoreTechnicalConclusionRequest $request, $id)
-    {
-        $validatedData = $request->validated();
-
-        $technicalConclusion = TechnicalConclusion::where('warranty_claim_id', $id)->first();
-        $technicalConclusion->update($validatedData);
-        $technicalConclusion->save();
-
-        return redirect()->route('app.conclusion.index')->with('status', 'Акт технічної експертизи збережено');
     }
 
     public function sort(Request $request)

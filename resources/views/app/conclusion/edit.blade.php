@@ -12,8 +12,8 @@
                 </ul>
                 <div class="btns">
                     @if ($warrantyClaim->status === \App\Enums\WarrantyClaimStatusEnum::review && auth()->user()->role_id === 2)
-                        <button type="button" class="btn-primary btn-blue _js-button-validation" form="form-create" value="approve">Затвердити</button>
-                        <button type="button" class="btn-border btn-blue _js-button-validation" form="form-create" value='save'>Зберегти</button>
+                        <button type="submit" class="btn-primary btn-blue _js-button-validation" form="form-create" value="approve">Затвердити</button>
+                        <button type="submit" class="btn-border btn-blue _js-button-validation" form="form-create" value='save'>Зберегти</button>
                         <button type="submit" class="btn-border btn-red _js-button-validation" form="form-create" value="save-exit">Зберегти і Вийти</button>
                     @elseif ($warrantyClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved)
                         <span class="btn-link btn-green text-only">Затверджено</span>
@@ -140,25 +140,6 @@
             </form>
         </div>
     </div>
-
-
-    <form id="form-save" action="{{ route('technical-conclusions.save', $warrantyClaim->id) }}" method="POST" style="display: none;">
-        @csrf
-        <input type="hidden" name="defect_code" id="hidden-defect-code">
-        <input type="hidden" name="symptom_code" id="hidden-symptom-code">
-        <input type="hidden" name="appeal_type" id="hidden-appeal-type">
-        <input type="hidden" name="conclusion" id="hidden-conclusion">
-        <input type="hidden" name="resolution" id="hidden-resolution">
-    </form>
-
-    <form id="form-save-and-exit" action="{{ route('conclusions.save-and-exit', $warrantyClaim->id) }}" method="POST" style="display: none;">
-        @csrf
-        <input type="hidden" name="defect_code" id="exit-defect-code">
-        <input type="hidden" name="symptom_code" id="exit-symptom-code">
-        <input type="hidden" name="appeal_type" id="exit-appeal-type">
-        <input type="hidden" name="conclusion" id="exit-conclusion">
-        <input type="hidden" name="resolution" id="exit-resolution">
-    </form>
 
     <div class="modal-overlay"></div>
 

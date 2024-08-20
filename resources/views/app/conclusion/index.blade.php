@@ -38,7 +38,7 @@
                                 <div class="td">{{ $conclusion->warrantyClaim->product_article }}</div>
                                 <div class="td">{{ $conclusion->warrantyClaim->product_name }}</div>
                                 <div class="td">
-                                    <button type="button" class="btn-label blue">{{ $conclusion->warrantyClaim->type_of_claim  }}</button>
+                                    <button type="button" class="btn-label blue">{{$conclusion->appeal_type}}</button>
                                 </div>
                                 <div class="td">{{ $conclusion->warrantyClaim->status ?? 'Новий' }}</div>
                                 <div class="td">{{ auth()->check() ? auth()->user()->first_name_ru : 'Не вказано' }}</div>

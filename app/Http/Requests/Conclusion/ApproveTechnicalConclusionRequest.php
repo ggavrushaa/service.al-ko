@@ -20,6 +20,7 @@ class ApproveTechnicalConclusionRequest extends FormRequest
             'resolution' => 'required|string|max:500',
             'appeal_type' => 'required',
             'conclusion' => 'required|string|max:500',
+            'button' => 'nullable',
         ];
     }
 
