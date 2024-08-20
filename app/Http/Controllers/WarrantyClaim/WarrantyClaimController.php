@@ -155,10 +155,14 @@ class WarrantyClaimController extends Controller
         }
 
         $serviceWorks = $currentClaim->serviceWorks;
+        $claimServiceWorks = WarrantyClaimServiceWork::where('warranty_claim_id', $currentClaim->id)->get()->keyBy('service_work_id');
 
         // цена сервисных работ
         $serviceWorksPrice = $defaultContract ? $defaultContract->service_works_price : 0;
         foreach ($serviceWorks as $work) {
+            $claimWork = $claimServiceWorks->get($work->id);
+
+            $work->qty = $claimWork ? $claimWork->qty : $work->duration_decimal;
             $work->price = $serviceWorksPrice;
             $work->total_price = $work->duration_decimal * $serviceWorksPrice;
         }
@@ -269,10 +273,14 @@ class WarrantyClaimController extends Controller
         }
 
         $serviceWorks = $currentClaim->serviceWorks;
+        $claimServiceWorks = WarrantyClaimServiceWork::where('warranty_claim_id', $currentClaim->id)->get()->keyBy('service_work_id');
 
         // цена сервисных работ
         $serviceWorksPrice = $defaultContract ? $defaultContract->service_works_price : 0;
         foreach ($serviceWorks as $work) {
+            $claimWork = $claimServiceWorks->get($work->id);
+
+            $work->qty = $claimWork ? $claimWork->qty : $work->duration_decimal;
             $work->price = $serviceWorksPrice;
             $work->total_price = $work->duration_decimal * $serviceWorksPrice;
         }

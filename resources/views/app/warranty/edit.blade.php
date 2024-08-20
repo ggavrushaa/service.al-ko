@@ -298,7 +298,7 @@
                                                 </div>
                                                 <div class="cell">
                                                     <div class="form-group">
-                                                        <input type="number" step="0.01" name="service_works[{{ $work->id }}][hours]" value="{{ number_format($work->duration_decimal, 2) }}" class="work-hours"
+                                                        <input type="number" step="0.01" name="service_works[{{ $work->id }}][hours]" value="{{ number_format($work->qty, 2) }}" class="work-hours"
                                                             oninput="workCounter(event)"
                                                             onkeyup="workCounterHandler(event)"
                                                         >
