@@ -95,7 +95,7 @@
                             <div class="form-group required default-select" data-valid="vanilla-select">
                                 <label for="defect_code">Код дефекту</label>
                                 <select name="defect_code" id="defect_code" required @if($warrantyClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) disabled @endif>
-                                    <option value="-1">Виберіть договір сервісу</option>
+                                    <option value="-1">Виберіть код дефекту</option>
                                     @foreach($defectCodes as $code)
                                         <option value="{{ $code->id }}" @if(isset($conclusion) && $conclusion->defect_code == $code->id) selected @endif>{{ $code->name }}</option>
                                     @endforeach
@@ -104,7 +104,7 @@
                             <div class="form-group required default-select" data-valid="vanilla-select">
                                 <label for="symptom_code">Код симптому</label>
                                 <select name="symptom_code" id="symptom_code" required @if($warrantyClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) disabled @endif>
-                                    <option value="-1">Виберіть договір сервісу</option>
+                                    <option value="-1">Виберіть код симптому</option>
                                     @foreach($symptomCodes as $code)
                                         <option value="{{ $code->id }}" @if(isset($conclusion) && $conclusion->symptom_code == $code->id) selected @endif>{{ $code->name }}</option>
                                     @endforeach
