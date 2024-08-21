@@ -101,7 +101,7 @@
                             <!-- Давати класс "show-placeholder" тільки тоді, коли немає обраного пункту. Тобто ми хочемо показати placeholder.  -->
                             <div class="form-group required default-select" data-valid="vanilla-select">
                                 <label for="service-center">Сервісний центр</label>
-                                <select name="service_partner" id="service-center" required @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>
+                                <select class="_js-select-2" name="service_partner" id="service-center" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>
                                     <option value="-1">Виберіть сервісний центр</option>
                                     @foreach($serviceCenters as $center)
                                         <option value="{{ $center->id }}" {{ old('service_partner', $currentClaim['service_partner'] ?? $currentClaim->service_partner) == $center->id ? 'selected' : '' }}>
@@ -1528,6 +1528,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
+    <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.4/dist/js/datepicker-full.min.js"></script>
     <script src="/cdn/js/swiper-bundle.min.js"></script>

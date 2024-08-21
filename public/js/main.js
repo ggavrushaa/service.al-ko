@@ -364,6 +364,26 @@ if (document.querySelector('._js-button-validation')) {
   });
 }
 
+/// Select 2
+
+$(document).ready(function () {
+  $('._js-select-2').select2({
+    "language": {
+       "noResults": function(){
+           return "Результатів не знайдено";
+       }
+   },
+  });
+
+  // $('._js-select-2').on('change.select2', function(e) {
+  //     console.log('Selecting: ' , e;
+  // });
+
+  $('._js-select-2').on('select2:select', function (event) {
+    event.target.dispatchEvent(new Event("change"));
+  });
+});
+
 // Btn required switcher
 var btnRequiredSwitcher = document.querySelectorAll('.js-btn-required-switcher');
 if (btnRequiredSwitcher.length > 0) {
