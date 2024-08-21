@@ -18,10 +18,11 @@ class GuaranteeCouponController extends Controller
             $query->select('product_id', 'recommended_price');
         }]);
     
-        if ($request->filled('barcode')) {
-            $query->where('barcode', $request->barcode)
-                ->orWhere('factory_number', $request->factory_number)
-                ->where('status', 'ACTIVE');
+        if ($request->filled('barcode') || $request->filled('factory_number')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('barcode', $request->barcode)
+                  ->orWhere('factory_number', $request->factory_number);
+            })->where('status', 'ACTIVE');
         }
     
         $talons = $query->get();
