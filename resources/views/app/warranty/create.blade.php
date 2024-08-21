@@ -493,21 +493,15 @@
                             <p class="sub-title">Для пошуку потрібних запчастин перейдіть за посиланням</p>
                             <div class="display-grid col-2 gap-8">
                                 <div class="card-content card-text">
-                                    <h2 class="text-underline text-blue">AL-KO</h2>
+                                    <h2 class="text-underline text-blue"><a target="_blank" style="text-decoration: none; color: #0561b6;" href="https://parts.al-ko.com/shop/parts/index.php?tc_sid=2&tc_cid=1&tc_lid=1">AL-KO</a></h2>
                                     <p>Після відкриття, у лівому верхньому куті виберіть директорію: <span
                                             class="text-red fw-600">ERSATZTEILSUCHE.</span></p>
                                     <p>Після переходу на іншу сторінку, в правому кутку в порожнє поле внесіть артикульний
                                         номер виробу, що Вас цікавить (артикульний номер виробу можна подивитися в
                                         прайс-листі або на заводській наклейці).</p>
-                                    <p>Щоб дізнатися ціну на деталь, відкрийте каталог зап.частин (додаток №3 до договору з
-                                        сервісного обслуговування). Комбінація Ctrl - F відкриває пошукове вікно, куди
-                                        вноситься артикул зап.частини.</p>
-                                    <p>За необхідності можна зберігати і друкувати деталі з інтернет бази. Для цього
-                                        необхідно зліва внизу натиснути кнопку <span class="text-red fw-600">Drucken</span>,
-                                        після чого вибрати потрібну вам сторінку.</p>
                                 </div>
                                 <div class="card-content card-text">
-                                    <h2 class="text-underline text-blue">B&S</h2>
+                                    <h2 class="text-underline text-blue"><a target="_blank" style="text-decoration: none; color: #0561b6;" href="http://www.briggsandstratton.com">B&S</a></h2>
                                     <p>Дотримуючись наведених інструкцій, знайдіть необхідну деталь для вашого продукту
                                         Briggs & Stratton</p>
                                 </div>
@@ -541,7 +535,7 @@
 
     <div id="datepicker-container"></div>
 
-    <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+    <script src="/js/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.4/dist/js/datepicker-full.min.js"></script>
