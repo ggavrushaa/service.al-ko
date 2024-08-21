@@ -15,8 +15,8 @@ class ApproveTechnicalConclusionRequest extends FormRequest
     {
         return [
             'code_1C' => 'nullable',
-            'defect_code' => 'required|integer',
-            'symptom_code' => 'required|integer',
+            'defect_code' => 'required',
+            'symptom_code' => 'required',
             'resolution' => 'required|string|max:500',
             'appeal_type' => 'required',
             'conclusion' => 'required|string|max:500',

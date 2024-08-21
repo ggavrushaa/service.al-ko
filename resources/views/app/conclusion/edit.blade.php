@@ -11,7 +11,7 @@
                     </li>
                 </ul>
                 <div class="btns">
-                    @if ($warrantyClaim->status === \App\Enums\WarrantyClaimStatusEnum::review && auth()->user()->role_id === 2)
+                    @if ($warrantyClaim->status === \App\Enums\WarrantyClaimStatusEnum::review && (auth()->user()->role_id === 2 || auth()->user()->role_id === 3))
                         <button type="submit" class="btn-primary btn-blue _js-button-validation" form="form-create" value="approve">Затвердити</button>
                         <button type="submit" class="btn-border btn-blue _js-button-validation" form="form-create" value='save'>Зберегти</button>
                         <button type="submit" class="btn-border btn-red _js-button-validation" form="form-create" value="save-exit">Зберегти і Вийти</button>
@@ -92,17 +92,19 @@
                                 <label for="factory_number">Заводський номер</label>
                                 <input type="text" id="factory_number" value="{{ $warrantyClaim->factory_number }}" readonly>
                             </div>
-                            <div class="form-group default-select">
+                            <div class="form-group required default-select" data-valid="vanilla-select">
                                 <label for="defect_code">Код дефекту</label>
-                                <select name="defect_code" id="defect_code" @if($warrantyClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) disabled @endif>
+                                <select name="defect_code" id="defect_code" required @if($warrantyClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) disabled @endif>
+                                    <option value="-1">Виберіть договір сервісу</option>
                                     @foreach($defectCodes as $code)
                                         <option value="{{ $code->id }}" @if(isset($conclusion) && $conclusion->defect_code == $code->id) selected @endif>{{ $code->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="form-group default-select">
+                            <div class="form-group required default-select" data-valid="vanilla-select">
                                 <label for="symptom_code">Код симптому</label>
-                                <select name="symptom_code" id="symptom_code" @if($warrantyClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) disabled @endif>
+                                <select name="symptom_code" id="symptom_code" required @if($warrantyClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) disabled @endif>
+                                    <option value="-1">Виберіть договір сервісу</option>
                                     @foreach($symptomCodes as $code)
                                         <option value="{{ $code->id }}" @if(isset($conclusion) && $conclusion->symptom_code == $code->id) selected @endif>{{ $code->name }}</option>
                                     @endforeach
