@@ -241,11 +241,17 @@ class WarrantyClaimController extends Controller
            return $center;
        });
        } else {
-           // Если роль менеджера или администратора, выбираем все сервисные центры
-           $serviceCenters = DB::connection('mysql')->table('user_partners')
-               ->select('id', 'full_name_ru')
-               ->get();
-       }
+        // Если роль менеджера или администратора, выбираем все сервисные центры
+        $serviceCenters = DB::connection('mysql')->table('user_partners')
+            ->whereExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('contracts')
+                    ->whereColumn('contracts.partner_id', 'user_partners.id')
+                    ->where('contracts.contract_type', 'Сервис');
+            })
+                    ->select('id', 'full_name_ru')
+                    ->get();
+    }
 
        $serviceContracts = collect();
 

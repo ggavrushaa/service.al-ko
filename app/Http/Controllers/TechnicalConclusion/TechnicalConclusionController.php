@@ -28,7 +28,9 @@ class TechnicalConclusionController extends Controller
                 WarrantyClaimStatusEnum::review->value, 
                 WarrantyClaimStatusEnum::approved->value
             ]);
-        })->orderBy('date', 'desc')->paginate(10);
+        })
+        ->whereNotNull('code_1C')
+        ->orderBy('date', 'desc')->paginate(10);
 
         $authors = User::where('role_id', 2)->get();
 
