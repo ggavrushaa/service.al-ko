@@ -29,7 +29,7 @@ class TechnicalConclusionController extends Controller
                 WarrantyClaimStatusEnum::approved->value
             ]);
         })->orderBy('date', 'desc')->paginate(10);
-        
+
         $authors = User::where('role_id', 2)->get();
 
         $warrantyClaims = [];

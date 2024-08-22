@@ -377,8 +377,8 @@
                                         <div class="cell">Артикул</div>
                                         <div class="cell">Назва</div>
                                         <div class="cell">Ціна</div>
-                                        <div class="cell">Кількість</div>
                                         <div class="cell">Знижка, %</div>
+                                        <div class="cell">Кількість</div>
                                         <div class="cell">Всього зі знижкою, грн</div>
                                         <div class="cell">Замовити</div>
                                         <div class="cell">Дія</div>

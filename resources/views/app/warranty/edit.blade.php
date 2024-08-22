@@ -111,7 +111,7 @@
                                 </select>
                                 <div class="help-block" data-empty="Обов'язкове поле"></div>
                             </div>
-                            <div class="form-group small-width default-select">
+                            <div class="form-group required small-width default-select" data-valid="vanilla-select">
                                 <label for="service-contract">Договір сервісу</label>
                                 <select name="service_contract" id="service-contract" class="form-control" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>
                                     <option value="-1">Виберіть договір сервісу</option>
