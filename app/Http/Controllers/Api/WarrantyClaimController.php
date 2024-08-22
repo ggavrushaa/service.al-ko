@@ -35,6 +35,11 @@ class WarrantyClaimController extends Controller
             try {
                 // Поиск или создание менеджера по имени
                 $manager = User::where('first_name_ru', $data['manager_name'])->first();
+                
+                if($data['manager_name'] == null) {
+                    $manager = null;
+                }
+
                 if (!$manager) {
                     $manager = User::where('role_id', 3)->orderBy('id')->first(); // Админ с наименьшим id
                 }
@@ -211,6 +216,7 @@ class WarrantyClaimController extends Controller
             ->whereNotNull('code_1C')
             ->where('updated_at', '>', DB::raw($formattedDateFrom))
             ->where('status', '!=', WarrantyClaimStatusEnum::new)
+            ->whereNotNull('manager_id')
             ->get();
             $updatedWarrantyClaims = $updatedWarrantyClaims->map(function ($claim) {
                 $claim->created = date('Y-m-d H:i:s', strtotime($claim->created_at));
