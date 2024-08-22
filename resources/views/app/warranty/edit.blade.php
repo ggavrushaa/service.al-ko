@@ -17,14 +17,17 @@
                 </ul>
                 <div class="btns">
                     @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::new)
-                        <button type="submit" class="btn-primary btn-blue" value="send_to_save" form="send-to-save">Зберегти</button>
-                        <button type="submit" class="btn-primary btn-blue" value="send_to_review" form="send-to-save">Відправити</button>
+                    <button type="submit" class="btn-primary btn-blue" value="send_to_save" form="send-to-save">Зберегти</button>
+                    <button type="submit" class="btn-primary btn-blue" value="send_to_review" form="send-to-save">Відправити</button>
                     @elseif ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::sent && (auth()->user()->role_id === 2 || auth()->user()->role_id === 3))
-                    <span class="btn-link btn-green text-only" style="font-size: 14px; text:left">Дані відправлено в 1С, синхронізація відбудеться орієнтовно за 5 хвилин і буде автоматично створено Акт технічної експертизи для подальшої роботи над заявкою</span>
-                        {{-- <button type="submit" class="btn-primary btn-blue" value="take_to_work" form="send-to-save">Взяти в роботу</button> --}}
+                    @if ($technicalConclusion)
+                        <button type="submit" class="btn-primary btn-blue" value="take_to_work" form="send-to-save">Взяти в роботу</button>
+                    @else
+                        <span class="btn-link btn-green text-only" style="font-size: 14px; text:left">Дані відправлено в 1С, синхронізація відбудеться орієнтовно за 5 хвилин і буде автоматично створено Акт технічної експертизи для подальшої роботи над заявкою</span>
+                    @endif
                     @elseif ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review && (auth()->user()->role_id === 2 || auth()->user()->role_id === 3))
                         <a href="{{ route('technical-conclusions.create', $currentClaim->id) }}" class="btn-primary btn-blue">Перейти в акт</a>
-                    @endif       
+                    @endif 
                     @if ($currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved)
                         <span class="btn-link btn-green text-only">Затверджено</span>
                     @endif
@@ -119,7 +122,7 @@
                                         @foreach($serviceContracts as $contract)
                                             <option value="{{ $contract->id }}" 
                                                     {{ old('service_contract', $currentClaim['service_contract'] ?? $defaultContract->id) == $contract->id ? 'selected' : '' }}>
-                                                {{ $contract->number }}
+                                                {{ $contract->name }}
                                             </option>
                                         @endforeach
                                 </select>

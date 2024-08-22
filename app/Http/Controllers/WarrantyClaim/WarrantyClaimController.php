@@ -177,11 +177,12 @@ class WarrantyClaimController extends Controller
             $query->where('contract_type', 'Сервис');
         })->get();
 
+        $technicalConclusion = TechnicalConclusion::where('warranty_claim_id', $currentClaim->id)->whereNotNull('code_1C')->first();
     
         return view('app.warranty.edit', 
         compact('talon', 'groups', 'works', 'documentNumber', 'product', 'products', 
         'serviceCenters', 'currentClaim', 'defaultServicePartner', 'defaultDiscount', 'defaultContract', 
-        'spareParts', 'serviceWorks', 'serviceContracts', 'userPartners'));
+        'spareParts', 'serviceWorks', 'serviceContracts', 'userPartners', 'technicalConclusion'));
     }
 
     public function create($barcode, $factory_number = null)
