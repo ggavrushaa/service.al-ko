@@ -24,7 +24,7 @@
                     </div>
                 </div>
                 <div class="btns">
-                    <button type="button" class="btn-primary btn-blue" id="importDocumentBtn">
+                    <button type="button" class="btn-primary btn-blue _js-btn-show-modal" data-modal="import-document">
                         Імпортувати документ
                         <span>Формати: Word / PDF / Excel</span>
                     </button>
