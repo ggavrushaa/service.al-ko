@@ -100,6 +100,7 @@ Route::group(['middleware' => ['auth',]], function () {
     // Документація
     Route::get('/documentations', [DocumentationController::class, 'index'])->name('documentations.index');
     Route::get('/fees', [DocumentationController::class, 'fees'])->name('documentations.fees');
+    Route::post('/documentations/import', [DocumentationController::class, 'import'])->name('documentations.import');
 
     // Генерація ПДФ
     Route::get('/generate-pdf/{id}', [PDFController::class, 'generatePDF'])->name('generate.pdf');

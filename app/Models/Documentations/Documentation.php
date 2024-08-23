@@ -14,8 +14,10 @@ class Documentation extends Model
     
     use HasFactory;
     protected $fillable = [
-        'name', 'doc_type_id', 'category_id', 'added'
+        'name', 'doc_type_id', 'category_id', 'added', 'file_path',
     ];
+
+    public $timestamps = false;
 
     public function documentType()
     {

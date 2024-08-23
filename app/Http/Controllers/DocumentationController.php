@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreImportDocument;
+use App\Models\UserPartner;
 use App\Models\ProductGroup;
+use Illuminate\Http\Request;
 use App\Models\WarrantyClaim;
 use App\Models\Documentations\DocumentType;
 use App\Models\Documentations\Documentation;
-use App\Models\UserPartner;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class DocumentationController extends Controller
 {
@@ -23,5 +27,30 @@ class DocumentationController extends Controller
     {
         $warrantyClaim = WarrantyClaim::all();
         return view('app.documentations.fees', compact('warrantyClaim', ));
+    }
+
+    public function import(StoreImportDocument $request)
+    {
+        Log::info($request->all());
+        
+        if ($request->hasFile('file')) {
+            Log::info('File detected');
+            $file = $request->file('file');
+            $filePath = $file->store('documents', 'public');
+            Log::info('File stored at: ' . $filePath);
+        } else {
+            Log::info('No file detected');
+            $filePath = null;
+        }
+
+        $document = new Documentation();
+        $document->name = $request->name;
+        $document->doc_type_id = $request->doc_type_id;
+        $document->category_id = $request->category_id;
+        $document->added = Carbon::now()->format('Y-m-d H:i:s');
+        $document->file_path = $filePath;
+        $document->save();
+
+        return redirect()->back();
     }
 }

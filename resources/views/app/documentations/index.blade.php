@@ -54,7 +54,7 @@
                                 <div class="td _empty"></div>
                                 <div class="td">
                                     <a href="" class="btn-action icon-edit"></a>
-                                    <a href="" class="btn-action icon-download"></a>
+                                    <a href="{{ Storage::url($documentation->file_path) }}" class="btn-action icon-download"></a>
                                     <a href="" class="btn-action icon-trash"></a>
                                 </div>
                             </div>
@@ -99,40 +99,37 @@
     <div class="modal-content ">
         <p class="modal-title">Імпорт документу</p>
 
-        <form action="">
+        <form action="{{ route('documentations.import') }}" method="POST" enctype="multipart/form-data">
+            @csrf
             <div class="form-group required" data-valid="empty">
                 <label for="doc-name">Назва документа</label>
-                <input type="text" id="doc-name" name="doc-name" placeholder="Назва">
+                <input type="text" id="doc-name" name="name" placeholder="Назва">
                 <div class="help-block" data-empty="Required field"></div>
             </div>
 
             <div class="form-group required default-select" data-valid="default-select">
-                <label for="doc-type">Група товару</label>
-                <select name="" id="doc-type">
-                    <option value="-1">Оберіть варіант</option>
-                    <option value="1">Варіант - 1</option>
-                    <option value="2">Варіант - 2</option>
-                    <option value="3">Варіант - 3</option>
-                    <option value="4">Варіант - 4</option>
-                    <option value="5">Варіант - 5</option>
+                <label for="prod-cat">Група товару</label>
+                <select name="category_id" id="prod-cat">
+                    <option value="-1">Оберіть групу товару</option>
+                    @foreach ($productGroups as $group)
+                        <option value="{{ $group->id }}">{{ $group->name }}</option>
+                    @endforeach
                 </select>
             </div>
 
             <div class="form-group required default-select" data-valid="default-select">
-                <label for="prod-cat">Група товару</label>
-                <select name="" id="prod-cat">
-                    <option value="-1">Оберіть варіант</option>
-                    <option value="1">Варіант - 1</option>
-                    <option value="2">Варіант - 2</option>
-                    <option value="3">Варіант - 3</option>
-                    <option value="4">Варіант - 4</option>
-                    <option value="5">Варіант - 5</option>
+                <label for="doc-type">Тип документу</label>
+                <select name="doc_type_id" id="doc-type">
+                    <option value="-1">Оберіть тип документу</option>
+                    @foreach ($documentTypes as $type)
+                        <option value="{{ $type->id }}">{{ $type->name }}</option>
+                    @endforeach
                 </select>
             </div>
 
             <div class="form-group file">
                 <label for="doc-file" class="btn-border btn-blue">Обрати файл ( Word / PDF / Excel) </label>
-                <input type="file" id="doc-file">
+                <input type="file" name="file" id="doc-file">
             </div>
 
             <div class="file-name-preview">
@@ -196,6 +193,8 @@
         </form>
     </div>
 </div>
+
+<div class="modal-overlay"></div>
 
       
 <script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.4/dist/js/datepicker-full.min.js"></script>
