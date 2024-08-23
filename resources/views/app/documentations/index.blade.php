@@ -24,7 +24,7 @@
                     </div>
                 </div>
                 <div class="btns">
-                    <button type="button" class="btn-primary btn-blue">
+                    <button type="button" class="btn-primary btn-blue" id="importDocumentBtn">
                         Імпортувати документ
                         <span>Формати: Word / PDF / Excel</span>
                     </button>
@@ -92,6 +92,110 @@
         align-items: center;
     }
     </style>
+
+<!-- модалка импорта документа -->
+<div class="modal modal-document js-modal js-modal-import-document custom-scrollbar">
+    <button type="button" class="icon-close-fill btn-close _js-btn-close-modal"></button>
+    <div class="modal-content ">
+        <p class="modal-title">Імпорт документу</p>
+
+        <form action="">
+            <div class="form-group required" data-valid="empty">
+                <label for="doc-name">Назва документа</label>
+                <input type="text" id="doc-name" name="doc-name" placeholder="Назва">
+                <div class="help-block" data-empty="Required field"></div>
+            </div>
+
+            <div class="form-group required default-select" data-valid="default-select">
+                <label for="doc-type">Група товару</label>
+                <select name="" id="doc-type">
+                    <option value="-1">Оберіть варіант</option>
+                    <option value="1">Варіант - 1</option>
+                    <option value="2">Варіант - 2</option>
+                    <option value="3">Варіант - 3</option>
+                    <option value="4">Варіант - 4</option>
+                    <option value="5">Варіант - 5</option>
+                </select>
+            </div>
+
+            <div class="form-group required default-select" data-valid="default-select">
+                <label for="prod-cat">Група товару</label>
+                <select name="" id="prod-cat">
+                    <option value="-1">Оберіть варіант</option>
+                    <option value="1">Варіант - 1</option>
+                    <option value="2">Варіант - 2</option>
+                    <option value="3">Варіант - 3</option>
+                    <option value="4">Варіант - 4</option>
+                    <option value="5">Варіант - 5</option>
+                </select>
+            </div>
+
+            <div class="form-group file">
+                <label for="doc-file" class="btn-border btn-blue">Обрати файл ( Word / PDF / Excel) </label>
+                <input type="file" id="doc-file">
+            </div>
+
+            <div class="file-name-preview">
+                Lorem ipsum dolor sit amet consectetur. pdf
+            </div>
+
+            <button type="submit" class="btn-primary btn-blue">Завантажити документ</button>
+
+        </form>
+    </div>
+</div>
+
+<!-- модалка редагування документа -->
+<div class="modal modal-document js-modal js-modal-edit-document custom-scrollbar">
+    <button type="button" class="icon-close-fill btn-close _js-btn-close-modal"></button>
+    <div class="modal-content ">
+        <p class="modal-title">Редагування документа</p>
+
+        <form action="">
+            <div class="form-group required" data-valid="empty">
+                <label for="doc-name-1">Назва документа</label>
+                <input type="text" id="doc-name-1" name="doc-name" value="Назва">
+                <div class="help-block" data-empty="Required field"></div>
+            </div>
+
+            <div class="form-group required default-select" data-valid="default-select">
+                <label for="doc-type-1">Група товару</label>
+                <select name="" id="doc-type-1">
+                    <option value="-1">Оберіть варіант</option>
+                    <option value="1" selected>Варіант - 1</option>
+                    <option value="2">Варіант - 2</option>
+                    <option value="3">Варіант - 3</option>
+                    <option value="4">Варіант - 4</option>
+                    <option value="5">Варіант - 5</option>
+                </select>
+            </div>
+
+            <div class="form-group required default-select" data-valid="default-select">
+                <label for="prod-cat-1">Група товару</label>
+                <select name="" id="prod-cat-1">
+                    <option value="-1">Оберіть варіант</option>
+                    <option value="1">Варіант - 1</option>
+                    <option value="2">Варіант - 2</option>
+                    <option value="3" selected>Варіант - 3</option>
+                    <option value="4">Варіант - 4</option>
+                    <option value="5">Варіант - 5</option>
+                </select>
+            </div>
+
+            <div class="form-group file">
+                <label for="doc-file-1" class="btn-border btn-blue">Обрати файл ( Word / PDF / Excel) </label>
+                <input type="file" id="doc-file-1">
+            </div>
+
+            <div class="file-name-preview">
+                Lorem ipsum dolor sit amet consectetur. pdf
+            </div>
+
+            <button type="submit" class="btn-primary btn-red">Зберегти зміни</button>
+
+        </form>
+    </div>
+</div>
 
       
 <script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.4/dist/js/datepicker-full.min.js"></script>
