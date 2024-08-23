@@ -24,8 +24,14 @@ class DefectCodes extends Model
     ];
 
     public function technicalConclusions()
-{
-    return $this->hasMany(TechnicalConclusion::class, 'defect_code');
-}
+    {
+        return $this->hasMany(TechnicalConclusion::class, 'defect_code');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(DefectCodes::class, 'parent_id', 'code_1C');
+    }
+
 
 }

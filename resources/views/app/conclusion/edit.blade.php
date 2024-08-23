@@ -96,8 +96,12 @@
                                 <label for="defect_code">Код дефекту</label>
                                 <select name="defect_code" id="defect_code" required @if($warrantyClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) disabled @endif>
                                     <option value="-1">Виберіть код дефекту</option>
-                                    @foreach($defectCodes as $code)
-                                        <option value="{{ $code->id }}" @if(isset($conclusion) && $conclusion->defect_code == $code->id) selected @endif>{{ $code->name }}</option>
+                                    @foreach($defectCodes[0] ?? [] as $folder)
+                                        <optgroup label="{{ $folder->name }}">
+                                            @foreach($defectCodes[$folder->code_1C] ?? [] as $subCode)
+                                                <option value="{{ $subCode->id }}" @if(isset($conclusion) && $conclusion->defect_code == $subCode->id) selected @endif>{{ $subCode->name }}</option>
+                                            @endforeach
+                                        </optgroup>
                                     @endforeach
                                 </select>
                             </div>
@@ -105,8 +109,12 @@
                                 <label for="symptom_code">Код симптому</label>
                                 <select name="symptom_code" id="symptom_code" required @if($warrantyClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) disabled @endif>
                                     <option value="-1">Виберіть код симптому</option>
-                                    @foreach($symptomCodes as $code)
-                                        <option value="{{ $code->id }}" @if(isset($conclusion) && $conclusion->symptom_code == $code->id) selected @endif>{{ $code->name }}</option>
+                                    @foreach($symptomCodes[0] ?? [] as $folder)
+                                        <optgroup label="{{ $folder->name }}">
+                                            @foreach($symptomCodes[$folder->code_1C] ?? [] as $subCode)
+                                                <option value="{{ $subCode->id }}" @if(isset($conclusion) && $conclusion->symptom_code == $subCode->id) selected @endif>{{ $subCode->name }}</option>
+                                            @endforeach
+                                        </optgroup>
                                     @endforeach
                                 </select>
                             </div>

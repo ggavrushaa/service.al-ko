@@ -28,7 +28,12 @@ class SymptomCodes extends Model
     public $timestamps = false;
 
     public function technicalConclusions()
-{
-    return $this->hasMany(TechnicalConclusion::class, 'symptom_code');
-}
+    {
+        return $this->hasMany(TechnicalConclusion::class, 'symptom_code');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(SymptomCodes::class, 'parent_id', 'code_1C');
+    }
 }

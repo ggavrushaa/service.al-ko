@@ -102,8 +102,17 @@ class TechnicalConclusionController extends Controller
     {
         $warrantyClaim = WarrantyClaim::findOrFail($id);
         $autor = UserPartner::where('user_id', $warrantyClaim->autor)->first();
-        $defectCodes = DefectCodes::all();
-        $symptomCodes = SymptomCodes::all();
+
+        $defectCodes = DefectCodes::where('is_deleted', 0)
+            ->orderBy('name', 'asc') // Сортировка по имени
+            ->get()
+            ->groupBy('parent_id');
+
+        $symptomCodes = SymptomCodes::where('is_deleted', 0)
+            ->orderBy('name', 'asc') // Сортировка по имени
+            ->get()
+            ->groupBy('parent_id');
+
         $appealTypes = ClaimTypeEnum::cases();
         $managers = User::all();
         $conclusion = TechnicalConclusion::where('warranty_claim_id', $id)->first();
