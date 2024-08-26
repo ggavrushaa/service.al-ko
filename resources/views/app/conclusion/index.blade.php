@@ -170,7 +170,7 @@
                 data.forEach(conclusion => {
                     const tr = document.createElement('div');
                     tr.classList.add('tr');
-                    tr.dataset.url = `/technical-conclusions/${conclusion.warranty_claim_id}/create-technical-conclusion`;
+                    tr.dataset.url = `/warranty-claims/${conclusion.warranty_claim_id}/create-technical-conclusion`;
     
                     const warrantyNumber = conclusion.warranty_claim_id || 'Не указано';
                     const warrantyDate = conclusion.date || 'Не указана';

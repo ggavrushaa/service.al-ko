@@ -100,6 +100,7 @@ class TechnicalConclusionController extends Controller
 
     public function create($id)
     {
+       try {
         $warrantyClaim = WarrantyClaim::findOrFail($id);
         $autor = UserPartner::where('user_id', $warrantyClaim->autor)->first();
 
@@ -132,6 +133,9 @@ class TechnicalConclusionController extends Controller
                 'updated_at' => now(),
             ]);
         }
+    } catch (\Exception $e) {
+        Log::info($e->getMessage());
+    }
 
         return view('app.conclusion.edit', compact('warrantyClaim', 'defectCodes', 'symptomCodes', 'appealTypes', 'managers', 'autor', 'conclusion'));
     }
