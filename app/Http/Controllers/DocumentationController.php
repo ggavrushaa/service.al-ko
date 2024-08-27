@@ -32,7 +32,7 @@ class DocumentationController extends Controller
     public function import(StoreImportDocument $request)
     {
         Log::info($request->all());
-        
+
         if ($request->hasFile('file')) {
             Log::info('File detected');
             $file = $request->file('file');
@@ -50,6 +50,33 @@ class DocumentationController extends Controller
         $document->added = Carbon::now()->format('Y-m-d H:i:s');
         $document->file_path = $filePath;
         $document->save();
+
+        return redirect()->back();
+    }
+
+    public function update($id, Request $request)
+    {
+        $document = Documentation::findOrFail($id);
+
+        $document->name = $request->input('doc-name');
+        $document->doc_type_id = $request->input('doc_type_id');
+        $document->category_id = $request->input('category_id');
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $filePath = $file->store('documents', 'public');
+            $document->file_path = $filePath;
+        }
+
+        $document->save();
+
+        return redirect()->back();
+    }
+
+    public function delete($id)
+    {
+        $document = Documentation::findOrFail($id);
+        $document->delete();
 
         return redirect()->back();
     }

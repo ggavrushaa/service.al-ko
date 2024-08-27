@@ -53,9 +53,19 @@
                                 <div class="td">{{ $documentation->added }}</div>
                                 <div class="td _empty"></div>
                                 <div class="td">
-                                    <a href="" class="btn-action icon-edit"></a>
+                                    <div class="btn-action icon-edit _js-btn-show-modal" 
+                                        data-modal="edit-document"
+                                        data-id="{{ $documentation->id }}"
+                                        data-name="{{ $documentation->name }}"
+                                        data-doc-type="{{ $documentation->doc_type_id }}"
+                                        data-category="{{ $documentation->category_id }}"
+                                    ></div>
                                     <a href="{{ Storage::url($documentation->file_path) }}" class="btn-action icon-download"></a>
-                                    <a href="" class="btn-action icon-trash"></a>
+                                    <form action="{{ route('documentations.delete', ['id' => $documentation->id]) }}" method="POST" style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn-action icon-trash" onclick="return confirm('Ви впевнені що хочете видалити цей документ?');"></button>
+                                    </form>
                                 </div>
                             </div>
                             @endforeach
@@ -148,7 +158,9 @@
     <div class="modal-content ">
         <p class="modal-title">Редагування документа</p>
 
-        <form action="">
+        <form action="" method="POST" enctype="multipart/form-data" id="edit-document-form">
+            @csrf
+            @method('PUT')
             <div class="form-group required" data-valid="empty">
                 <label for="doc-name-1">Назва документа</label>
                 <input type="text" id="doc-name-1" name="doc-name" value="Назва">
@@ -156,32 +168,28 @@
             </div>
 
             <div class="form-group required default-select" data-valid="default-select">
-                <label for="doc-type-1">Група товару</label>
-                <select name="" id="doc-type-1">
-                    <option value="-1">Оберіть варіант</option>
-                    <option value="1" selected>Варіант - 1</option>
-                    <option value="2">Варіант - 2</option>
-                    <option value="3">Варіант - 3</option>
-                    <option value="4">Варіант - 4</option>
-                    <option value="5">Варіант - 5</option>
+                <label for="prod-cat">Група товару</label>
+                <select name="category_id" id="prod-cat">
+                    <option value="-1">Оберіть групу товару</option>
+                    @foreach ($productGroups as $group)
+                        <option value="{{ $group->id }}">{{ $group->name }}</option>
+                    @endforeach
                 </select>
             </div>
 
             <div class="form-group required default-select" data-valid="default-select">
-                <label for="prod-cat-1">Група товару</label>
-                <select name="" id="prod-cat-1">
-                    <option value="-1">Оберіть варіант</option>
-                    <option value="1">Варіант - 1</option>
-                    <option value="2">Варіант - 2</option>
-                    <option value="3" selected>Варіант - 3</option>
-                    <option value="4">Варіант - 4</option>
-                    <option value="5">Варіант - 5</option>
+                <label for="doc-type">Тип документу</label>
+                <select name="doc_type_id" id="doc-type">
+                    <option value="-1">Оберіть тип документу</option>
+                    @foreach ($documentTypes as $type)
+                        <option value="{{ $type->id }}">{{ $type->name }}</option>
+                    @endforeach
                 </select>
             </div>
 
             <div class="form-group file">
                 <label for="doc-file-1" class="btn-border btn-blue">Обрати файл ( Word / PDF / Excel) </label>
-                <input type="file" id="doc-file-1">
+                <input type="file" name="file" id="doc-file-1">
             </div>
 
             <div class="file-name-preview">
@@ -196,7 +204,39 @@
 
 <div class="modal-overlay"></div>
 
-      
+<!-- Редагування файлу модалка -->
+<script>
+document.querySelectorAll('._js-btn-show-modal').forEach(function (button) {
+    button.addEventListener('click', function () {
+        var modalId = this.getAttribute('data-modal');
+        var modal = document.querySelector('.js-modal-' + modalId);
+        
+        // Получаем данные из атрибутов
+        var docId = this.getAttribute('data-id');
+        var docName = this.getAttribute('data-name');
+        var docTypeId = this.getAttribute('data-doc-type');
+        var categoryId = this.getAttribute('data-category');
+
+        // Заполняем поля модального окна
+        modal.querySelector('input[name="doc-name"]').value = docName;
+        
+        // Устанавливаем выбранное значение для doc_type_id
+        var docTypeSelect = modal.querySelector('select[id="doc-type"]');
+        docTypeSelect.value = docTypeId;
+
+        // Устанавливаем выбранное значение для category_id
+        var categorySelect = modal.querySelector('select[id="prod-cat"]');
+        categorySelect.value = categoryId;
+
+        // Обновляем action формы на основе ID документа
+        var form = modal.querySelector('form');
+        form.action = "/documentations/update/" + docId; // Используем прямой путь к маршруту
+
+        modal.classList.add('is-active');
+    });
+});
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.4/dist/js/datepicker-full.min.js"></script>
 <script src="/cdn/js/swiper-bundle.min.js" ></script>
 <script src="/cdn/js/popper.min.js" ></script>

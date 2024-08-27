@@ -101,6 +101,8 @@ Route::group(['middleware' => ['auth',]], function () {
     Route::get('/documentations', [DocumentationController::class, 'index'])->name('documentations.index');
     Route::get('/fees', [DocumentationController::class, 'fees'])->name('documentations.fees');
     Route::post('/documentations/import', [DocumentationController::class, 'import'])->name('documentations.import');
+    Route::put('/documentations/update/{id}', [DocumentationController::class, 'update'])->name('documentations.update');
+    Route::delete('/documentations/delete/{id}', [DocumentationController::class, 'delete'])->name('documentations.delete');
 
     // Генерація ПДФ
     Route::get('/generate-pdf/{id}', [PDFController::class, 'generatePDF'])->name('generate.pdf');
