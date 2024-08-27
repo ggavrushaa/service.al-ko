@@ -207,10 +207,14 @@ function loadServiceWorks(groupId) {
 
             // console.log(data);
             let totalDuration = 0;
-            let nonCkeckedElements = serviceWorksContainer.querySelectorAll('input[name="service_works[]"]:not(:checked)');
+            // const worksCheckbox = document.querySelectorAll('#service-works-container input[name*="[checkbox]"]');
+            let nonCkeckedElements = serviceWorksContainer.querySelectorAll('input[name*="[checkbox]');
+            
 
             nonCkeckedElements.forEach(nonCkeckedElement => {
-                nonCkeckedElement.closest('.row').remove();
+                if(!nonCkeckedElement.checked){
+                    nonCkeckedElement.closest('.row').remove();
+                }
             })
 
 
