@@ -105,7 +105,7 @@
                             <!-- Давати класс "show-placeholder" тільки тоді, коли немає обраного пункту. Тобто ми хочемо показати placeholder.  -->
                             <div class="form-group required default-select" data-valid="vanilla-select">
                                 <label for="service-center">Сервісний центр</label>
-                                <select class="_js-select-2" name="service_partner" id="service-center" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>
+                                <select class="_js-select-2" name="service_partner" id="service-center" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::sent) disabled @endif>
                                     <option value="-1">Виберіть сервісний центр</option>
                                     @foreach($serviceCenters as $center)
                                         <option value="{{ $center->id }}" {{ old('service_partner', $currentClaim['service_partner'] ?? $currentClaim->service_partner) == $center->id ? 'selected' : '' }}>
@@ -117,7 +117,7 @@
                             </div>
                             <div class="form-group required small-width default-select" data-valid="vanilla-select">
                                 <label for="service-contract">Договір сервісу</label>
-                                <select name="service_contract" id="service-contract" class="form-control" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>
+                                <select name="service_contract" id="service-contract" class="form-control" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::sent) disabled @endif>
                                     <option value="-1">Виберіть договір сервісу</option>
                                         @foreach($serviceContracts as $contract)
                                             <option value="{{ $contract->id }}" 
@@ -145,17 +145,17 @@
                         </div>
                         <div class="card-content card-form">
                             <p class="card-title">Дані того Хто звернувся</p>
-                            <button type="button" class="btn-link btn-copy btn-blue" onclick="copyToClipboard()" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif> Копіювати данні покупця</button>
+                            <button type="button" class="btn-link btn-copy btn-blue" onclick="copyToClipboard()" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::sent) disabled @endif> Копіювати данні покупця</button>
       
                             <div class="inputs-group one-row">
                                 <div class="form-group required" data-valid="empty">
                                     <label for="sender-name">ПІБ</label>
-                                    <input type="text" name="sender_name" id="sender-name" value="{{ old('sender_name', $currentClaim->sender_name ?? '') }}"  placeholder="Прізвище Ім'я По батькові" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) readonly @endif>
+                                    <input type="text" name="sender_name" id="sender-name" value="{{ old('sender_name', $currentClaim->sender_name ?? '') }}"  placeholder="Прізвище Ім'я По батькові" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::sent) readonly @endif>
                                     <div class="help-block" data-empty="Обов'язкове поле"></div>
                                 </div>
                                 <div class="form-group required" data-valid="empty">
                                     <label for="sender-phone">Контактний телефон</label>
-                                    <input type="text" name="sender_phone" id="sender-phone" value="{{ old('sender_phone', $currentClaim->sender_phone ?? $product->phone ?? '') }}" placeholder="+380501234567" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) readonly @endif>
+                                    <input type="text" name="sender_phone" id="sender-phone" value="{{ old('sender_phone', $currentClaim->sender_phone ?? $product->phone ?? '') }}" placeholder="+380501234567" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::sent) readonly @endif>
                                     <div class="help-block" data-empty="Обов'язкове поле"></div>
                                 </div>
                             </div>
@@ -193,14 +193,14 @@
                             <div class="form-group required" data-valid="empty">
                                 <label for="date-start">Дата звернення в сервісний центр</label>
                                 <div class="input-wrapper">
-                                    <input type="text" name="date_of_claim" id="date-start" value="{{now()->format('Y-m-d')}}" class="_js-datepicker" @if($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>
+                                    <input type="text" name="date_of_claim" id="date-start" value="{{now()->format('Y-m-d')}}" class="_js-datepicker" @if($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::sent) disabled @endif>
                                     <span class="icon-calendar"></span>
                                 </div>
                                 <div class="help-block" data-empty="Обов'язкове поле"></div>
                             </div>
                             <div class="form-group">
                                 <label for="receipt-number">Номер квитанції сервісного центру</label>
-                                <input type="text" name="receipt_number" id="receipt-number" value="{{ old('receipt_number', $currentClaim->receipt_number ?? '') }}" placeholder="0000000000" @if($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) readonly @endif>
+                                <input type="text" name="receipt_number" id="receipt-number" value="{{ old('receipt_number', $currentClaim->receipt_number ?? '') }}" placeholder="0000000000" @if($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::sent) readonly @endif>
                             </div>
                         </div>
                     </div>
@@ -209,12 +209,12 @@
                         <div class="inputs-group one-row">
                             <div class="form-group required" data-valid="empty">
                                 <label for="desc">Точний опис дефекту</label>
-                                <textarea name="details" id="desc" placeholder="Точний опис дефекту" rows="3" @if($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) readonly @endif>{{ old('details', $currentClaim->details ?? '') }}</textarea>
+                                <textarea name="details" id="desc" placeholder="Точний опис дефекту" rows="3" @if($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::sent) readonly @endif>{{ old('details', $currentClaim->details ?? '') }}</textarea>
                                 <div class="help-block" data-empty="Обов'язкове поле"></div>
                             </div>
                             <div class="form-group required" data-valid="empty">
                                 <label for="reason">Причина дефекту</label>
-                                <textarea name="deteails_reason" id="reason" placeholder="Причина дефекту" rows="3" @if($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) readonly @endif>{{ old('deteails_reason', $currentClaim->deteails_reason ?? '') }}</textarea>
+                                <textarea name="deteails_reason" id="reason" placeholder="Причина дефекту" rows="3" @if($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::sent) readonly @endif>{{ old('deteails_reason', $currentClaim->deteails_reason ?? '') }}</textarea>
                                 <div class="help-block" data-empty="Обов'язкове поле"></div>
                             </div>
                         </div>
@@ -224,10 +224,10 @@
                         <div class="inputs-group one-row">
                             <div class="form-group">
                                 <label for="comment_photo">Коментар</label>
-                                <textarea name="comment" id="comment" placeholder="Коментар до заяви" rows="3" @if($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) readonly @endif>{{ old('comment', $currentClaim->comment ?? '') }}</textarea>
+                                <textarea name="comment" id="comment" placeholder="Коментар до заяви" rows="3" @if($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::sent) readonly @endif>{{ old('comment', $currentClaim->comment ?? '') }}</textarea>
                             </div>
                             <div class="form-group file">
-                                <input type="file" name="file[]" id="file" multiple @if($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>
+                                <input type="file" name="file[]" id="file" multiple @if($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::sent) disabled @endif>
                                 <label for="file">
                                     <span class="icon-upload"></span>
                                     <span class="help-block">Обов'язково до заповнення</span>
@@ -255,7 +255,7 @@
                             <p class="card-title">Сервісні роботи</p>
                             
                             <div class="form-group uyu8-select">
-                                <select name="product_group" id="product-group" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>
+                                <select name="product_group" id="product-group" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::sent) disabled @endif>
                                     <option value="-1">Виберіть групу товару</option>
                                     @foreach($groups as $group)
                                         <option value="{{ $group->id }}">{{ $group->name }}</option>
@@ -286,7 +286,7 @@
                                             <div class="row">
                                                 <div class="cell">
                                                     <div class="form-group checkbox">
-                                                        <input type="checkbox" id="service-{{ $work->id }}" name="service_works[{{ $work->id }}][checkbox]" onchange="calcPrice();" {{ $serviceWorks->contains($work->id) ? 'checked' : '' }} @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>
+                                                        <input type="checkbox" id="service-{{ $work->id }}" name="service_works[{{ $work->id }}][checkbox]" onchange="calcPrice();" {{ $serviceWorks->contains($work->id) ? 'checked' : '' }} @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::sent) disabled @endif>
                                                         <label for="service-{{ $work->id }}"></label>
                                                     </div>
                                                 </div>
@@ -336,7 +336,7 @@
                                 <div class="display-grid col-2">
                                     <div class="form-group">
                                         <label for="comment_service">Опис додаткових робіт</label>
-                                        <textarea name="comment_service" id="comment_service" placeholder="Якщо виконувалися додаткові роботи, які не відображені в списку до вибору, опишіть їх в цьому полі" rows="3" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>{{ old('comment_service', $currentClaim->comment_service) }}</textarea>
+                                        <textarea name="comment_service" id="comment_service" placeholder="Якщо виконувалися додаткові роботи, які не відображені в списку до вибору, опишіть їх в цьому полі" rows="3" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::sent) disabled @endif>{{ old('comment_service', $currentClaim->comment_service) }}</textarea>
                                     </div>
                                 </div>
                             </div>
@@ -348,7 +348,7 @@
                             <p class="card-title">Використані запчастини</p>
                             <div class="form-group have-icon">
                                 <span class="icon icon-search-active"></span>
-                                <input type="text" id="search-articul" placeholder="XXXXXX-XXX" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>
+                                <input type="text" id="search-articul" placeholder="XXXXXX-XXX" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::sent) disabled @endif>
                             </div>
                         </div>
                     
@@ -482,7 +482,7 @@
                             <div class="display-grid col-2 gap-8">
                                 <div class="form-group _mb0">
                                     <label for="comment_part">Коментар</label>
-                                    <textarea id="comment_part" name="comment_part" placeholder="Не знайшли потрібні запчастини? Опишіть вашу проблему" rows="3" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>{{ old('comment_part', $currentClaim->comment_part) }}</textarea>
+                                    <textarea id="comment_part" name="comment_part" placeholder="Не знайшли потрібні запчастини? Опишіть вашу проблему" rows="3" @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::sent) disabled @endif>{{ old('comment_part', $currentClaim->comment_part) }}</textarea>
                                 </div>
                             </div>
                         </div>
