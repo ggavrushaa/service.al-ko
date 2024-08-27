@@ -35,7 +35,7 @@ class WarrantyClaimController extends Controller
             try {
                 // Поиск или создание менеджера по имени
                 $manager = User::where('first_name_ru', $data['manager_name'])->first();
-                
+
                 if($data['manager_name'] == null) {
                     $manager = null;
                 }
@@ -93,7 +93,6 @@ class WarrantyClaimController extends Controller
 
 
                 $serviceWorksSum = 0;
-                $warrantyClaim->files()->delete();
                 foreach ($data['files'] as $file) {
                     $warrantyClaim->files()->create($file);
                 }
