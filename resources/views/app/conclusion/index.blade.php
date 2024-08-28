@@ -93,6 +93,15 @@
         transition: background-color 0.3s;
     }
 
+    .th {
+        pointer-events: none; 
+        position: relative;
+    }
+
+    .icon-switch {
+        pointer-events: auto;
+    }
+
     .tr:hover {
         background-color: grey; 
     }
@@ -116,98 +125,97 @@
 
     <!-- Сортування -->
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const authUserRole = {{ auth()->user()->role_id }}; 
-            let isSorting = false; // Флаг для предотвращения повторных запросов
-        
-            function initConclusionTableEvents() {
-                document.querySelectorAll('.tbody').forEach(tbody => {
-                    tbody.addEventListener('click', function(event) {
-                        const target = event.target.closest('.tr');
-                        if (target && !event.target.closest('a') && !event.target.closest('button')) {
-                            window.location.href = target.dataset.url;
-                        }
-                    });
-                });
-        
-                document.querySelectorAll('.icon-switch').forEach(el => {
-                    el.removeEventListener('click', handleConclusionSortClick);
-                    el.addEventListener('click', handleConclusionSortClick);
-                });
-            }
-        
-            function handleConclusionSortClick(event) {
-                console.log('Clicked!');
-                event.preventDefault();
-                if (isSorting) return;
-                isSorting = true;
-        
-                const column = event.target.getAttribute('data-column');
-                const order = event.target.getAttribute('data-order');
-                const newOrder = order === 'asc' ? 'desc' : 'asc';
-        
-                fetch(`/technical-conclusions/sort?column=${column}&order=${newOrder}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Received data:', data);
-                        if (data && data.data && data.data.length > 0) {
-                            updateConclusionTableRows(data.data, newOrder, column, authUserRole);
-                        } else {
-                            console.error('No valid data returned:', data);
-                        }
-                        isSorting = false;
-                    })
-                    .catch(error => {
-                        console.error('Error fetching sorted data:', error);
-                        isSorting = false;
-                    });
-            }
-        
-            function updateConclusionTableRows(data, newOrder, column, authUserRole) {
-                const tbody = document.querySelector('.tbody');
-                tbody.innerHTML = '';
-    
-                data.forEach(conclusion => {
-                    const tr = document.createElement('div');
-                    tr.classList.add('tr');
-                    tr.dataset.url = `/warranty-claims/${conclusion.warranty_claim_id}/create-technical-conclusion`;
-    
-                    const warrantyNumber = conclusion.warranty_claim_id || 'Не указано';
-                    const warrantyDate = conclusion.date || 'Не указана';
-                    const productArticle = conclusion.warranty_claim?.product_article || 'Не указан';
-                    const productName = conclusion.warranty_claim?.product_name || 'Не указано';
-                    const typeOfClaim = conclusion.appeal_type || 'Не указано';
-                    const warrantyStatus = conclusion.warranty_claim?.status ?? 'Новий';
-                    const authorName = conclusion.warranty_claim?.user?.first_name_ru || 'Не вказано';
-                    const managerName = conclusion.warranty_claim?.manager?.first_name_ru || 'Не вказано';
-    
-                    tr.innerHTML = `
-                        <div class="td"><a href="/technical-conclusions/${conclusion.warranty_claim_id}/create-technical-conclusion" class="table-link">${warrantyNumber}</a></div>
-                        <div class="td">${warrantyDate}</div>
-                        <div class="td">${productArticle}</div>
-                        <div class="td">${productName}</div>
-                        <div class="td"><button type="button" class="btn-label blue">${typeOfClaim}</button></div>
-                        <div class="td">${warrantyStatus}</div>
-                        <div class="td">${authorName}</div>
-                        <div class="td">${managerName}</div>
-                        <div class="td _empty"></div>
-                        <div class="td">
-                            ${authUserRole === 2 ? '<a href="#" class="btn-action icon-user _js-btn-show-modal" data-claim-id="' + conclusion.id + '" data-modal="switch-manager"></a>' : ''}
-                            <a href="/generate-pdf/${conclusion.id}" class="btn-action icon-pdf"></a>
-                        </div>
-                    `;
-                    tbody.appendChild(tr);
-                });
-    
-                document.querySelectorAll('.icon-switch').forEach(el => {
-                    el.setAttribute('data-order', 'asc');
-                });
-                document.querySelector(`[data-column="${column}"]`).setAttribute('data-order', newOrder);
-                initConclusionTableEvents(); 
-            }
-    
-            initConclusionTableEvents();
+    document.addEventListener('DOMContentLoaded', function () {
+    let isSorting = false; // Флаг для предотвращения повторных запросов
+
+    function initConclusionTableEvents() {
+        document.querySelectorAll('.tbody').forEach(tbody => {
+            tbody.addEventListener('click', function(event) {
+                const target = event.target.closest('.tr');
+                if (target && !event.target.closest('a') && !event.target.closest('button')) {
+                    window.location.href = target.dataset.url;
+                }
+            });
         });
+
+        document.querySelectorAll('.icon-switch').forEach(el => {
+            el.removeEventListener('click', handleConclusionSortClick);
+            el.addEventListener('click', handleConclusionSortClick);
+        });
+    }
+
+    function handleConclusionSortClick(event) {
+        event.preventDefault();
+        event.stopPropagation(); // Останавливает дальнейшее распространение события
+
+        if (isSorting) return;
+        isSorting = true;
+
+        const column = event.target.getAttribute('data-column');
+        const order = event.target.getAttribute('data-order');
+        const newOrder = order === 'asc' ? 'desc' : 'asc';
+
+        fetch(`/technical-conclusions/sort?column=${column}&order=${newOrder}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log('Received data:', data);
+                if (data && data.data && data.data.length > 0) {
+                    updateConclusionTableRows(data.data, newOrder, column);
+                } else {
+                    console.error('No valid data returned:', data);
+                }
+                isSorting = false;
+            })
+            .catch(error => {
+                console.error('Error fetching sorted data:', error);
+                isSorting = false;
+            });
+    }
+
+    function updateConclusionTableRows(data, newOrder, column) {
+        const tbody = document.querySelector('.tbody');
+        tbody.innerHTML = '';
+
+        data.forEach(conclusion => {
+            const tr = document.createElement('div');
+            tr.classList.add('tr');
+            tr.dataset.url = `/warranty-claims/${conclusion.warranty_claim_id}/create-technical-conclusion`;
+
+            const warrantyNumber = conclusion.warranty_claim_id || 'Не указано';
+            const warrantyDate = conclusion.date || 'Не указана';
+            const productArticle = conclusion.warranty_claim?.product_article || 'Не указан';
+            const productName = conclusion.warranty_claim?.product_name || 'Не указано';
+            const typeOfClaim = conclusion.appeal_type || 'Не указано';
+            const warrantyStatus = conclusion.warranty_claim?.status ?? 'Новий';
+            const authorName = conclusion.warranty_claim?.user?.first_name_ru || 'Не вказано';
+            const managerName = conclusion.warranty_claim?.manager?.first_name_ru || 'Не вказано';
+
+            tr.innerHTML = `
+                <div class="td"><a href="/technical-conclusions/${conclusion.warranty_claim_id}/create-technical-conclusion" class="table-link">${warrantyNumber}</a></div>
+                <div class="td">${warrantyDate}</div>
+                <div class="td">${productArticle}</div>
+                <div class="td">${productName}</div>
+                <div class="td"><button type="button" class="btn-label blue">${typeOfClaim}</button></div>
+                <div class="td">${warrantyStatus}</div>
+                <div class="td">${authorName}</div>
+                <div class="td">${managerName}</div>
+                <div class="td _empty"></div>
+                <div class="td">
+                    <a href="/generate-pdf/${conclusion.id}" class="btn-action icon-pdf"></a>
+                </div>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        document.querySelectorAll('.icon-switch').forEach(el => {
+            el.setAttribute('data-order', 'asc');
+        });
+        document.querySelector(`[data-column="${column}"]`).setAttribute('data-order', newOrder);
+        initConclusionTableEvents(); 
+    }
+
+    initConclusionTableEvents();
+    });
     </script>
     
     

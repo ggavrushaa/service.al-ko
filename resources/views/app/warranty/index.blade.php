@@ -177,6 +177,15 @@
     opacity: 1;
 }
 
+.th {
+    pointer-events: none; 
+    position: relative;
+}
+
+.icon-switch {
+    pointer-events: auto;
+}
+
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.4/dist/js/datepicker-full.min.js"></script>
