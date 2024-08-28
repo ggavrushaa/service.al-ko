@@ -50,7 +50,7 @@
                                 <div class="td">{{$claim->manager->first_name_ru ?? 'Не вказано'}}</div>
                                 <div class="td _empty"></div>
                                 <div class="td">
-                                    @if(auth()->check() && auth()->user()->role_id === 2)
+                                    @if(auth()->check() && auth()->user()->role_id === 2 OR auth()->user()->role_id === 3)
                                         <a href="#" class="btn-action icon-user _js-btn-show-modal" data-claim-id="{{ $claim->id }}" data-modal="switch-manager"></a>
                                     @endif
                                     {{-- <a href="" class="btn-action icon-pdf"></a> --}}
