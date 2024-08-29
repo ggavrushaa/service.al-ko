@@ -137,6 +137,14 @@
                             </div>
                             <div class="form-group required" data-valid="empty">
                                 <label for="resolution">Резолюція</label>
+
+                                <select name="" id="">
+                                    <option value="1" data-desc="test" >Name</option>
+                                    <option value="1" data-desc="test" >Name</option>
+                                    <option value="1" data-desc="test" >Name</option>
+                                </select>
+
+
                                 <button type="button" class="btn-link btn-copy btn-blue pos-0 _js-btn-show-template-modal" @if($warrantyClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) disabled @endif>Підібрати Шаблон</button>
                                 <textarea name="resolution" id="resolution" placeholder="Резолюція" rows="3" @if($warrantyClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) readonly @endif>{{ $conclusion->resolution ?? '' }}</textarea>
                                 <div class="help-block" data-empty="Обов'язкове поле"></div>
@@ -314,43 +322,6 @@
             }
         });
 
-        function submitSaveForm() {
-            const defectCode = document.getElementById('defect_code') ? document.getElementById('defect_code').value : null;
-            const symptomCode = document.getElementById('symptom_code') ? document.getElementById('symptom_code').value : null;
-            const appealType = document.getElementById('appeal_type') ? document.getElementById('appeal_type').value : null;
-            const conclusion = document.getElementById('conclusion') ? document.getElementById('conclusion').value : null;
-            const resolution = document.getElementById('resolution') ? document.getElementById('resolution').value : null;
-
-
-            if (document.getElementById('hidden-defect-code')) document.getElementById('hidden-defect-code').value = defectCode;
-            if (document.getElementById('hidden-symptom-code')) document.getElementById('hidden-symptom-code').value = symptomCode;
-            if (document.getElementById('hidden-appeal-type')) document.getElementById('hidden-appeal-type').value = appealType;
-            if (document.getElementById('hidden-conclusion')) document.getElementById('hidden-conclusion').value = conclusion;
-            if (document.getElementById('hidden-resolution')) document.getElementById('hidden-resolution').value = resolution;
-
-            document.getElementById('form-save').submit();
-        }
-    </script>
-
-    <!-- save and exit -->
-    <script>
-    function submitSaveAndExitForm() {
-        const defectCode = document.getElementById('defect_code') ? document.getElementById('defect_code').value : null;
-        const symptomCode = document.getElementById('symptom_code') ? document.getElementById('symptom_code').value : null;
-        const appealType = document.getElementById('appeal_type') ? document.getElementById('appeal_type').value : null;
-        const conclusion = document.getElementById('conclusion') ? document.getElementById('conclusion').value : null;
-        const resolution = document.getElementById('resolution') ? document.getElementById('resolution').value : null;
-
-        console.log({ defectCode, symptomCode, appealType, conclusion, resolution });
-
-        document.getElementById('exit-defect-code').value = defectCode;
-        document.getElementById('exit-symptom-code').value = symptomCode;
-        document.getElementById('exit-appeal-type').value = appealType;
-        document.getElementById('exit-conclusion').value = conclusion;
-        document.getElementById('exit-resolution').value = resolution;
-
-        document.getElementById('form-save-and-exit').submit();
-    }
     </script>
 
 </x-layouts.base>
