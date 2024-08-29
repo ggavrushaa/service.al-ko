@@ -18,6 +18,7 @@ use App\Enums\WarrantyClaimStatusEnum;
 use App\Http\Requests\Conclusion\ApproveTechnicalConclusionRequest;
 use App\Models\TechnicalConclusion\TechnicalConclusion;
 use App\Http\Requests\Conclusion\StoreTechnicalConclusionRequest;
+use App\Models\ResolutionTemplate;
 
 class TechnicalConclusionController extends Controller
 {
@@ -114,6 +115,8 @@ class TechnicalConclusionController extends Controller
             ->get()
             ->groupBy('parent_id');
 
+        $resolutionTemplates = ResolutionTemplate::where('is_folder', 0)->get();
+
         $appealTypes = ClaimTypeEnum::cases();
         $managers = User::all();
         $conclusion = TechnicalConclusion::where('warranty_claim_id', $id)->first();
@@ -137,7 +140,7 @@ class TechnicalConclusionController extends Controller
         Log::info($e->getMessage());
     }
 
-        return view('app.conclusion.edit', compact('warrantyClaim', 'defectCodes', 'symptomCodes', 'appealTypes', 'managers', 'autor', 'conclusion'));
+        return view('app.conclusion.edit', compact('warrantyClaim', 'defectCodes', 'symptomCodes', 'appealTypes', 'managers', 'autor', 'conclusion', 'resolutionTemplates', ));
     }
 
     public function store(StoreTechnicalConclusionRequest $request, $id)

@@ -138,10 +138,10 @@
                             <div class="form-group required" data-valid="empty">
                                 <label for="resolution">Резолюція</label>
 
-                                <select name="" id="">
-                                    <option value="1" data-desc="test" >Name</option>
-                                    <option value="1" data-desc="test" >Name</option>
-                                    <option value="1" data-desc="test" >Name</option>
+                                <select name="resolution" id="">
+                                    @foreach($resolutionTemplates as $template)
+                                        <option value="{{ $template->id }}" @if(isset($conclusion) && $conclusion->resolution == $template->id) selected @endif>{{ $template->name }}</option>
+                                    @endforeach
                                 </select>
 
 
