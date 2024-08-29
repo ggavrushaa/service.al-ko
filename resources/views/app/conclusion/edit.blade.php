@@ -104,6 +104,7 @@
                                         </optgroup>
                                     @endforeach
                                 </select>
+                                <div class="help-block" data-empty="Обов'язкове поле"></div>
                             </div>
                             <div class="form-group required default-select" data-valid="vanilla-select">
                                 <label for="symptom_code">Код симптому</label>
@@ -117,6 +118,7 @@
                                         </optgroup>
                                     @endforeach
                                 </select>
+                                <div class="help-block" data-empty="Обов'язкове поле"></div>
                             </div>
                             <div class="form-group default-select">
                                 <label for="appeal_type">Тип звернення</label>
@@ -131,21 +133,31 @@
                         </div>
                         <div class="inputs-group one-row">
                             <div class="form-group required" data-valid="empty">
-                                <label for="conclusion">Висновок</label>
+                                <div class="form-group__top">
+                                    <label for="conclusion">Висновок</label>
+                                </div>
                                 <textarea name="conclusion" id="conclusion" placeholder="Висновок" rows="3" @if($warrantyClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) readonly @endif>{{ $conclusion->conclusion ?? '' }}</textarea>
                                 <div class="help-block" data-empty="Обов'язкове поле"></div>
                             </div>
+
+                            
                             <div class="form-group required" data-valid="empty">
-                                <label for="resolution">Резолюція</label>
 
-                                <select name="resolution" id="">
-                                    @foreach($resolutionTemplates as $template)
-                                        <option value="{{ $template->id }}" @if(isset($conclusion) && $conclusion->resolution == $template->id) selected @endif>{{ $template->name }}</option>
-                                    @endforeach
-                                </select>
+                                <div class="form-group__top">
+                                    <label for="resolution" style="text-wrap: nowrap;">Резолюція</label>
 
+                                    <div class="form-group default-select show-placeholder">
+                                        <select class="select-template" name="resolution" id="">
+                                            <option value="-1">Оберіть шаблон</option>
+                                            @foreach($resolutionTemplates as $template)
+                                            <option value="{{ $template->id }}" @if(isset($conclusion) && $conclusion->resolution == $template->id) selected @endif>{{ $template->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
 
-                                <button type="button" class="btn-link btn-copy btn-blue pos-0 _js-btn-show-template-modal" @if($warrantyClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) disabled @endif>Підібрати Шаблон</button>
+                                </div>
+
+                                <!-- <button type="button" class="btn-link btn-copy btn-blue pos-0 _js-btn-show-template-modal" @if($warrantyClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) disabled @endif>Підібрати Шаблон</button> -->
                                 <textarea name="resolution" id="resolution" placeholder="Резолюція" rows="3" @if($warrantyClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) readonly @endif>{{ $conclusion->resolution ?? '' }}</textarea>
                                 <div class="help-block" data-empty="Обов'язкове поле"></div>
                             </div>
@@ -205,6 +217,27 @@
     <!-- шаблони резолюцій -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            /// New 
+            if (document.querySelector('.select-template')) {
+                document.querySelector('.select-template').addEventListener('change', (e) => {
+                    const select = e.target,
+                        input = e.target.closest('.form-group:not(.default-select)').querySelector('textarea');
+
+                        console.log(input);
+                        
+
+                    if(select.value === "-1"){
+                        input.value = '';
+                        return false;
+                    }
+                    input.value = select.options[select.selectedIndex].text;
+
+
+                })
+            }
+
+
+
             const showTemplateModalButton = document.querySelector('.btn-copy._js-btn-show-template-modal');
             const templateModal = document.querySelector('.js-modal-template');
             const templateModalBody = templateModal ? templateModal.querySelector('.manager-body') : null;

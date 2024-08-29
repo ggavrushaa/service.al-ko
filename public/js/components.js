@@ -535,7 +535,7 @@ function validateField(form_group, valid_type) {
   switch (valid_type) {
     case 'empty':
       {
-        var input = form_group.querySelector('input, textarea, select');
+        var input = form_group.querySelector('input, textarea');
         if (input.value.trim() === "") {
           form_group.classList.add('has-error');
           helpBock.innerHTML = helpBock.dataset.empty;
