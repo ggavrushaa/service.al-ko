@@ -237,6 +237,68 @@ document.querySelectorAll('._js-btn-show-modal').forEach(function (button) {
 });
 </script>
 
+<!-- Фільтри -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const typeDocSelect = document.getElementById('type-doc');
+    const catSelect = document.getElementById('cat');
+
+    // Обработчик события для изменения значения в селектах
+    typeDocSelect.addEventListener('change', fetchFilteredData);
+    catSelect.addEventListener('change', fetchFilteredData);
+
+    function fetchFilteredData() {
+        const typeDoc = typeDocSelect.value;
+        const category = catSelect.value;
+
+        // Отправляем AJAX-запрос на сервер с выбранными параметрами
+        fetch(`/documentations/filter?type_doc=${typeDoc}&category=${category}`, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            updateTable(data.documentations); // Функция для обновления таблицы
+        })
+        .catch(error => console.error('Error fetching filtered data:', error));
+    }
+
+    function updateTable(documentations) {
+        const tbody = document.querySelector('.tbody');
+        tbody.innerHTML = ''; // Очистить таблицу перед добавлением новых данных
+
+        documentations.forEach(documentation => {
+            const tr = document.createElement('div');
+            tr.classList.add('tr');
+            tr.innerHTML = `
+                <div style="text-align: center" class="td">${documentation.name}</div>
+                <div class="td">${documentation.document_type_name ?? 'Не вказано'}</div>
+                <div class="td">${documentation.product_group_name ?? 'Не вказано'}</div>
+                <div class="td">${documentation.added}</div>
+                <div class="td _empty"></div>
+                <div class="td">
+                    <div class="btn-action icon-edit _js-btn-show-modal" 
+                        data-modal="edit-document"
+                        data-id="${documentation.id}"
+                        data-name="${documentation.name}"
+                        data-doc-type="${documentation.doc_type_id}"
+                        data-category="${documentation.category_id}"
+                    ></div>
+                    <a href="${documentation.file_url}" class="btn-action icon-download"></a>
+                    <form action="/documentations/delete/${documentation.id}" method="POST" style="display:inline;">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button type="submit" class="btn-action icon-trash" onclick="return confirm('Ви впевнені що хочете видалити цей документ?');"></button>
+                    </form>
+                </div>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+});
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.4/dist/js/datepicker-full.min.js"></script>
 <script src="/cdn/js/swiper-bundle.min.js" ></script>
 <script src="/cdn/js/popper.min.js" ></script>

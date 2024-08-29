@@ -104,6 +104,8 @@ Route::group(['middleware' => ['auth',]], function () {
     Route::put('/documentations/update/{id}', [DocumentationController::class, 'update'])->name('documentations.update');
     Route::delete('/documentations/delete/{id}', [DocumentationController::class, 'delete'])->name('documentations.delete');
 
+    Route::get('documentations/filter', [DocumentationController::class, 'filter'])->name('documentations.filter');
+
     // Генерація ПДФ
     Route::get('/generate-pdf/{id}', [PDFController::class, 'generatePDF'])->name('generate.pdf');
 
