@@ -115,8 +115,8 @@
                 Коментарі до документу
             </p>
             <div class="chat-desc">
-                <p><strong>Документ:</strong> №{{$claim->number}}</p>
-                <p><strong>Ваш менеджер/дилер:</strong> {{$claim->manager->first_name_ru ?? 'Не вказано'}}</p>
+                <p><strong>Документ:</strong> №</p>
+                <p><strong>Ваш менеджер/дилер:</strong></p>
             </div>
         </div>
 
