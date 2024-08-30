@@ -147,17 +147,16 @@
                                     <label for="resolution" style="text-wrap: nowrap;">Резолюція</label>
 
                                     <div class="form-group default-select show-placeholder">
-                                        <select class="select-template" name="resolution" id="">
-                                            <option value="-1">Оберіть шаблон</option>
+                                        <select class="select-template" name="resolution" id=""  @if($warrantyClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) disabled @endif>
                                             @foreach($resolutionTemplates as $template)
-                                            <option data-description="{{ $template->description }}" value="{{ $template->id }}" @if(isset($conclusion) && $conclusion->resolution == $template->id) selected @endif>{{ $template->name }}</option>
+                                            <option value="-1" @if(!isset($conclusion) || $conclusion->resolution === null || $conclusion->resolution == -1) selected @endif>Оберіть шаблон</option>
+                                            <option data-description="{{ $template->description }}" value="{{ $template->id }}" @if(isset($conclusion) && $conclusion->resolution == $template->id) selected @endif>
+                                                {{ $template->name }}
+                                            </option>
                                             @endforeach
                                         </select>
                                     </div>
-
                                 </div>
-
-                                <!-- <button type="button" class="btn-link btn-copy btn-blue pos-0 _js-btn-show-template-modal" @if($warrantyClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) disabled @endif>Підібрати Шаблон</button> -->
                                 <textarea name="resolution" id="resolution" placeholder="Резолюція" rows="3" @if($warrantyClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) readonly @endif>{{ $conclusion->resolution ?? '' }}</textarea>
                                 <div class="help-block" data-empty="Обов'язкове поле"></div>
                             </div>
