@@ -570,10 +570,10 @@ document.addEventListener('DOMContentLoaded', function () {
                         <button type="button" class="btn-delete"></button>
                         <ul class="controls-list">
                             <li>
-                                <button type="button" class="icon-edit">Редагувати</button>
+                                <button data-action="{{ route('comments.update', ['commentId' => $comment->id]) }}" type="button" class="icon-edit">Редагувати</button>
                             </li>
                             <li>
-                                <button type="button" class="icon-trash">Видалити</button>
+                                <button data-action="{{ route('comments.delete', ['commentId' => $comment->id]) }}" type="button" class="icon-trash">Видалити</button>
                             </li>
                         </ul>
                     </div>
