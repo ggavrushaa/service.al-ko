@@ -148,7 +148,7 @@ Route::group(['middleware' => ['guest']], function () {
     Route::prefix('warranty-claims/{claimId}/comments')->group(function () {
         Route::get('/', [WarrantyClaimCommentController::class, 'index']);
         Route::post('/', [WarrantyClaimCommentController::class, 'store']);
-        Route::put('update/{commentId}', [WarrantyClaimCommentController::class, 'update'])->name('comments.update');
+        Route::post('update/{commentId}', [WarrantyClaimCommentController::class, 'update'])->name('comments.update');
         Route::delete('delete/{commentId}', [WarrantyClaimCommentController::class, 'destroy'])->name('comments.delete');
     });
     

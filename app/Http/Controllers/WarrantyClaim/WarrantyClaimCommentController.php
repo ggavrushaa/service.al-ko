@@ -35,7 +35,7 @@ class WarrantyClaimCommentController extends Controller
         return response()->json($comment);
     }
 
-    public function update(Request $request, $commentId)
+    public function update(Request $request, $warrantyId, $commentId)
     {
         $comment = WarrantyClaimComment::findOrFail($commentId);
         if ($comment->user_id == Auth::id()) {
@@ -48,15 +48,15 @@ class WarrantyClaimCommentController extends Controller
         return response()->json(['error' => 'Unauthorized'], 403);
     }
 
-    public function destroy($commentId)
+    public function destroy($warrantyId, $commentId)
     {
         $comment = WarrantyClaimComment::findOrFail($commentId);
         if ($comment->user_id == Auth::id()) {
             $comment->delete();
 
-            return response()->json(['message' => 'Comment deleted']);
+            return response()->json(['success' => true]);
         }
 
-        return response()->json(['error' => 'Unauthorized'], 403);
+        return response()->json(['success' => false], 403);
     }
 }
