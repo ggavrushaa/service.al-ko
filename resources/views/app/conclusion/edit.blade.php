@@ -213,7 +213,7 @@
                         input.value = '';
                         return false;
                     }
-                    input.value = select.options[select.selectedIndex].text;
+                    input.value = select.options[select.selectedIndex].dataset.description;
 
 
                 })
