@@ -129,7 +129,7 @@
                 <input type="text" name="chat-text" placeholder="Ваш текст">
                 <div class="help-block">Введіть повідомлення</div>
             </div>
-            <button type="submit" class="btn-primary btn-blue" id="send-comment">Надіслати</button>
+            <button type="submit" class="btn-primary btn-blue" id="send-comment" data-text="Редагувати">Надіслати</button>
         </form>
     </div>
 </div>
@@ -561,32 +561,7 @@ document.addEventListener('DOMContentLoaded', function () {
         .catch(error => console.error('Error posting comment:', error));
     });
 
-    function displayComments(comments) {
-        modalBody.innerHTML = '';
-        comments.forEach(comment => {
-            const commentHtml = `
-                <div class="message ${comment.user_id === {{ Auth::id() }} ? 'sender' : ''}">
-                    <div class="message-controls">
-                        <button type="button" class="btn-delete"></button>
-                        <ul class="controls-list">
-                            <li>
-                                <button data-action="{{ route('comments.update', ['commentId' => $comment->id]) }}" type="button" class="icon-edit">Редагувати</button>
-                            </li>
-                            <li>
-                                <button data-action="{{ route('comments.delete', ['commentId' => $comment->id]) }}" type="button" class="icon-trash">Видалити</button>
-                            </li>
-                        </ul>
-                    </div>
-                    <p class="message-author">${comment.user_name} (${comment.user_id === {{ Auth::id() }} ? 'Ви' : 'Менеджер'})</p>
-                    <div class="message-text">
-                        ${comment.comment}
-                    </div>
-                    <div class="message-date">${new Date(comment.created_at).toLocaleString()}</div>
-                </div>
-            `;
-            modalBody.insertAdjacentHTML('beforeend', commentHtml);
-        });
-    }
+    
 });
 </script>
 

@@ -442,9 +442,15 @@ if (btnOpenChat.length > 0) {
             e.preventDefault();
             e.stopPropagation();
 
-            var modal_node = document.querySelector(".js-modal-".concat(btn.dataset.modal));
+            const modal_node = document.querySelector(".js-modal-".concat(btn.dataset.modal)),
+                form = modal_node.querySelector('#chat-form');
+
+
 
             const currentClaimId = btn.dataset.claimId;
+            form.action = `/warranty-claims/${currentClaimId}/comments`;
+            form.dataset.actionSend = `/warranty-claims/${currentClaimId}/comments`;
+
             modal_node.querySelector('#chat-form').dataset.claimId = currentClaimId;
 
             closeAllModal();
@@ -491,7 +497,7 @@ if (btnOpenChat.length > 0) {
             inputFormGroup.classList.remove('has-error');
             button.disabled = true;
 
-            fetch(`/warranty-claims/${currentClaimId}/comments`, {
+            fetch(form.action, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -503,11 +509,20 @@ if (btnOpenChat.length > 0) {
                 .then(data => {
                     input.value = '';
 
+
                     responseComments(currentClaimId).then(data => {
                         drawComments(data, modal);
                     })
-
                     button.disabled = false;
+
+
+                    if (form.classList.contains('edit-mode')) {
+                        form.action = form.dataset.actionSend;
+                        const oldBtnText = button.textContent;
+                        button.innerHTML = button.dataset.text;
+                        button.dataset.text = oldBtnText;
+                        form.classList.remove('edit-mode');
+                    }
                 })
                 .catch(function (error) {
                     button.disabled = false;
@@ -518,23 +533,23 @@ if (btnOpenChat.length > 0) {
 }
 
 function drawComments(comments, modal) {
-    const autjUserId = document.querySelector('input[name="auth-user-id"]').value;
-    const modalBody = modal.querySelector('.chat-main__wrapper');
+    const autjUserId = document.querySelector('input[name="auth-user-id"]').value,
+        modalBody = modal.querySelector('.chat-main__wrapper');
+
 
     modalBody.innerHTML = '';
 
     comments.forEach(comment => {
-
         const commentHtml = `
             <div class="message ${(+autjUserId === comment.user_id) ? 'sender' : ''}">
                 <div class="message-controls">
                     <button type="button" class="btn-delete"></button>
                     <ul class="controls-list">
                         <li>
-                            <button type="button" class="icon-edit">Редагувати</button>
+                            <button type="button" class="icon-edit js-edit-msg" data-action="/warranty-claims/${comment.warranty_claim_id}/comments/update/${comment.id}/">Редагувати</button>
                         </li>
                         <li>
-                            <button type="button" class="icon-trash" data-action="/delete/">Видалити</button>
+                            <button type="button" class="icon-trash js-del-msg" data-action="/warranty-claims/${comment.warranty_claim_id}/comments/delete/${comment.id}/">Видалити</button>
                         </li>
                     </ul>
                 </div>
@@ -555,12 +570,14 @@ function drawComments(comments, modal) {
 document.documentElement.addEventListener('click', (e) => {
     const target = e.target;
 
-    if (target.closest('.btn-del-msg')) {
-        const btn = target.closest('.btn-del-msg'),
+
+    // Delete message
+    if (target.closest('.js-del-msg')) {
+        const btn = target.closest('.js-del-msg'),
             action = btn.dataset.action;
 
         fetch(action, {
-            method: 'post',
+            method: 'delete',
             headers: {
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             }
@@ -571,6 +588,26 @@ document.documentElement.addEventListener('click', (e) => {
                 btn.closest('.message').remove();
             }
         });
-
     }
+
+
+
+    // Edit message
+    if (target.closest('.js-edit-msg')) {
+        const btn = target.closest('.js-edit-msg'),
+            action = btn.dataset.action;
+
+        const form = btn.closest('.js-modal').querySelector('#chat-form'),
+            input = form.querySelector('input[name="chat-text"]'),
+            msg = btn.closest('.message').querySelector('.message-text').textContent.trim(),
+            button = form.querySelector('button[type="submit"]')
+
+        form.action = action;
+        input.value = msg;
+        const oldBtnText = button.textContent;
+        button.innerHTML = button.dataset.text;
+        button.dataset.text = oldBtnText;
+        form.classList.add('edit-mode');
+    }
+
 })
