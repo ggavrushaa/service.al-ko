@@ -54,7 +54,7 @@
                                         <a href="#" class="btn-action icon-user _js-btn-show-modal" data-claim-id="{{ $claim->id }}" data-modal="switch-manager"></a>
                                     @endif
                                     {{-- <a href="" class="btn-action icon-pdf"></a> --}}
-                                    <a href="#" class="btn-action icon-message _js-btn-show-modal" data-modal="chat" data-claim-id="{{ $claim->id }}"></a>
+                                    <a href="#" class="btn-action icon-message js-btn-open-chat" data-modal="chat" data-claim-id="{{ $claim->id }}"></a>
                                 </div>
                         </div>
                         @endforeach
@@ -124,19 +124,22 @@
             <div class="chat-main__wrapper _empty">
             </div>
         </div>
-        <div class="chat-footer">
+        <form id="chat-form" class="chat-footer">
             <div class="form-group">
                 <input type="text" name="chat-text" placeholder="Ваш текст">
+                <div class="help-block">Введіть повідомлення</div>
             </div>
-            <button type="button" class="btn-primary btn-blue" id="send-comment">Надіслати</button>
-        </div>
+            <button type="submit" class="btn-primary btn-blue" id="send-comment">Надіслати</button>
+        </form>
     </div>
 </div>
 
 
+<input type="hidden" name="auth-user-id" value="{{ Auth::id() }}">
 <div id="datepicker-container"></div>
 
-<style>
+
+<!-- <style>
 
 .modal {
     display: none;
@@ -186,7 +189,7 @@
     pointer-events: auto;
 }
 
-</style>
+</style> -->
 
 <script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.4/dist/js/datepicker-full.min.js"></script>
 <script src="/cdn/js/swiper-bundle.min.js" ></script>
@@ -326,7 +329,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let managersList = [];
 
         if (!showModalButtons.length || !modal || !modalBody || !closeModalButton || !searchInput || !reassignButton) {
-            console.error('One or more elements are missing:', { showModalButtons, modal, modalBody, closeModalButton, searchInput, reassignButton });
+            // console.error('One or more elements are missing:', { showModalButtons, modal, modalBody, closeModalButton, searchInput, reassignButton });
             return;
         }
 
@@ -470,7 +473,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let currentClaimId = null;
 
     if (!showModalButtons.length || !modal || !modalBody || !closeModalButton || !sendButton || !inputField) {
-        console.error('One or more elements are missing:', { showModalButtons, modal, modalBody, closeModalButton, sendButton, inputField });
+        // console.error('One or more elements are missing:', { showModalButtons, modal, modalBody, closeModalButton, sendButton, inputField });
         return;
     }
 
@@ -509,7 +512,6 @@ document.addEventListener('DOMContentLoaded', function () {
             event.preventDefault();
             event.stopPropagation();
             currentClaimId = this.getAttribute('data-claim-id');
-            console.log('Current Claim ID:', currentClaimId);
 
             fetch(`/warranty-claims/${currentClaimId}/comments`)
                 .then(response => response.json())

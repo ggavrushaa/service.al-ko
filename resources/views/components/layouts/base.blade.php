@@ -15,6 +15,8 @@
     <link rel="stylesheet" href="/cdn/css/swiper-bundle.min.css">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="/css/components.css?v=002">
+    <script src="/js/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 </head>
 
 <body class="preload">
@@ -25,6 +27,7 @@
         :user="auth()->user()"
     />
     {{$slot}}
+
     <script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.4/dist/js/datepicker-full.min.js"></script>
 </body>
 

@@ -204,17 +204,12 @@
                 document.querySelector('.select-template').addEventListener('change', (e) => {
                     const select = e.target,
                         input = e.target.closest('.form-group:not(.default-select)').querySelector('textarea');
-
-                        console.log(input);
-                        
-
+                    
                     if(select.value === "-1"){
                         input.value = '';
                         return false;
                     }
                     input.value = select.options[select.selectedIndex].dataset.description;
-
-
                 })
             }
 
