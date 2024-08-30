@@ -150,7 +150,7 @@
                                         <select class="select-template" name="resolution" id="">
                                             <option value="-1">Оберіть шаблон</option>
                                             @foreach($resolutionTemplates as $template)
-                                            <option value="{{ $template->id }}" @if(isset($conclusion) && $conclusion->resolution == $template->id) selected @endif>{{ $template->name }}</option>
+                                            <option data-description="{{ $template->description }}" value="{{ $template->id }}" @if(isset($conclusion) && $conclusion->resolution == $template->id) selected @endif>{{ $template->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -172,23 +172,6 @@
     </div>
 
     <div class="modal-overlay"></div>
-
-    <div class="modal modal-manager js-modal js-modal-template">
-        <button type="button" class="icon-close-fill btn-close _js-btn-close-modal"></button>
-        <div class="modal-content">
-            <div class="manager-header">
-                <p class="modal-title">Оберіть шаблон</p>
-                <div class="form-group">
-                    <span class="icon-search"></span>
-                    <input type="text" placeholder="пошук" name="template-search">
-                </div>
-            </div>
-            <div class="manager-body custom-scrollbar"></div>
-            <div class="manager-footer">
-                <button type="button" class="btn-primary btn-blue select-template-btn">Вибрати Шаблон</button>
-            </div>
-        </div>
-    </div>
 
 <style>
     .modal-overlay {
