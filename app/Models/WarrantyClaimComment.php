@@ -12,7 +12,7 @@ class WarrantyClaimComment extends Model
     protected $connection = 'second_db';
 
     protected $fillable = [
-        
+        'warranty_claim_id', 'comment', 'user_id',
     ];
 
 
