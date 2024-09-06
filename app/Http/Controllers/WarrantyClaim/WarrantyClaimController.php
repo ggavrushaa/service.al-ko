@@ -379,7 +379,7 @@ class WarrantyClaimController extends Controller
             if ($request->hasFile('file')) {
                 foreach ($request->file('file') as $file) {
                     if ($file->isValid()) {
-                        $path = $file->store('public/warranty_claims_files');
+                        $path = $file->store('warranty_claims_files');
                         WarrantyClaimFile::create([
                             'warranty_claim_id' => $warrantyClaim->id,
                             'path' => $path,
