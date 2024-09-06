@@ -243,7 +243,7 @@
                             <div class="image-preview">
                                 @foreach ($currentClaim->files as $file)
                                 <div class="img">
-                                    <img src="{{ asset('storage/' . $file->path) }}" alt="{{ $file->filename }}">
+                                    <img src="{{ Storage::disk('warranty_claims_files')->url(basename($file->path)) }}" alt="{{ $file->filename }}">
                                     <button type="button" class="icon-trash js-remove-image" data-action="{{ route('warranty-image.remove', ['id' => $file->id]) }}"></button>
                                 </div>
                                 @endforeach
