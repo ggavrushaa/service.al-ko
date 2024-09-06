@@ -1,5 +1,6 @@
 <?php
 use Illuminate\Support\Facades\Route;
+use Illuminate\Validation\Rules\File;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GuideController;
@@ -165,3 +166,17 @@ Route::group(['middleware' => ['guest']], function () {
 
     Route::get('/technical-conclusions', [ApiTechnicalConclusionController::class, 'index']);
     Route::post('/technical-conclusions', [ApiTechnicalConclusionController::class, 'store']);
+
+    Route::get('warranty_claims_files/{filename}', function ($filename) {
+        $path = storage_path('app/warranty_claims_files/' . $filename);
+    
+        if (!File::exists($path)) {
+            abort(404);
+        }
+    
+        $file = File::get($path);
+        $type = File::mimeType($path);
+    
+        return response($file, 200)->header("Content-Type", $type);
+    });
+    
