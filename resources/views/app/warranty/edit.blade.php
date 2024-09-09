@@ -243,7 +243,11 @@
                             <div class="image-preview">
                                 @foreach ($currentClaim->files as $file)
                                 <div class="img">
-                                    <img src="{{ asset('public/warranty_claims_files/' . basename($file->path)) }}" alt="{{ $file->filename }}">
+                                    @if(env('APP_ENV') !== 'local')
+                                        <img src="{{ asset('public/warranty_claims_files/' . basename($file->path)) }}" alt="{{ $file->filename }}">
+                                    @else
+                                        <img src="{{ asset('warranty_claims_files/' . basename($file->path)) }}" alt="{{ $file->filename }}">
+                                    @endif
                                     <button type="button" class="icon-trash js-remove-image" data-action="{{ route('warranty-image.remove', ['id' => $file->id]) }}"></button>
                                 </div>
                                 @endforeach
