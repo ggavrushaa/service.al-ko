@@ -380,7 +380,6 @@ class WarrantyClaimController extends Controller
                 foreach ($request->file('file') as $file) {
                     if ($file->isValid()) {
                         $path = $file->store('warranty_claims_files');
-                        dd($path, $file->getClientOriginalName());
                         WarrantyClaimFile::create([
                             'warranty_claim_id' => $warrantyClaim->id,
                             'path' => $path,
