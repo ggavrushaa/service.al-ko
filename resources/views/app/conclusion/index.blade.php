@@ -60,7 +60,7 @@
 
             <div class="pagination">
                 <div class="pagination-total">
-                    Показано документів <strong>1-{{ $conclusions->count() }}</strong> з <strong>{{ $conclusions->total() }}</strong>
+                    Показано документів <strong>{{ $conclusions->firstItem() }}-{{ $conclusions->lastItem() }}</strong> з <strong>{{ $conclusions->total() }}</strong>
                 </div>
                 <div class="pagination-select-wrapper">
                     <p>Сторінка</p>
