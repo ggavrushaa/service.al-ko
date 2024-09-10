@@ -181,7 +181,7 @@
             tr.classList.add('tr');
             tr.dataset.url = `/warranty-claims/${conclusion.warranty_claim_id}/create-technical-conclusion`;
 
-            const warrantyNumber = conclusion.warranty_claim_id || 'Не указано';
+            const warrantyNumber = conclusion.warranty_claim?.number || 'Не указано';
             const warrantyDate = conclusion.date || 'Не указана';
             const productArticle = conclusion.warranty_claim?.product_article || 'Не указан';
             const productName = conclusion.warranty_claim?.product_name || 'Не указано';
@@ -191,7 +191,7 @@
             const managerName = conclusion.warranty_claim?.manager?.first_name_ru || 'Не вказано';
 
             tr.innerHTML = `
-                <div class="td"><a href="/technical-conclusions/${conclusion.warranty_claim_id}/create-technical-conclusion" class="table-link">${warrantyNumber}</a></div>
+                <div class="td"><a href="/warranty-claims/${conclusion.warranty_claim_id}/create-technical-conclusion" class="table-link">${warrantyNumber}</a></div>
                 <div class="td">${warrantyDate}</div>
                 <div class="td">${productArticle}</div>
                 <div class="td">${productName}</div>
