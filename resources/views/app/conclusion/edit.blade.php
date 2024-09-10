@@ -148,8 +148,8 @@
 
                                     <div class="form-group default-select show-placeholder">
                                         <select class="select-template" name="resolution" id=""  @if($warrantyClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved) disabled @endif>
-                                            @foreach($resolutionTemplates as $template)
                                             <option value="-1" @if(!isset($conclusion) || $conclusion->resolution === null || $conclusion->resolution == -1) selected @endif>Оберіть шаблон</option>
+                                            @foreach($resolutionTemplates as $template)
                                             <option data-description="{{ $template->description }}" value="{{ $template->id }}" @if(isset($conclusion) && $conclusion->resolution == $template->id) selected @endif>
                                                 {{ $template->name }}
                                             </option>
