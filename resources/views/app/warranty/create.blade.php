@@ -96,9 +96,15 @@
                                 <label for="service-contract">Договір сервісу</label>
                                 <select name="service_contract" id="service-contract" class="form-control"
                                         @if ($currentClaim && $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::approved OR $currentClaim->status === \App\Enums\WarrantyClaimStatusEnum::review) disabled @endif>
-                                    <option value="{{ old('service_contract', $defaultContract->id ?? '') }}">
-                                        {{ old('service_contract', $defaultContract->number ?? 'Виберіть договір сервісу') }}
-                                    </option>
+                                        @if ($defaultContract)
+                                            <option value="{{ old('service_contract', $defaultContract->id ?? '') }}">
+                                                {{ old('service_contract', $defaultContract->number ?? 'Виберіть договір сервісу') }}
+                                            </option>
+                                        @else
+                                            <option value="-1">
+                                                Оберіть договір сервісу
+                                            </option>
+                                        @endif
                                 </select>
                             </div>
                         </div>

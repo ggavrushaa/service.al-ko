@@ -226,11 +226,11 @@ class WarrantyClaimController extends Controller
         if ($userRole->id === 1) {
        // Если роль пользователя дилер, выбираем только связанные сервисные центры
        $userServiceCentres = DB::connection('second_db')->table('users_services_centres')
-           ->where('user_id', $userId)
+           ->where('user_id', operator: $userId)
            ->select('user_partner_id', 'default')
            ->get();
 
-       $partnerIds = $userServiceCentres->pluck('user_partner_id');
+       $partnerIds = $userServiceCentres->pluck(value: 'user_partner_id');
 
        $serviceCenters = DB::connection('mysql')->table('user_partners')
            ->whereIn('id', $partnerIds)
@@ -258,7 +258,7 @@ class WarrantyClaimController extends Controller
 
        $defaultServicePartner = $currentClaim->service_partner 
        ? $serviceCenters->firstWhere('id', $currentClaim->service_partner) 
-       : ($serviceCenters->firstWhere('default', 1) ?: $serviceCenters->first());
+       : ($serviceCenters->firstWhere('default', 1) ?: null);
 
         $defaultContract = null;
         $defaultDiscount = 0;
