@@ -90,4 +90,9 @@ class WarrantyClaim extends Model
             default => 'blue',
         };
     }
+
+    public function servicePartner()
+    {
+        return $this->belongsTo(UserPartner::class, 'service_partner');
+    }
 }

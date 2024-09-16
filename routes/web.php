@@ -9,6 +9,7 @@ use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\ContractController;
 use App\Http\Controllers\Parts\PartsController;
 use App\Http\Controllers\Auth\LoginController;  
+use App\Http\Controllers\CompensationController;
 use App\Http\Controllers\DocumentationController;
 use App\Http\Controllers\Api\DefectCodeController;
 use App\Http\Controllers\Api\ServiceWorkController;
@@ -166,4 +167,7 @@ Route::group(['middleware' => ['guest']], function () {
 
     Route::get('/technical-conclusions', [ApiTechnicalConclusionController::class, 'index']);
     Route::post('/technical-conclusions', [ApiTechnicalConclusionController::class, 'store']);
+
+    // documentations fees
+    Route::get('/documentations-nodescription', [CompensationController::class, 'noDescription'])->name('documentations.nodescription');
     

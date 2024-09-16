@@ -8,7 +8,7 @@
                 <div class="sort">
                     <a href="" class="">По документам</a>
                     <a href="" class="">По сервіс-центрам</a>
-                    <a href="" class="active">Без опису товару</a>
+                    <a href="{{route('documentations.nodescription')}}" class="@if(Route::currentRouteName() == 'documentations.nodescription') active @endif">Без опису товару</a>
                 </div>
             </div>
             <div class="row">
