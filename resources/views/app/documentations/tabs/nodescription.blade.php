@@ -7,8 +7,8 @@
                 <h1>Звірка компенсацій</h1>
                 <div class="sort">
                     <a href="" class="">По документам</a>
-                    <a href="" class="">По сервіс-центрам</a>
-                    <a href="" class="active">Без опису товару</a>
+                    <a href="{{route('documentations.documents')}}" class="if(@if(Route::currentRouteName() == 'documentations.documents') active @endif">По сервіс-центрам</a>
+                    <a href="{{route('documentations.nodescription')}}" class="@if(Route::currentRouteName() == 'documentations.nodescription') active @endif">Без опису товару</a>
                 </div>
             </div>
             <div class="row">
@@ -21,7 +21,7 @@
                 </div>
             </div>
             <div class="btns">
-                <button type="button" class="btn-primary btn-blue icon-filters btn-filter _js-show-filters">Фільтри</button>
+                {{-- <button type="button" class="btn-primary btn-blue icon-filters btn-filter _js-show-filters">Фільтри</button> --}}
             </div>
         </div>
 
@@ -145,7 +145,7 @@
                             <div class="td">Гарантійна заява #{{$claim->number}} <br>від {{$claim->date}}</div>
                             <div class="td">{{$claim->spare_parts_sum}}</div>
                             <div class="td">{{$claim->service_works_sum}}</div>
-                            <div class="td">{{($claim->spare_parts_sum + $claim->service_works_sum)}}</div>
+                            <div class="td">{{$claim->spare_parts_sum + $claim->service_works_sum}}</div>
                             <div class="td _empty"></div>
                         </div>
                         @endforeach
