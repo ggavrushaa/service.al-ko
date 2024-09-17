@@ -15,7 +15,7 @@ class CompensationController extends Controller
         return view('app.documentations.tabs.nodescription', compact('warrantyClaims'));
     }
 
-    public function documents()
+    public function service()
     {
         $warrantyClaims = WarrantyClaim::where('status', '=', WarrantyClaimStatusEnum::approved)->get();
         return view('app.documentations.tabs.service', compact('warrantyClaims'));
