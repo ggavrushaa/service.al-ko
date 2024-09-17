@@ -122,100 +122,47 @@
         </div>
     </div>
     
-            <div class="card-content card-table">
-            <div class="table-wrapper">
-                <div class="table table-actions table-footer have-subtable cell-border">
-                    <div class="thead">
-                        <div class="tr">
-                            <div class="th">Сервісний центр</div>
-                            <div class="th">Документ</div>
-                            <div class="th">Дата продажу</div>
-                            <div class="th subtable-сell">
-                                Номенклатура
-                                <table class="">
-                                    <thead>
-                                    <tr>
-                                        <th>Артикул</th>
-                                        <th>Заводський <br> номер</th>
-                                    </tr>
-                                    </thead>
-                                </table>
-                            </div>
-                            <div class="th">Покупець</div>
-                            <div class="th">Запчастини: вартість, грн кількість, шт</div>
-                            <div class="th">Роботи: вартість, грн кількість, год</div>
-                            <div class="th">Всього вартість, грн</div>
-                            {{-- <div class="th _empty"></div> --}}
-                            {{-- <div class="th">Дії</div> --}}
-                        </div>
+    <div class="card-content card-table">
+        <div class="table-wrapper">
+            <div class="table layout-fixed table-footer layout-fixed">
+                <div class="thead">
+                    <div class="tr">
+                        <div class="th">Сервіс-центр <a href=""></a></div>
+                        <div class="th">Запчастини, шт <a href=""></a></div>
+                        <div class="th">Вартість запчастин, грн <a href=""></a></div>
+                        <div class="th">Нормогодини <a href=""></a></div>
+                        <div class="th">Вартість нормогодин, грн <a href=""></a></div>
+                        <div class="th"><strong>Всього вартість, грн <a href=""></a></strong></div>
                     </div>
-                    <div class="tbody">
-                        
-                        @foreach($warrantyClaims as $claim)
-                        <div class="tr">
-                            <div class="td">
-                                {{$claim->servicePartner->full_name_ru}}
-                            </div>
-                            <div class="td">Гарантійна заява #{{$claim->number}} <br>від {{$claim->date}}</div>
-                            <div class="td">{{$claim->date_of_sale}}</div>
-                            <div class="td subtable-сell">
-                                {{$claim->product_name}}
-                                <table class="">
-                                    <tbody>
-                                    <tr>
-                                        <td>{{$claim->product_article}}</td>
-                                        <td>{{$claim->factory_number}}</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="td">{{$claim->client_name}}</div>
-                            <div class="td">
-                                {{$claim->spare_parts_sum}}
-                                <span>{{$claim->spareParts->sum('qty')}} шт</span>
-                            </div>
-                            <div class="td">
-                                {{$claim->service_works_sum}}
-                                <span>{{$claim->serviceWorksAPI->sum('qty')}} год</span>
-                            </div>
-                            <div class="td">{{$claim->spare_parts_sum + $claim->service_works_sum}}</div>
-                            {{-- <div class="td _empty"></div> --}}
-                            {{-- <div class="td">
-                                <a href="" class="btn-action icon-info"></a>
-                            </div> --}}
+                </div>
+                <div class="tbody">
+                    
+                    @foreach($warrantyClaims as $claim)
+                    <div class="tr">
+                        <div class="td">
+                            {{$claim->servicePartner->full_name_ru}}
                         </div>
-                        @endforeach
-                        
-                    </div>
-                    <div class="tfoot">
-                        <div class="tr">
-                            <div class="th">Разом</div>
-                            <div class="th"></div>
-                            <div class="th"></div>
-                            <div class="th"></div>
-                            <div class="th"></div>
-                            <div class="th">
-                                {{$warrantyClaims->sum('spare_parts_sum')}}<br>
-                                <span>
-                                    {{$warrantyClaims->sum(function ($warrantyClaim) {
-                                        return $warrantyClaim->spareParts->sum('qty');
-                                    })}} шт
-                                </span>
-                            </div>
-                            <div class="th">
-                                {{$warrantyClaims->sum('service_works_sum')}}
-                                <span>{{$warrantyClaims->sum(function ($warrantyClaim) {
-                                    return $warrantyClaim->serviceWorksAPI->sum('qty');
-                                })}} год</span>
-                            </div>
-                            <div class="th">{{$warrantyClaims->sum('spare_parts_sum') + $warrantyClaims->sum('service_works_sum')}}</div>
-                            {{-- <div class="th _empty"></div> --}}
-                            {{-- <div class="th"></div> --}}
-                        </div>
+                        <div class="td">{{$claim->total_spare_parts_qty}}</div>
+                        <div class="td">{{$claim->total_spare_parts_cost}}</div>
+                        <div class="td">{{$claim->total_service_works_qty}}</div>
+                        <div class="td">{{$claim->total_service_works_cost}}</div>
+                        <div class="td"><strong>{{$claim->total_cost}}</strong></div>
+                    </div>          
+                    @endforeach
+                </div>
+                <div class="tfoot">
+                    <div class="tr">
+                        <div class="th">Разом</div>
+                        <div class="th">{{$warrantyClaims->sum('total_spare_parts_qty')}}</div>
+                        <div class="th">{{$warrantyClaims->sum('total_spare_parts_cost')}}</div>
+                        <div class="th">{{$warrantyClaims->sum('total_service_works_qty')}}</div>
+                        <div class="th">{{$warrantyClaims->sum('total_service_works_cost')}}</div>
+                        <div class="th">{{$warrantyClaims->sum('total_cost')}}</div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     
         </div>
     </div>

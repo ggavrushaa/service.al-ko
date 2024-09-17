@@ -6,8 +6,8 @@
             <div class="row">
                 <h1>Звірка компенсацій</h1>
                 <div class="sort">
-                    <a href="" class="">По документам</a>
-                    <a href="{{route('documentations.service')}}" class="if(@if(Route::currentRouteName() == 'documentations.service') active @endif">По сервіс-центрам</a>
+                    <a href="{{route('documentations.document')}}" class="@if(Route::currentRouteName() == 'documentations.document') active @endif">По документам</a>
+                    <a href="{{route('documentations.service')}}" class="@if(Route::currentRouteName() == 'documentations.service') active @endif">По сервіс-центрам</a>
                     <a href="{{route('documentations.nodescription')}}" class="@if(Route::currentRouteName() == 'documentations.nodescription') active @endif">Без опису товару</a>
                 </div>
             </div>

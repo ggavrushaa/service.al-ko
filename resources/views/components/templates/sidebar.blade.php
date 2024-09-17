@@ -36,8 +36,8 @@
                         <p class="list-group__title">Інше</p>
                         <ul>
                             @if(auth()->check() && auth()->user()->role_id == 3)
-                            <li class="{{Route::currentRouteName() == 'documentations.fees' || Route::currentRouteName() == 'documentations.fees' ? 'active' : ''}}">
-                                <a href="{{route('documentations.fees')}}" class="link">
+                            <li class="{{Route::currentRouteName() == 'documentations.document' || Route::currentRouteName() == 'documentations.document' ? 'active' : ''}}">
+                                <a href="{{route('documentations.document')}}" class="link">
                                     <span class="icon icon-docs"></span>
                                     <span class="text">Звірка компенсацій</span>
                                 </a>
