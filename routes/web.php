@@ -170,5 +170,5 @@ Route::group(['middleware' => ['guest']], function () {
 
     // documentations fees
     Route::get('/documentations-nodescription', [CompensationController::class, 'noDescription'])->name('documentations.nodescription');
-    Route::get('/documentations-documents', [CompensationController::class, 'documents'])->name('documentations.documents');
+    Route::get('/documentations-service', [CompensationController::class, 'service'])->name('documentations.service');
     

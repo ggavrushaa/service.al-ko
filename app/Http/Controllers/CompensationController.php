@@ -18,6 +18,6 @@ class CompensationController extends Controller
     public function documents()
     {
         $warrantyClaims = WarrantyClaim::where('status', '=', WarrantyClaimStatusEnum::approved)->get();
-        return view('app.documentations.tabs.documents', compact('warrantyClaims'));
+        return view('app.documentations.tabs.service', compact('warrantyClaims'));
     }
 }
