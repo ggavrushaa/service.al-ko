@@ -1,7 +1,7 @@
 <x-layouts.base>
 
 <div class="main" id="main">
-    <div class="page-compensation without-desc">
+    <div class="page-compensation without-desc service-centre">
         <div class="page-name">
             <div class="row">
                 <h1>Звірка компенсацій</h1>
