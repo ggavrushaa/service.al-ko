@@ -124,7 +124,7 @@
     
             <div class="card-content card-table">
             <div class="table-wrapper">
-                <div class="table table-actions table-footer have-subtable cell-border">
+                <div class="table table-footer have-subtable cell-border">
                     <div class="thead">
                         <div class="tr">
                             <div class="th">Сервісний центр</div>
