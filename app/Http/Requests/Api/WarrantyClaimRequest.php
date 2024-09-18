@@ -16,7 +16,7 @@ class WarrantyClaimRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // '*.id' => 'nullable|integer',
+            '*.id' => 'nullable|integer',
             '*.code_1C' => 'required|string|max:255',
             '*.number' => 'nullable|integer',
             '*.number_1c' => 'nullable',
