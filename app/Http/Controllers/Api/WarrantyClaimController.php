@@ -55,10 +55,10 @@ class WarrantyClaimController extends Controller
                 $data['client_name'] = $data['sender_name'];
                 $data['client_phone'] = $data['sender_phone'];
     
-                if (isset($data['id'])) {
-                    $warrantyClaim = WarrantyClaim::find($data['id']);
+                if (isset($data['code_1C'])) {
+                    $warrantyClaim = WarrantyClaim::find($data['code_1C']);
                     if (!$warrantyClaim) {
-                        throw new \Exception('Warranty claim not found for the provided ID');
+                        throw new \Exception('Warranty claim not found for the provided code_1C');
                     }
                 } else {
                     $warrantyClaim = null;
