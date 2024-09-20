@@ -25,7 +25,7 @@ class PDFController extends Controller
 
         $html = View::make('pdf.conclusion', $data)->render();
 
-        $mpdf = new \Mpdf\Mpdf();
+        $mpdf = new \Mpdf\Mpdf(['tempDir' => __DIR__ . '/custom/temp/dir/path']);
         $mpdf->WriteHTML($html);
 
         $mpdf->Output('technical_conclusion_' . $id . '.pdf', 'D');
