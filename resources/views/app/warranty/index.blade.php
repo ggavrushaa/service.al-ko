@@ -42,7 +42,7 @@
                                 <div class="td">{{ $claim->spare_parts_sum ?? 'Не вказано' }}</div>
                                 <div class="td">{{ $claim->service_works_sum ?? 'Не вказано' }}</div>
                                 <div class="td">
-                                    <button type="button" class="btn-label blue">
+                                    <button type="button" class="btn-label {{ $claim->status->labelClass() }}">
                                         {{ $claim->status }}
                                     </button>
                                 </div>

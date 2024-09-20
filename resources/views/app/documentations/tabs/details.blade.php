@@ -1,221 +1,77 @@
 <x-layouts.base>
 
     <div class="main" id="main">
-        <div class="page-compensation without-desc service-centre">
+        <div class="page-compensation-single">
             <div class="page-name">
-                <div class="row">
-                    <h1>Звірка компенсацій</h1>
-                    <div class="sort">
-                        <a href="{{route('documentations.document')}}" class="@if(Route::currentRouteName() == 'documentations.document') active @endif">По документам</a>
-                        <a href="{{route('documentations.service')}}" class="@if(Route::currentRouteName() == 'documentations.service') active @endif">По сервіс-центрам</a>
-                        <a href="{{route('documentations.nodescription')}}" class="@if(Route::currentRouteName() == 'documentations.nodescription') active @endif">Без опису товару</a>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="filters-result">
-                        <div class="active-filters">
-                            <p class="count">
-                                Показано документів: <span>{{$warrantyClaims->count()}}</span>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="btns">
-                    {{-- <button type="button" class="btn-primary btn-blue icon-filters btn-filter _js-show-filters">Фільтри</button> --}}
-                </div>
+                <a href="{{url()->previous()}}" class="btn-border btn-blue btn-only-icon">
+                    <span class="icon-arrow-left"></span>
+                </a>
             </div>
-    
-            <div class="filters custom-scrollbar">
-        <a href="./home.html" class="logo">
-            <img src="./img/components/logo.svg" alt="">
-        </a>
-        <div class="filters-title">
-            <p>Фільтри таблиці</p>
-            <button type="button" class="icon-close-fill _js-show-filters"></button>
-        </div>
-    
-        <div class="filters-main">
-            <div class="filter-group js-accordion">
-                <div class="filter-group__head js-accordion-btn">
-                    <p>Заяви за період</p>
-                    <button type="button" class="icon-arrow-dropdown"></button>
-                </div>
-                <div class="filter-group__content js-accordion-content">
-                    <div class="filter-group__content__wrapper">
-                        <div class="form-group horizontal">
-                            <label for="date-start">З</label>
-                            <div class="input-wrapper">
-                                <input type="text" id="date-start" placeholder="дд.мм.рррр" class="_js-datepicker">
-                                <span class="icon-calendar"></span>
-                            </div>
-                        </div>
-                        <div class="form-group horizontal _mb0">
-                            <label for="date-end">по</label>
-                            <div class="input-wrapper">
-                                <input type="text" id="date-end" placeholder="дд.мм.рррр" class="_js-datepicker">
-                                <span class="icon-calendar"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="filter-group js-accordion">
-                <div class="filter-group__head js-accordion-btn">
-                    <p>Артикул </p>
-                    <button type="button" class="icon-arrow-dropdown"></button>
-                </div>
-                <div class="filter-group__content js-accordion-content">
-                    <div class="filter-group__content__wrapper">
-                        <div class="form-group _mb0">
-                            <input type="text" id="article" placeholder="Артикул">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="filter-group js-accordion">
-                <div class="filter-group__head js-accordion-btn">
-                    <p>Статус</p>
-                    <button type="button" class="icon-arrow-dropdown"></button>
-                </div>
-                <div class="filter-group__content js-accordion-content">
-                    <div class="filter-group__content__wrapper">
-                        <div class="form-group checkbox">
-                            <input type="checkbox" id="status-1" name="status[]" value="status-1">
-                            <label for="status-1">Відправлений</label>
-                        </div>
-                        <div class="form-group checkbox">
-                            <input type="checkbox" id="status-2" name="status[]" value="status-2">
-                            <label for="status-2">Розглядається</label>
-                        </div>
-                        <div class="form-group checkbox _mb0">
-                            <input type="checkbox" id="status-3" name="status[]" value="status-3">
-                            <label for="status-3">Затверджений</label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="filter-group js-accordion">
-                <div class="filter-group__head js-accordion-btn">
-                    <p>Автор документу</p>
-                    <button type="button" class="icon-arrow-dropdown"></button>
-                </div>
-                <div class="filter-group__content js-accordion-content">
-                    <div class="filter-group__content__wrapper">
-                        <div class="form-group default-select">
-                            <select name="" id="author">
-                                <option selected value="-1">Автор документу</option>
-                                <option value="1">Author #1</option>
-                                <option value="2">Author #2</option>
-                                <option value="3">Author #3</option>
-                                <option value="4">Author #4</option>
-                                <option value="5">Author #5</option>
-                                <option value="6">Author #6</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    
-        <div class="filters-footer">
-            <p>AL-KO Copyright © 2023 </p>
-        </div>
-    </div>
     
             <div class="card-content card-table">
-            <div class="table-wrapper">
-                <div class="table table-footer have-subtable cell-border table-actions">
-                    <div class="thead">
-                        <div class="tr">
-                            <div class="th">Сервісний центр</div>
-                            <div class="th">Документ</div>
-                            <div class="th">Дата продажу</div>
-                            <div class="th subtable-сell">
-                                Номенклатура
-                                <table class="">
-                                    <thead>
-                                    <tr>
-                                        <th>Артикул</th>
-                                        <th>Заводський <br> номер</th>
-                                    </tr>
-                                    </thead>
-                                </table>
+                <div class="display-grid col-2 gap-20">
+                    <div class="table-wrapper">
+                        <div class="table table-footer">
+                            <div class="thead">
+                                <div class="tr">
+                                    <div class="th">Назва <a href="" class=""></a></div>
+                                    <div class="th">Нормогодин <a href="" class=""></a></div>
+                                    <div class="th">Вартість , грн <a href="" class=""></a></div>
+                                </div>
                             </div>
-                            <div class="th">Покупець</div>
-                            <div class="th">Запчастини: вартість, грн кількість, шт</div>
-                            <div class="th">Роботи: вартість, грн кількість, год</div>
-                            <div class="th">Всього вартість, грн</div>
-                            <div class="th _empty"></div>
-                            <div class="th">Дії</div>
-                        </div>
-                    </div>
-                    <div class="tbody">
-                        
-                        @foreach($warrantyClaims as $claim)
-                        <div class="tr">
-                            <div class="td">
-                                {{$claim->servicePartner->full_name_ru}}
+                            <div class="tbody">
+                                @foreach($warrantyClaimServiceWorks as $work)
+                                <div class="tr">
+                                    <div class="td">{{$work->serviceWork->name}}</div>
+                                    <div class="td">{{$work->qty}}</div>
+                                    <div class="td">{{$work->sum}}</div>
+                                </div>
+                                @endforeach
+                                
                             </div>
-                            <div class="td">Гарантійна заява #{{$claim->number}} <br>від {{$claim->date}}</div>
-                            <div class="td">{{$claim->date_of_sale}}</div>
-                            <div class="td subtable-сell">
-                                {{$claim->product_name}}
-                                <table class="">
-                                    <tbody>
-                                    <tr>
-                                        <td>{{$claim->product_article}}</td>
-                                        <td>{{$claim->factory_number}}</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="td">{{$claim->client_name}}</div>
-                            <div class="td">
-                                {{$claim->spare_parts_sum}}
-                                <span>{{$claim->spareParts->sum('qty')}} шт</span>
-                            </div>
-                            <div class="td">
-                                {{$claim->service_works_sum}}
-                                <span>{{$claim->serviceWorksAPI->sum('qty')}} год</span>
-                            </div>
-                            <div class="td">{{$claim->spare_parts_sum + $claim->service_works_sum}}</div>
-                            <div class="td _empty"></div>
-                            <div class="td">
-                                <a href="{{route('documentations.details', $claim->id)}}" class="btn-action icon-info"></a>
+                            <div class="tfoot">
+                                <div class="tr">
+                                    <div class="th">Всього</div>
+                                    <div class="th">{{$warrantyClaimServiceWorks->sum('qty')}}</div>
+                                    <div class="th">{{$warrantyClaimServiceWorks->sum('sum')}}</div>
+                                </div>
                             </div>
                         </div>
-                        @endforeach
-                        
                     </div>
-                    <div class="tfoot">
-                        <div class="tr">
-                            <div class="th">Разом</div>
-                            <div class="th"></div>
-                            <div class="th"></div>
-                            <div class="th"></div>
-                            <div class="th"></div>
-                            <div class="th">
-                                {{$warrantyClaims->sum('spare_parts_sum')}}<br>
-                                <span>
-                                    {{$warrantyClaims->sum(function ($warrantyClaim) {
-                                        return $warrantyClaim->spareParts->sum('qty');
-                                    })}} шт
-                                </span>
+                    <div class="table-wrapper">
+                        <div class="table table-footer">
+                            <div class="thead">
+                                <div class="tr">
+                                    <div class="th">Назва <a href="" class=""></a></div>
+                                    <div class="th">Артикул <a href="" class=""></a></div>
+                                    <div class="th">Кількість <a href="" class=""></a></div>
+                                    <div class="th">Вартість, грн <a href="" class=""></a></div>
+                                </div>
                             </div>
-                            <div class="th">
-                                {{$warrantyClaims->sum('service_works_sum')}}
-                                <span>{{$warrantyClaims->sum(function ($warrantyClaim) {
-                                    return $warrantyClaim->serviceWorksAPI->sum('qty');
-                                })}} год</span>
+                            <div class="tbody">
+                                
+                                @foreach($warrantyClaimSpareParts as $part)
+                                <div class="tr">
+                                    <div class="td">{{$part->product->name}}</div>
+                                    <div class="td">{{$part->spare_parts}}</div>
+                                    <div class="td">{{$part->qty}}</div>
+                                    <div class="td">{{$part->sum}}</div>
+                                </div>
+                                @endforeach
+                                
                             </div>
-                            <div class="th">{{$warrantyClaims->sum('spare_parts_sum') + $warrantyClaims->sum('service_works_sum')}}</div>
-                            <div class="th _empty"></div>
-                            <div class="th"></div>
+                            <div class="tfoot">
+                                <div class="tr">
+                                    <div class="th">Всього</div>
+                                    <div class="th"></div>
+                                    <div class="th">{{$warrantyClaimSpareParts->sum('qty')}}</div>
+                                    <div class="th">{{$warrantyClaimSpareParts->sum('sum')}}</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
     
         </div>
     </div>

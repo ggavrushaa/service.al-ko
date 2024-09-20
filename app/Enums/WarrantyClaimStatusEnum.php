@@ -21,4 +21,15 @@ enum WarrantyClaimStatusEnum : string
             self::review => "Розглядається",
         };
     }
+
+    public function labelClass(): string
+    {
+        return match ($this) {
+            self::new => "blue",
+            self::sent => "purple",
+            self::error => "red",
+            self::approved => "green",
+            self::review => "yellow",
+        };
+    }
 }

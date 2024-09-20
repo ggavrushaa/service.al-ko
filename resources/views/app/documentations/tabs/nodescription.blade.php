@@ -133,6 +133,7 @@
                             <div class="th">Вартість робіт, грн</div>
                             <div class="th">Всього вартість, грн</div>
                             <div class="th _empty"></div>
+                            <div class="th">Дії</div>
                         </div>
                     </div>
                     <div class="tbody">
@@ -147,6 +148,9 @@
                             <div class="td">{{$claim->service_works_sum}}</div>
                             <div class="td">{{$claim->spare_parts_sum + $claim->service_works_sum}}</div>
                             <div class="td _empty"></div>
+                            <div class="td">
+                                <a href="{{route('documentations.details', $claim->id)}}" class="btn-action icon-info"></a>
+                            </div>
                         </div>
                         @endforeach
 
@@ -159,6 +163,7 @@
                             <div class="th">{{$warrantyClaims->sum('service_works_sum')}}</div>
                             <div class="th">{{$warrantyClaims->sum('spare_parts_sum') + $warrantyClaims->sum('service_works_sum')}}</div>
                             <div class="th _empty"></div>
+                            <div class="th"></div>
                         </div>
                     </div>
                 </div>

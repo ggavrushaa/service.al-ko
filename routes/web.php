@@ -172,4 +172,5 @@ Route::group(['middleware' => ['guest']], function () {
     Route::get('/documentations-nodescription', [CompensationController::class, 'noDescription'])->name('documentations.nodescription');
     Route::get('/documentations-service', [CompensationController::class, 'service'])->name('documentations.service');
     Route::get('/documentations-document', [CompensationController::class, 'document'])->name('documentations.document');
+    Route::get('/details/{id}', [CompensationController::class, 'details'])->name('documentations.details');
     
